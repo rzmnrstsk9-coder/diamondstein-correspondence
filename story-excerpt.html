@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Read the Story: Condensed Version — The Diamondstein Correspondence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: var(--ink); color: #fff; }
+  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
+  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+
+  .demo-banner { background: #2a2118; color: #e8c98a; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; padding: 0.7rem 1rem; line-height: 1.5; }
+
+  .head { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem 1rem; text-align: center; }
+  .head p.kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.8rem; }
+  .head h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 1rem; }
+  .head p.sub { font-size: 1.02rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
+
+  article { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+  .chapter-mark { display: flex; align-items: center; gap: 1rem; margin: 3.5rem 0 1.6rem; }
+  .chapter-mark:first-child { margin-top: 1rem; }
+  .chapter-num { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 2rem; color: var(--rust); }
+  .chapter-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(26,26,26,0.5); }
+
+  p.para { font-size: 1.06rem; line-height: 1.75; margin-bottom: 1.3rem; color: rgba(26,26,26,0.88); }
+  p.para a.inline-link { color: var(--rust); text-decoration: underline; text-decoration-color: rgba(193,72,31,0.35); }
+
+  figure.inline-figure { margin: 2.2rem calc(-1 * 1.5rem) 2.2rem; }
+  @media (min-width: 720px) { figure.inline-figure { margin-left: -2.5rem; margin-right: -2.5rem; } }
+  figure.inline-figure img { width: 100%; border-radius: 10px; display: block; cursor: zoom-in; transition: opacity 0.15s ease; }
+  figure.inline-figure img:hover { opacity: 0.92; }
+  figure.inline-figure figcaption { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.5); text-align: center; margin-top: 0.6rem; padding: 0 1rem; }
+
+  figure.map-figure { margin: 2.2rem 0; background: #fff; border-radius: 14px; padding: 1.2rem; box-shadow: 0 10px 26px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06); }
+  figure.map-figure img { width: 100%; border-radius: 8px; display: block; cursor: zoom-in; transition: opacity 0.15s ease; }
+  figure.map-figure img:hover { opacity: 0.92; }
+  figure.map-figure figcaption { font-size: 0.86rem; color: rgba(26,26,26,0.6); margin-top: 0.9rem; line-height: 1.5; }
+  figure.map-figure figcaption b { color: var(--navy); font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem; }
+
+  .cast-inline { display: flex; gap: 1rem; align-items: center; background: #fff; border-radius: 12px; padding: 0.9rem 1.1rem; margin: 1.6rem 0; border: 1px solid rgba(0,0,0,0.06); cursor: pointer; transition: box-shadow 0.15s ease, transform 0.15s ease; }
+  .cast-inline:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .cast-inline img { width: 56px; height: 56px; border-radius: 8px; object-fit: cover; flex-shrink: 0; }
+  .cast-inline .ci-name { font-weight: 600; font-size: 0.94rem; }
+  .cast-inline .ci-role { font-size: 0.82rem; color: rgba(26,26,26,0.55); }
+  .cast-inline .ci-hint { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: var(--rust); margin-top: 0.2rem; }
+
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(10,8,6,0.72); z-index: 150; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .overlay.open { display: flex; }
+  .person-modal { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .person-modal .close-btn { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(26,26,26,0.5); line-height: 1; }
+  .person-modal .close-btn:hover { color: var(--ink); }
+  .pm-top { display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; }
+  .pm-photo { width: 84px; height: 84px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+  .pm-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.25rem; }
+  .pm-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
+  .pm-role { font-size: 0.84rem; color: var(--rust); font-weight: 600; margin-top: 0.25rem; }
+  .pm-bio { font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.85); margin-bottom: 1.1rem; }
+  .pm-letters-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(26,26,26,0.45); margin-bottom: 0.5rem; }
+  .pm-letter-item { display: block; width: 100%; text-align: left; font-size: 0.85rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); color: var(--ink); text-decoration: none; background: none; border-left: none; border-right: none; border-top: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .pm-letter-item:last-child { border-bottom: none; }
+  .pm-letter-item:hover { color: var(--rust); }
+  .pm-no-letters { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: rgba(26,26,26,0.4); }
+
+  #letter-overlay { z-index: 160; }
+  .letter-modal { background: var(--cream); border-radius: 16px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .letter-modal .close-btn { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(26,26,26,0.5); line-height: 1; }
+  .letter-modal .close-btn:hover { color: var(--ink); }
+  .lm-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
+  .lm-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; margin-bottom: 1rem; }
+  .lm-scan img { width: 100%; border-radius: 8px; margin-bottom: 1.2rem; display: block; }
+  .lm-translation { font-size: 0.92rem; line-height: 1.7; white-space: pre-wrap; color: rgba(26,26,26,0.85); }
+
+  .demo-end { max-width: 680px; margin: 3rem auto 5rem; padding: 1.5rem; background: #fff; border-radius: 14px; border: 1px dashed rgba(0,0,0,0.15); text-align: center; }
+  .demo-end p { font-size: 0.9rem; line-height: 1.6; color: rgba(26,26,26,0.65); }
+  .demo-end a { color: var(--rust); font-weight: 600; text-decoration: none; }
+
+  .zoom-overlay { display: none; position: fixed; inset: 0; background: rgba(10,8,6,0.85); z-index: 200; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; }
+  .zoom-overlay.open { display: flex; }
+  .zoom-overlay img { max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+  .zoom-close { position: fixed; top: 1.2rem; right: 1.5rem; z-index: 201; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="index.html#doors">&larr; Back to start</a>
+  <span class="crumb">Read the Story: Condensed Version</span>
+</div>
+<div class="demo-banner">The full arc, five chapters &mdash; Prologue through the Courtship, the War Years, the Travelling Years, and what the letters don't say &mdash; with maps, portraits, and illustrations woven into the prose throughout.</div>
+
+<div class="head">
+  <p class="kicker">The Diamondstein Correspondence</p>
+  <h1 class="display">Read the Story: Condensed Version</h1>
+  <p class="sub">The maps, portraits, and illustrations sit inside the story, right where they're needed &mdash; instead of being pulled out into their own separate sections.</p>
+</div>
+
+<article>
+
+  <div class="chapter-mark">
+    <div class="chapter-num display">1</div>
+    <div class="chapter-name">Prologue &middot; Before the Letters</div>
+  </div>
+
+  <p class="para">The story doesn't start with Sam and Dora. It starts with their grandparents' generation, in the small towns of the Latvian-Lithuanian Pale, where a family named Diamondstein and a family named &mdash; Dora's side &mdash; were already intertwined by cousinage and geography long before anyone wrote a letter worth keeping.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-01-academy-at-keidan.png" alt="Illustration: the academy at Keidan">
+    <figcaption>The academy at Keidan, where Dora's brother Yehuda-Leib was educated &mdash; the kind of institution that produced the family's own literate, biography-writing tradition.</figcaption>
+  </figure>
+
+  <p class="para">Dora's father Reuven and mother Hinde raised their children in this world; her brother Yehuda-Leib became learned enough that his son later wrote a full biographical account of him, which is how we know anything about that side of the family beyond what Dora's own letters mention in passing.</p>
+
+  <div class="cast-inline" data-person="Yehuda-Leib">
+    <img src="images/yehuda-leib.png" alt="Yehuda-Leib">
+    <div><div class="ci-name">Yehuda-Leib</div><div class="ci-role">Dora's brother &middot; b. unknown &ndash; d. 27 Aug 1929</div><div class="ci-hint">Tap for his story &rarr;</div></div>
+  </div>
+
+  <p class="para">But this generation's defining fact is that it didn't stay put. David and Keila-Tsirel's ten children &mdash; the generation just above Sam and Dora &mdash; scattered out of the Pale in every direction available to a Jewish family at the turn of the century: to Montreal, to London, to South Africa, to Palestine.</p>
+
+  <figure class="map-figure">
+    <img src="images/scattering.png" alt="Map showing the scattering of the family across the world">
+    <figcaption><b>Why this map matters here</b>Once a family is this spread out, letters aren't a nicety &mdash; they're the only mechanism left for staying a family at all. Everything that follows in this archive exists because of this scattering.</figcaption>
+  </figure>
+
+  <p class="para">Sam grew up in Korsovka, in this same world, the son of Getzel and (per family record, though not fully confirmed) Deborah Tomshinsky. He and Dora were cousins, and their families' paths ran close enough that by the time Sam was a teenager, marrying his cousin was already a plausible, half-expected future &mdash; if he ever came back from wherever he was about to go.</p>
+
+  <div class="chapter-mark">
+    <div class="chapter-num display">2</div>
+    <div class="chapter-name">The Courtship &middot; 1901&ndash;1911</div>
+  </div>
+
+  <p class="para">In 1901, still a teenager, Sam left Korsovka alone for Montreal &mdash; overland to a Channel port, then steerage across the Atlantic on one of the emigrant lines running Europe to Canada. It's the single decision that starts the correspondence: from this point on, whatever happens between Sam and Dora happens on paper, across an ocean, for the next decade.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-04-atlantic-crossing.png" alt="Illustration: Sam's Atlantic crossing, 1901">
+    <figcaption>Sam's crossing to Montreal, 1901 &mdash; alone, a teenager, on an emigrant-line ship.</figcaption>
+  </figure>
+
+  <figure class="map-figure">
+    <img src="images/emigration.png" alt="Map of the 1901 emigration route from Korsovka to Montreal">
+    <figcaption><b>The route</b>Korsovka to a Channel port overland, then Atlantic crossing by Allan Line steamer to Montreal &mdash; the standard path for Jewish emigration from the Pale in this period.</figcaption>
+  </figure>
+
+  <p class="para">Montreal did not go smoothly. Sam crossed back and forth more than once across this decade, chasing work that kept not holding &mdash; and in 1907 the Panic of that year wiped out whatever he'd managed to build, for the second time.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-06-the-panic-outside.png" alt="Illustration: the Panic of 1907 outside Sam's work">
+    <figcaption>The Panic of 1907 &mdash; the second time Montreal failed him.</figcaption>
+  </figure>
+
+  <p class="para">There's a story from these years, hard to date precisely, of Sam passing as an Austrian Christian to get or keep a job &mdash; the kind of small, practical deception immigrants of the period sometimes had to make just to keep working. It survives as family memory more than as something spelled out plainly in a letter, but it fits everything else known about how precarious this decade actually was for him.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-05-austrian-christian.png" alt="Illustration: Sam passing as an Austrian Christian">
+    <figcaption>"I'm an Austrian Christian" &mdash; survives as family memory, consistent with the precariousness of these years.</figcaption>
+  </figure>
+
+  <p class="para">By 1908, Sam gave up on Canada for good and went to London instead. It's the decision that actually determines the rest of the story &mdash; made only after Montreal had already failed him twice, not as a first choice but as what was left.</p>
+
+  <figure class="map-figure">
+    <img src="images/back-and-forth.png" alt="Map of crossings back and forth between Montreal and Europe">
+    <figcaption><b>A decade of false starts</b>Two failed attempts in Montreal, each undone by forces outside Sam's control, before London becomes the answer &mdash; not the plan.</figcaption>
+  </figure>
+
+  <p class="para">Sometime around February 1911, Sam and Dora married &mdash; cousins who'd courted almost entirely by letter across an ocean for a decade. No photograph of the day survives. The marriage came with real money attached: Reuven's own signed tenaim obligated him to a fifty-pound dowry, quite possibly the first real capital Sam ever had, and five years later the seed money behind the fur business he was running by 1916.</p>
+
+  <div class="cast-inline" data-person="Reuven">
+    <img src="images/reuven.png" alt="Reuven">
+    <div><div class="ci-name">Reuven</div><div class="ci-role">Dora's father</div><div class="ci-hint">Tap for his story &rarr;</div></div>
+  </div>
+
+  <div class="chapter-mark">
+    <div class="chapter-num display">3</div>
+    <div class="chapter-name">The War Years &middot; 1916</div>
+  </div>
+
+  <p class="para">By September 1916, Sam and Dora are married with children, running S. Diamondstein &amp; Co., Fur Dealers and Job Buyers, out of Fashion Street and Fournier Street in Brick Lane &mdash; home at 34 Alvington Crescent, Dalston, the earliest address this archive can attest to. It's a short chapter by letter count, but a real hinge: the courtship-at-a-distance voice of the last chapter gives way here to the provider-from-a-distance voice that defines the next decade.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-10-the-shop-sign.png" alt="Illustration: Sam's shop sign, Brick Lane, 1916">
+    <figcaption>By 1916, the young man who'd once posed as an Austrian Christian just to get hired had his own name over a shop door in Brick Lane.</figcaption>
+  </figure>
+
+  <p class="para">Once, history simply walks into an ordinary letter home. Sam mentions that he and his friend John watched a German Zeppelin shot down over London &mdash; &ldquo;it was a fine sight&rdquo; &mdash; then returns to asking after the kiddies at the seaside, in the very same paragraph.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-11-the-zeppelin.png" alt="Illustration: the Cuffley Zeppelin shot down over London, 1916">
+    <figcaption>The Cuffley Zeppelin, mentioned in the same breath as the weather and the kiddies.</figcaption>
+  </figure>
+
+  <div class="cast-inline" data-person="John Felkov">
+    <img src="images/john-felkov.png" alt="John Felkov">
+    <div><div class="ci-name">John Felkov</div><div class="ci-role">Alice's husband</div><div class="ci-hint">Tap for his story &rarr;</div></div>
+  </div>
+
+  <div class="chapter-mark">
+    <div class="chapter-num display">4</div>
+    <div class="chapter-name">The Travelling Years &middot; 1919&ndash;1926</div>
+  </div>
+
+  <p class="para">Dora and the girls summer at the English seaside for weeks at a stretch &mdash; Margate, Ramsgate, Westcliff, Bournemouth &mdash; while Sam works London and buys fur on the Continent. Every summer, Dora and the girls went to the coast for weeks at a time. Every summer, Sam stayed behind in London and wrote.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-12-the-coast.png" alt="Illustration: Dora and the girls at the seaside">
+    <figcaption>Margate. Ramsgate. Westcliff. Bournemouth. Weeks at a time, summer after summer.</figcaption>
+  </figure>
+
+  <p class="para">Through these years, Sam's letters settle into a steady rhythm: a cheque folded into an envelope, then the same handful of questions about the children, the weather, whether they're behaving &mdash; asked and answered, week after week, for the better part of a decade.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-13-weekly-cheque.png" alt="Illustration: the weekly cheque and letter home">
+    <figcaption>The same handful of questions, asked and answered, for years.</figcaption>
+  </figure>
+
+  <p class="para">The business, meanwhile, becomes genuinely wealthy. By the 1920s Sam is buying pelts by the thousand on regular trips to Paris and Leipzig &mdash; ninety stone martens and three thousand dyed moles in a single afternoon, at a steep markup over what he'd sell them for back home. The boy who once earned twenty-five cents a day in Montreal was, twenty years on, moving more money in an afternoon than most of Montreal ever paid him in a year.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-14-furs-by-the-thousand.png" alt="Illustration: buying furs by the thousand in Paris">
+    <figcaption>Ninety stone martens. Three thousand dyed moles. One day's purchase.</figcaption>
+  </figure>
+
+  <p class="para">Not every trip was just business. In January 1923, Sam's sister Sonia was hospitalized for an operation in Leipzig while he happened to be there buying stock &mdash; one of the few moments in the archive where family and trade share the same page.</p>
+
+  <div class="cast-inline" data-person="Sonia">
+    <img src="images/sonia.png" alt="Sonia">
+    <div><div class="ci-name">Sonia</div><div class="ci-role">Sam's sister</div><div class="ci-hint">Tap for her story &rarr;</div></div>
+  </div>
+
+  <p class="para">The daughters, meanwhile, grow into correspondents of their own. From a Bournemouth boarding house in December 1923, one of them writes home about a card game, needling her father for a promised five-pound note &mdash; one of the only letters in this whole archive written in a child's own voice, not Sam's.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-16-pontoon-bournemouth.png" alt="Illustration: a daughter's letter home from Bournemouth">
+    <figcaption>&ldquo;But you know Mummy &mdash; she kept arguing until they let her have them for one shilling and threepence each.&rdquo;</figcaption>
+  </figure>
+
+  <div class="cast-inline" data-person="Gladys">
+    <img src="images/gladys.png" alt="Gladys">
+    <div><div class="ci-name">Gladys</div><div class="ci-role">Eldest daughter</div><div class="ci-hint">Tap for her story &rarr;</div></div>
+  </div>
+
+  <p class="para">Not every plan came off. In December 1924, Dora backed out of buying a house; Sam took it in stride &mdash; and, in the very same letter, swore the family to secrecy about his own goods purchases.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-15-house-that-got-away.png" alt="Illustration: the house that got away">
+    <figcaption>&ldquo;Better luck next time.&rdquo;</figcaption>
+  </figure>
+
+  <div class="chapter-mark">
+    <div class="chapter-num display">5</div>
+    <div class="chapter-name">What the Letters Don't Say</div>
+  </div>
+
+  <p class="para">Not every part of this story is in what the letters say. Some of the most telling moments here are in what they don't.</p>
+
+  <p class="para">Of the letters in this archive, Sam is the confirmed author of at least 82. Not one is written by Dora herself. Her side of a decade of daily correspondence, and years more after that, simply doesn't survive &mdash; if it was ever kept at all.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-18-empty-chair.png" alt="Illustration: the empty chair, Dora's absent voice">
+    <figcaption>Every seat at the table is full except Dora's own voice.</figcaption>
+  </figure>
+
+  <p class="para">Twice, a dozen years apart, Sam learns how Dora is really doing only through someone else &mdash; her father Reuven during their courtship, her sister Sarah after they were married. In the whole surviving archive, her own feelings never once reach him directly.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-19-third-party.png" alt="Illustration: news of Dora relayed through a third party">
+    <figcaption>&ldquo;Father writes that you are very sad.&rdquo;</figcaption>
+  </figure>
+
+  <div class="cast-inline" data-person="Sarah Nygate">
+    <img src="images/sarah-nygate.png" alt="Sarah Nygate">
+    <div><div class="ci-name">Sarah Nygate</div><div class="ci-role">Dora's sister</div><div class="ci-hint">Tap for her story &rarr;</div></div>
+  </div>
+
+  <p class="para">Nearly one letter in five that Sam wrote to Dora opens the same way: surprise, or hurt, that nothing arrived from her. The silence itself became its own kind of news between them.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-20-no-letter-from-you.png" alt="Illustration: Sam waiting for a letter that never comes">
+    <figcaption>A fifth of this entire archive is, in some part, about the act of correspondence itself.</figcaption>
+  </figure>
+
+  <p class="para">From 1922 into the late 1930s, sixteen of Sam's letters home are written from Leipzig, Berlin, and Hanover &mdash; the exact years of the Weimar collapse and the Nazi rise to power. Every one of them talks about hotels, prices, and missing home. Not one mentions politics at all.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-21-silence-over-germany.png" alt="Illustration: Sam writing home from Germany, silent on politics">
+    <figcaption>Sixteen letters from Germany, c.1922&ndash;the late 1930s &mdash; uniformly silent on what was coming.</figcaption>
+  </figure>
+
+  <p class="para">Every dated item in this archive after 1926 is a bank cheque or an official notice, addressed to Sam or Dora by their bureaucratic names &mdash; never a letter in anyone's own hand. For twenty-five years, this archive let Sam speak for himself. For its last stretch, all that's left is what he owed and spent.</p>
+
+  <figure class="inline-figure">
+    <img src="images/scene-22-cheque-not-a-voice.png" alt="Illustration: a bank cheque, the archive's final years">
+    <figcaption>A cheque, not a voice &mdash; the archive's last twenty-five years.</figcaption>
+  </figure>
+
+</article>
+
+<div class="demo-end">
+  <p>That's the whole arc &mdash; Prologue through the Courtship, the War Years, the Travelling Years, and what the letters don't say. See <a href="journey.html">Follow the Journey</a> for all five maps with their full context, <a href="letters.html">Every Letter</a> for the full archive, or <a href="index.html#doors">go back to the start</a>.</p>
+</div>
+
+<button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
+<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""></div>
+
+<div class="overlay" id="person-overlay">
+  <div class="person-modal">
+    <button class="close-btn" id="person-modal-close">&times;</button>
+    <div class="pm-top">
+      <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div>
+        <div class="pm-name" id="pm-name"></div>
+        <div class="pm-dates mono" id="pm-dates"></div>
+        <div class="pm-role" id="pm-role"></div>
+      </div>
+    </div>
+    <div class="pm-bio" id="pm-bio"></div>
+    <div class="pm-letters-label" id="pm-letters-label"></div>
+    <div id="pm-letters-list"></div>
+  </div>
+</div>
+
+<div class="overlay" id="letter-overlay">
+  <div class="letter-modal">
+    <button class="close-btn" id="letter-modal-close">&times;</button>
+    <div class="lm-date mono" id="lm-date"></div>
+    <div class="lm-title" id="lm-title"></div>
+    <div class="lm-scan" id="lm-scan"></div>
+    <div class="lm-translation" id="lm-translation"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const overlay = document.getElementById('zoom-overlay');
+  const overlayImg = document.getElementById('zoom-overlay-img');
+  const closeBtn = document.getElementById('zoom-close');
+
+  function openZoom(src, alt) {
+    overlayImg.src = src;
+    overlayImg.alt = alt || '';
+    overlay.classList.add('open');
+    closeBtn.style.display = 'flex';
+  }
+  function closeZoom() {
+    overlay.classList.remove('open');
+    closeBtn.style.display = 'none';
+  }
+
+  document.querySelectorAll('figure.inline-figure img, figure.map-figure img').forEach(img => {
+    img.addEventListener('click', () => openZoom(img.src, img.alt));
+  });
+  overlay.addEventListener('click', closeZoom);
+  closeBtn.addEventListener('click', closeZoom);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+})();
+
+(function() {
+  const people = {
+    "Reuven": { img: "images/reuven.png", dates: "b. c.1850 &ndash; d. 1934", role: "Dora's father",
+      bio: "Simultaneously Sam's own paternal uncle &mdash; making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam's marriage.",
+      letters: ["A Hard Plan"] },
+    "Yehuda-Leib": { img: "images/yehuda-leib.png", dates: "b. unknown &ndash; d. 27 Aug 1929", role: "Dora's brother",
+      bio: "Emigrated to Jerusalem. Died during the 1929 Palestine Riots &mdash; severely wounded in the Arab attack on the Diskin Orphanage, Givat Shaul, and died four days later. His son Avraham later adopted the surname &ldquo;Yahalomi&rdquo; &mdash; Hebrew for &ldquo;diamond.&rdquo; Not known from any letter &mdash; from the family's own biographical account of him.",
+      letters: [] },
+    "John Felkov": { img: "images/john-felkov.png", dates: "b. unknown &ndash; d. unknown", role: "Alice's husband",
+      bio: "Sam's close companion in the 1916 letters &mdash; watched the Cuffley Zeppelin fall together.",
+      letters: ["The Zeppelin, Again"] },
+    "Sonia": { img: "images/sonia.png", dates: "b. c.1893 &ndash; d. 1986", role: "Sam's sister",
+      bio: "Hospitalized for an operation in Leipzig/Berlin, January 1923, while Sam was there on a fur-buying trip.",
+      letters: ["My Sister's Operation"] },
+    "Gladys": { img: "images/gladys.png", dates: "b. 1913 &ndash; d. 1951", role: "Eldest daughter",
+      bio: "Passed a piano exam at 12, left school in 1925 with a glowing reference &mdash; &ldquo;keen, intelligent, and well-behaved.&rdquo; Married 1934; died at about 38.",
+      letters: ["Pontoon at Bournemouth"] },
+    "Sarah Nygate": { img: "images/sarah-nygate.png", dates: "b. c.1896 &ndash; d. 1968", role: "Dora's sister",
+      bio: "A trusted go-between for news of the girls &mdash; &ldquo;Auntie Sarah&rdquo; in several letters.",
+      letters: ["Three Pounds Enclosed"] }
+  };
+
+  const letters = {
+    "A Hard Plan": { date: "c. 1907–1908", img: "images/1907-mr-dean-montreal.jpeg",
+      translation: "My dear uncle Reuben,\n\nI hope this finds you living well, in good health, and thriving in everything, from the bottom of my heart.\n\nDear uncle, the fur trade is not the best here. As for our plan, it is, sadly, a hard one. When you have no money, there is nothing at all you can do. As I wrote in the first letter — once things change for me, I'll write you more plainly.\n\nStay well. From me, your nephew.\n\nWarm regards to everyone — to him and his wife, and to the others with their wives, and to the Applestein family — to you all, our love, in one word: to every last one of you." },
+    "The Zeppelin, Again": { date: "3 Sep 1916", img: "images/1916-zeppelin-again.jpeg",
+      translation: "[Letterhead:] S. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam" },
+    "My Sister's Operation": { date: "3 Jan 1923", img: "images/1923-leipzig.jpeg",
+      translation: "Hotel der Kaiserhof, Robert Börner — Leipzig\nLeipzig, 3 January 1923\n\nMy dear Dora Kiddies,\n\nJust a line to tell you I am quite well, in the best of health. I arrived in Leipzig on Tuesday morning. Business is very hard to do. I will stay here until Saturday morning, then I will go to Berlin, as my sister has to undergo an operation, so I will wait for a few days to see how she comes through it. I do expect to be home for next Saturday week, about the 12th or 14th of January. Sonia is with me in Leipzig for the few days I am here, as Marie also went home last week. There is no more news.\n\nI remain your loving husband and dad,\nSam" },
+    "Pontoon at Bournemouth": { date: "29 Dec 1923", img: "images/1923-bournemouth.jpeg",
+      translation: "[Letterhead — 'BERACHAH,' a high-class boarding establishment. Proprietors: Mr. & Mrs. Grossman. Full sea views, south aspect. Phone 2890. 7 Kerley Road, West Cliff, Bournemouth. Book to West Station.]\n\nDecember 29th, 1923\n\nDear Daddy,\n\nWe received your letter and the money this morning, and Mummy is quite satisfied with the new place, because we don't have to walk far before we come to the seafront. At Bress's we used to play \"pontoon,\" and at first Gladys and I won a shilling each; and on the third night I was banker three times and won three shillings and threepence. For a Christmas present, Mummy bought us a silver thimble each for a shilling, and a bracelet costing 2s. 11½d. But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each. I hope you have not forgotten what you promised us for a Christmas present; in case you have, I'll just remind you: it was a five-pound note each.\n\nDear Daddy, a Yiddish phrase here, unreadable — because we have not written to you, as the posts are very odd Christmas week. Today it was simply scorching, and I would have gone in to bathe if I had had a costume, and Mummy would have let me. This afternoon we went into the Winter Gardens and saw our pennyworth — it was simply lovely (in its dreams!). Will you write and say whether you are going to your weekly boxing match regularly? Please excuse the writing, as I have got a rotten pen. Gladys is getting on splendidly, and we are having a ripping time [...]" },
+    "Three Pounds Enclosed": { date: "1 Sep 1916", img: "images/1916-business.jpeg",
+      translation: "Diamondstein & Co.\nFur Dealers and Job Buyers — Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 1, 1916\n\nDear Dora and darling kiddies,\n\nSorry I did not write to you on Sunday, as I could not get stamps. I am glad to know that you and the children are improving. Alice tells me that you are growing fat and in height, and I am glad to hear that Gladys has become straight, and that the baby is improving well.\n\nI will write to you when I will be coming down. Tell Sarah that I spoke to Father and he will send her £1 tomorrow. He is busy down the West End every evening.\n\nEnclosed you will find three pounds.\n\nYour loving husband,\nDad" }
+  };
+
+  const personOverlay = document.getElementById('person-overlay');
+  const letterOverlay = document.getElementById('letter-overlay');
+
+  function openLetterModal(title) {
+    const l = letters[title];
+    if (!l) return;
+    document.getElementById('lm-date').textContent = l.date;
+    document.getElementById('lm-title').textContent = title;
+    document.getElementById('lm-scan').innerHTML = `<img src="${l.img}" alt="${title}">`;
+    document.getElementById('lm-translation').textContent = l.translation;
+    letterOverlay.classList.add('open');
+  }
+
+  function openPersonModal(name) {
+    const p = people[name];
+    if (!p) return;
+    document.getElementById('pm-photo').src = p.img;
+    document.getElementById('pm-photo').alt = name;
+    document.getElementById('pm-name').textContent = name;
+    document.getElementById('pm-dates').innerHTML = p.dates;
+    document.getElementById('pm-role').textContent = p.role;
+    document.getElementById('pm-bio').innerHTML = p.bio;
+    const labelEl = document.getElementById('pm-letters-label');
+    const listEl = document.getElementById('pm-letters-list');
+    if (p.letters.length === 0) {
+      labelEl.textContent = '';
+      listEl.innerHTML = `<div class="pm-no-letters">No letters in this sample &mdash; see the <a href="letters.html" style="color:var(--rust);">full archive</a></div>`;
+    } else {
+      labelEl.textContent = `Appears in (${p.letters.length})`;
+      listEl.innerHTML = p.letters.map(t =>
+        `<button class="pm-letter-item" data-title="${t}">${t} &rarr;</button>`
+      ).join('');
+      listEl.querySelectorAll('.pm-letter-item').forEach(btn => {
+        btn.addEventListener('click', () => openLetterModal(btn.dataset.title));
+      });
+    }
+    personOverlay.classList.add('open');
+  }
+  document.querySelectorAll('.cast-inline').forEach(el => {
+    el.addEventListener('click', () => openPersonModal(el.dataset.person));
+  });
+  document.getElementById('person-modal-close').addEventListener('click', () => personOverlay.classList.remove('open'));
+  personOverlay.addEventListener('click', (e) => { if (e.target === personOverlay) personOverlay.classList.remove('open'); });
+  document.getElementById('letter-modal-close').addEventListener('click', () => letterOverlay.classList.remove('open'));
+  letterOverlay.addEventListener('click', (e) => { if (e.target === letterOverlay) letterOverlay.classList.remove('open'); });
+})();
+</script>
+
+</body>
+</html>

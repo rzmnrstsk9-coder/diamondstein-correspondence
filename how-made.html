@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How This Was Made — The Diamondstein Correspondence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: var(--ink); color: #fff; }
+  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
+  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+
+  .head { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem 1rem; text-align: center; }
+  .head p.kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.8rem; }
+  .head h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 1rem; }
+  .head p.sub { font-size: 1.05rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
+
+  .phase-label { max-width: 780px; margin: 3.5rem auto 0; padding: 0 1.5rem; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rust); }
+  .phase-sub { max-width: 620px; margin: 0.6rem auto 0; padding: 0 1.5rem; text-align: center; font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.65); }
+  .steps { max-width: 780px; margin: 3rem auto; padding: 0 1.5rem; }
+  .step { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; }
+  .step-num { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; background: var(--rust); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; }
+  .step-body { flex: 1; padding-top: 0.3rem; }
+  .step-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.25rem; margin-bottom: 0.5rem; }
+  .step-text { font-size: 0.98rem; line-height: 1.7; color: rgba(26,26,26,0.78); }
+  .step-example { margin-top: 0.9rem; background: #fff; border-radius: 10px; padding: 0.9rem 1.1rem; font-size: 0.86rem; line-height: 1.6; color: rgba(26,26,26,0.65); border-left: 3px solid var(--navy); }
+  .step-example b { color: var(--navy); }
+  .connector { width: 2px; background: rgba(0,0,0,0.1); margin: 0 auto -1.5rem; height: 1.5rem; }
+
+  .principles { max-width: 780px; margin: 0 auto 5rem; padding: 0 1.5rem; }
+  .principles h2 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; text-align: center; margin-bottom: 2rem; }
+  .principle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+  .principle-card { background: #fff; border-radius: 12px; padding: 1.3rem 1.4rem; border: 1px solid rgba(0,0,0,0.06); }
+  .principle-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--rust); }
+  .principle-body { font-size: 0.86rem; line-height: 1.55; color: rgba(26,26,26,0.7); }
+
+  .method-figure { max-width: 900px; margin: 2.5rem auto 0; padding: 0 1.5rem; }
+  .method-figure img { width: 100%; border-radius: 14px; display: block; box-shadow: 0 20px 50px rgba(0,0,0,0.12); }
+  .method-figure figcaption { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.45); text-align: center; margin-top: 0.9rem; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="index.html#doors">&larr; Back to start</a>
+  <span class="crumb">How This Was Made</span>
+</div>
+
+<div class="head">
+  <p class="kicker">An Experiment in AI-Assisted Genealogical Research</p>
+  <h1 class="display">How This Was Made</h1>
+  <p class="sub">This project is two things at once: the recovered story of Sam and Dora, and a real, honest test of whether AI tools can be trusted to help with family history research at all. No one left in the family reads Yiddish well enough to check this alone &mdash; so here's exactly how we made sure nothing got made up.</p>
+</div>
+
+<figure class="method-figure">
+  <img src="images/how-made-illustration.png" alt="Illustration: three independent readings of a letter, compared under a magnifying glass, alongside family photographs">
+  <figcaption>Three separate readings of the same page, compared side by side, before a family member has the final say.</figcaption>
+</figure>
+
+<div class="phase-label">Phase One &mdash; Getting the Words Right</div>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Scan it first</div>
+      <div class="step-text">Every letter and postcard was scanned first, before anything else happened to it. That scan is the one fixed, unarguable thing in this whole project &mdash; every fact on this site has to trace back to it.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Read it three times, separately</div>
+      <div class="step-text">Each page was read independently by three different tools, without letting them see each other's answers first. That independence matters: if all three land on the same reading without coordinating, it's a much stronger sign the reading is actually right, not just repeated.</div>
+      <div class="step-example"><b>Why it matters:</b> a lot of this correspondence is badly damaged &mdash; faded ink, torn pages, garbled Yiddish handwriting. A single reading, however confident it sounds, can quietly be wrong. Three independent readings expose that.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Compare the answers</div>
+      <div class="step-text">Where all three readings agreed, we trust it and move on. Where they didn't &mdash; and on the worst-damaged pages, they often didn't &mdash; we show both readings side by side and say so plainly, instead of quietly picking the one that sounds better.</div>
+      <div class="step-example"><b>What this looks like on the page:</b> phrases like &ldquo;[illegible]&rdquo; or notes that a name or date is uncertain aren't a formatting choice &mdash; they're the honest record of what the source actually supports.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">A person checks it</div>
+      <div class="step-text">A family member read every single letter in this archive, fixed anything a computer couldn't know &mdash; a family nickname, a local street, a relative's face in a photo &mdash; and approved what you see on this site. Nothing here is published un-reviewed.</div>
+    </div>
+  </div>
+</div>
+
+<div class="phase-label">Phase Two &mdash; Turning Verified Letters Into a Story</div>
+<p class="phase-sub">Getting an honest translation is only half the job. The letters also had to become a story &mdash; connected across decades, explained where they assume things a modern reader wouldn't know, and honest about which parts are solid and which are educated guesses.</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">Put everything in order</div>
+      <div class="step-text">Every letter and document was dated as precisely as the evidence allowed, then grouped into the eras you see on this site &mdash; the Courtship, the War Years, the Travelling Years &mdash; based on where Sam was actually writing from and what he was doing, not by assumption.</div>
+      <div class="step-example"><b>Where a date wasn't certain:</b> the site says so directly &mdash; &ldquo;c. 1907&ndash;1908&rdquo; means a best estimate, not a known fact dressed up to look precise.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <div class="step-title">Bring in outside history, clearly labeled</div>
+      <div class="step-text">Some of what makes the letters make sense isn't in the letters at all &mdash; what the Panic of 1907 actually was, how emigration routes worked, why a Yiddish-speaking family would leave the Pale of Settlement. That's real historical research, brought in on purpose and clearly marked as background &mdash; never blended into what the letters themselves say.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <div class="step-title">Look for patterns across the whole archive</div>
+      <div class="step-text">Some of this site's biggest findings aren't from any single letter &mdash; they only show up when you count across all of them: how many surviving letters are in Sam's hand versus Dora's (none of hers survive, though Sam's own letters make clear she wrote back &mdash; "I received your letter" &mdash; so this is about what was kept, not what existed), how many open with some version of &ldquo;no letter from you,&rdquo; which years have almost nothing at all. These are measurable facts about the collection itself, not interpretation.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <div class="step-title">Flag the guesses as guesses</div>
+      <div class="step-text">Where the story connects two things that no letter actually states outright &mdash; like whether the wedding dowry became the seed money for Sam's fur business &mdash; that connection is labeled as speculation, not fact. Family memory (a name from a family tree, a date recalled by a living relative) gets used too, but always held at a lower confidence than an actual document, and never silently upgraded into one.</div>
+    </div>
+  </div>
+</div>
+
+<div class="principles">
+  <h2 class="display">Three Rules That Shaped Everything</h2>
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="principle-title">The scan is ground truth</div>
+      <div class="principle-body">Every claim on this site &mdash; every date, every name, every quote &mdash; has to trace back to a scanned page, a family tree record, or named family testimony. If it can't, it doesn't get stated as fact.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-title">Honesty over fluency</div>
+      <div class="principle-body">It would be easy to smooth over the gaps and write confident, tidy prose. We didn't. Where the letters are ambiguous, this site stays ambiguous too &mdash; uncertainty is preserved, not polished away.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-title">Rigor builds the archive; a person tells the story</div>
+      <div class="principle-body">The full, honest record behind this site is exhaustive on purpose. But the story you actually read &mdash; what's featured, in what order, in whose voice &mdash; is a family member's own editorial retelling of that record, not a claim that anything left out is untrue.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

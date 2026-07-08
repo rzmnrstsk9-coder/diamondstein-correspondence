@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Meet the Family — The Diamondstein Correspondence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: var(--ink); color: #fff; }
+  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
+  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+
+  .head { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem 1rem; text-align: center; }
+  .head p.kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.8rem; }
+  .head h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 1rem; }
+  .head p.sub { font-size: 1.02rem; line-height: 1.65; color: rgba(26,26,26,0.7); margin-bottom: 1rem; }
+
+  .featured-section { background: var(--cream-dim); border-radius: 24px; max-width: 980px; margin: 0 auto 4rem; padding: 3rem 2rem 2.75rem; }
+  .featured-kicker { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 2rem; }
+  .featured-row { display: flex; justify-content: center; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+  .featured-person { text-align: center; cursor: pointer; }
+  .featured-person img { width: 210px; height: 210px; border-radius: 16px; object-fit: cover; display: block; margin: 0 auto 1.1rem; box-shadow: 0 20px 44px rgba(0,0,0,0.18); border: 4px solid #fff; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+  .featured-person:hover img { transform: translateY(-5px); box-shadow: 0 26px 54px rgba(0,0,0,0.24); border-color: var(--rust); }
+  .featured-person:hover .fp-name { color: var(--rust); }
+  .fp-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.6rem; transition: color 0.15s ease; }
+  .fp-role { font-size: 0.85rem; color: var(--rust); font-weight: 600; margin-top: 0.3rem; }
+  .fp-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.5); margin-top: 0.35rem; }
+  .featured-connector { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 0 0.5rem; }
+  .featured-connector .amp { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2.75rem; color: var(--rust); line-height: 1; }
+  .featured-connector .married-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: rgba(26,26,26,0.45); text-align: center; white-space: nowrap; }
+
+  .daughters-section { max-width: 900px; margin: 0 auto 3.5rem; padding: 0 1.5rem; }
+  .daughters-kicker { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(26,26,26,0.4); margin-bottom: 1.25rem; }
+  .daughters-row { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+  .daughter-card { text-align: center; cursor: pointer; width: 150px; }
+  .daughter-card img { width: 150px; height: 150px; border-radius: 14px; object-fit: cover; display: block; margin: 0 auto 0.7rem; box-shadow: 0 10px 24px rgba(0,0,0,0.1); border: 3px solid transparent; transition: transform 0.15s ease, border-color 0.15s ease; }
+  .daughter-card:hover img { transform: translateY(-3px); border-color: var(--rust); }
+  .daughter-card:hover .dc-name { color: var(--rust); }
+  .dc-name { font-weight: 700; font-size: 1rem; transition: color 0.15s ease; }
+  .dc-role { font-size: 0.78rem; color: rgba(26,26,26,0.5); }
+
+  .cast-sections { display: flex; justify-content: center; gap: 3rem; max-width: 1100px; margin: 0 auto 5rem; padding: 0 1.5rem; flex-wrap: wrap; }
+  .cast-group { flex: 1 1 380px; max-width: 460px; }
+  .cast-group-kicker { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(26,26,26,0.4); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .cast-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1.5rem; }
+  .cast-card { text-align: center; cursor: pointer; }
+  .cast-card img { width: 100%; aspect-ratio: 1; border-radius: 12px; object-fit: cover; display: block; margin-bottom: 0.6rem; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border: 3px solid transparent; transition: transform 0.15s ease, border-color 0.15s ease; }
+  .cast-card:hover img { transform: translateY(-3px); border-color: var(--rust); }
+  .cast-card:hover .cc-name { color: var(--rust); }
+  .cc-name { font-weight: 600; font-size: 0.92rem; transition: color 0.15s ease; }
+  .cc-role { font-size: 0.76rem; color: rgba(26,26,26,0.5); }
+
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(10,8,6,0.72); z-index: 100; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .overlay.open { display: flex; }
+  .person-modal { background: #fff; border-radius: 16px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .close-btn { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(26,26,26,0.5); line-height: 1; }
+  .close-btn:hover { color: var(--ink); }
+  .pm-top { display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; }
+  .pm-photo { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+  .pm-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; }
+  .pm-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
+  .pm-role { font-size: 0.86rem; color: var(--rust); font-weight: 600; margin-top: 0.3rem; }
+  .pm-bio { font-size: 0.94rem; line-height: 1.65; color: rgba(26,26,26,0.85); margin-bottom: 1.2rem; }
+  .pm-bio a { color: var(--rust); }
+  .pm-letters-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(26,26,26,0.45); margin-bottom: 0.6rem; }
+  .pm-letter-item { display: block; width: 100%; text-align: left; font-size: 0.86rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); background: none; border-left: none; border-right: none; border-top: none; cursor: pointer; font-family: 'Inter', sans-serif; color: var(--ink); }
+  .pm-letter-item:last-child { border-bottom: none; }
+  .pm-letter-item:hover { color: var(--rust); }
+  .pm-letter-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--navy); }
+
+  #letter-overlay { z-index: 110; }
+  .letter-modal { background: var(--cream); border-radius: 16px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .letter-modal .close-btn { position: absolute; top: 0.8rem; right: 1rem; }
+  .lm-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
+  .lm-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; margin-bottom: 1rem; }
+  .lm-scan-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: rgba(26,26,26,0.4); margin-bottom: 1rem; font-style: italic; }
+  .lm-scan img { width: 100%; border-radius: 8px; margin-bottom: 1.2rem; display: block; }
+  .lm-translation { font-size: 0.92rem; line-height: 1.7; white-space: pre-wrap; color: rgba(26,26,26,0.85); }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="index.html#doors">&larr; Back to start</a>
+  <span class="crumb">Meet the Family</span>
+</div>
+
+<div class="head">
+  <p class="kicker">The Cast</p>
+  <h1 class="display">Meet the Family</h1>
+  <p class="sub">Everyone who appears in these 141 letters and postcards. Click anyone for their story and the letters they appear in.</p>
+</div>
+
+<div class="featured-section">
+  <p class="featured-kicker">The Correspondence's Central Couple</p>
+  <div class="featured-row" id="featured-row"></div>
+</div>
+
+<div class="daughters-section">
+  <p class="daughters-kicker">Their Three Daughters</p>
+  <div class="daughters-row" id="daughters-row"></div>
+</div>
+
+<div class="cast-sections">
+  <div class="cast-group">
+    <p class="cast-group-kicker">Sam's Family</p>
+    <div class="cast-grid" id="sam-family-grid"></div>
+  </div>
+  <div class="cast-group">
+    <p class="cast-group-kicker">Dora's Family</p>
+    <div class="cast-grid" id="dora-family-grid"></div>
+  </div>
+</div>
+
+<div class="overlay" id="person-overlay">
+  <div class="person-modal">
+    <button class="close-btn" id="modal-close">&times;</button>
+    <div class="pm-top">
+      <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div>
+        <div class="pm-name" id="pm-name"></div>
+        <div class="pm-dates mono" id="pm-dates"></div>
+        <div class="pm-role" id="pm-role"></div>
+      </div>
+    </div>
+    <div class="pm-bio" id="pm-bio"></div>
+    <div class="pm-letters-label" id="pm-letters-label"></div>
+    <div id="pm-letters-list"></div>
+  </div>
+</div>
+
+<div class="overlay" id="letter-overlay">
+  <div class="letter-modal">
+    <button class="close-btn" id="letter-modal-close">&times;</button>
+    <div class="lm-date mono" id="lm-date"></div>
+    <div class="lm-title" id="lm-title"></div>
+    <div class="lm-scan" id="lm-scan"></div>
+    <div class="lm-translation" id="lm-translation"></div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const people = {
+    "Sam": { img: "sam.png", dates: "b. c.1880/1882 &ndash; d. 1978", role: "Husband, letter-writer, our primary source",
+      bio: "Emigrated Korsovka &rarr; Montreal (1901), then London for good after 1908; ran a fur business and wrote home constantly from business trips. Sam is the confirmed author of at least 82 of the 141 items in this archive &mdash; by far its dominant voice.",
+      letters: ["The Austrian Christian Ruse", "The Panic of 1907", "The Decision", "Three Pounds Enclosed", "The Zeppelin, Again", "Dancing at Maxine's", "The House That Got Away", "Eight Pounds"] },
+    "Dora": { img: "dora.png", dates: "b. 1889 &ndash; d. 1984", role: "Wife, first cousin, recipient",
+      bio: "Held down the London household and three daughters through Sam's long absences; summered at the seaside with the girls most years. Not one letter in the surviving archive is confirmed as written in Dora's own hand.",
+      letters: [] },
+    "Gladys": { img: "gladys.png", dates: "b. 1913 &ndash; d. 1951", role: "Eldest daughter",
+      bio: "Passed a piano exam at 12, left school in 1925 with a glowing reference &mdash; &ldquo;keen, intelligent, and well-behaved.&rdquo; Married 1934; died at about 38.",
+      letters: ["Get Well Soon, Mummy", "Pontoon at Bournemouth"] },
+    "Beatrice": { img: "beatrice.png", dates: "b. unknown &ndash; d. unknown", role: "Middle daughter (&ldquo;Beaty&rdquo;)",
+      bio: "The liveliest voice in the corpus &mdash; wins at pontoon, bargains over a Christmas thimble, signs one letter &ldquo;Burglar Bill.&rdquo; Hilary's mother.",
+      letters: ["A Camera for Beatrice"] },
+    "Cynthia": { img: "cynthia.png", dates: "b. unknown &ndash; d. unknown", role: "Youngest daughter",
+      bio: "Only appears from 1924 on &mdash; once mixed up with Beatrice mid-letter by her own father, writing from abroad.",
+      letters: ["How Is Cynthia?"] },
+    "Getzel": { img: "getzel.png", dates: "b. c.1857 &ndash; d. 1890", role: "Sam's father",
+      bio: "Died in Korsovka at about 33, when Sam was 8&ndash;10 years old. Never appears in the letters himself.",
+      letters: [] },
+    "Deborah Tomshinsky (unconfirmed)": { img: "deborah-tomshinsky.png", dates: "b. unknown &ndash; d. unknown", role: "Sam's mother",
+      bio: "Likely died in Latvia before Sam emigrated. &ldquo;Deborah Tomshinsky&rdquo; is an unverified name from one family-tree chart &mdash; not confirmed elsewhere.",
+      letters: [] },
+    "Sonia": { img: "sonia.png", dates: "b. c.1893 &ndash; d. 1986", role: "Sam's sister",
+      bio: "Hospitalized for an operation in Leipzig/Berlin, January 1923, while Sam was there on a fur-buying trip.",
+      letters: ["My Sister's Operation"] },
+    "Reuven": { img: "reuven.png", dates: "b. c.1850 &ndash; d. 1934", role: "Dora's father",
+      bio: "Simultaneously Sam's own paternal uncle &mdash; making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam's marriage.",
+      letters: ["A Hard Plan"] },
+    "Hinde": { img: "hinde.png", dates: "b. unknown &ndash; d. unknown", role: "Dora's mother",
+      bio: "Named once in the whole corpus &mdash; &ldquo;to my dear uncle Reuben&hellip; and to Hinde.&rdquo;",
+      letters: [] },
+    "Yehuda-Leib": { img: "yehuda-leib.png", dates: "b. unknown &ndash; d. 27 Aug 1929", role: "Dora's brother",
+      bio: "Emigrated to Jerusalem. Died during the 1929 Palestine Riots &mdash; severely wounded in the Arab attack on the Diskin Orphanage, Givat Shaul, and died four days later. His son Avraham later adopted the surname &ldquo;Yahalomi&rdquo; &mdash; Hebrew for &ldquo;diamond.&rdquo; Not known from any letter &mdash; from the family's own biographical account of him.",
+      letters: [] },
+    "Cousin Alice": { img: "alice.png", dates: "b. c.1889 &ndash; d. 1972", role: "Dora's first cousin",
+      bio: "A recurring, affectionate presence across the letters &mdash; married John Felkov in London, 1930.",
+      letters: ["The Panic of 1907", "Three Pounds Enclosed"] },
+    "John Felkov": { img: "john-felkov.png", dates: "b. unknown &ndash; d. unknown", role: "Alice's husband",
+      bio: "Sam's close companion in the 1916 letters &mdash; watched the Cuffley Zeppelin fall together.",
+      letters: ["The Zeppelin, Again"] },
+    "Sarah Nygate": { img: "sarah-nygate.png", dates: "b. c.1896 &ndash; d. 1968", role: "Dora's sister",
+      bio: "A trusted go-between for news of the girls &mdash; &ldquo;Auntie Sarah&rdquo; in several letters.",
+      letters: ["Three Pounds Enclosed"] }
+  };
+
+  const letters = {
+    "The Austrian Christian Ruse": { date: "11 Jun 1901", img: "images/1901-montreal.jpeg", translation: "Montreal, 11 June 1901\n\nDear Darling Dora,\n\nI'm very surprised that I didn't get a letter from you today. I don't know — maybe I'll get one from you tomorrow. I'd half expected to have it today. Anyway, dear Dora, let me write you a little news.\n\nYou know how it is in a new country — you're a bit of a greenhorn, and it's hard to find work. But what can you do. Well, walking down the street yesterday, I saw that they needed workers to be sent off to some job away from the city. When I asked, they told me they don't take any Englishmen. So I said I was an Austrian Christian — and they took me. Seeing how glad everyone who got hired was to have work, I thought to myself that I'm a little uneasy because they don't take any Jews either. You had to pay a small amount right there in the office when you took the contract. Reading it over, it looked fine at first — it reads well — but going over it again, I saw that I'd have to work for nothing for two months to cover the cost of the passage, plus food.\n\nBut since I'd already bought my ticket, I wanted to leave. So today I went into the office and took back the things they had snatched from me." },
+    "The Panic of 1907": { date: "c. 1907–1908", img: "images/1907-panic.jpeg", translation: "Dear friends — the Falkovs, and you, Elis,\n\nDear friends, I am well and strong enough to do anything, but you should know that things are truly in a great panic here. The crisis has thrown people out of work by the hundreds, and I am one of them. Still, I haven't lost heart; I'll see what the times bring.\n\nWrite to me about work — whatever you hear in your circles.\n\nElis, give my regards to everyone in the family — to [name] and her family, to Yuel and his people; likewise to the father and mother, to Lion, to Betsye and the children, to Menish, to Brayne and the children, to Wolf, to Roze, to Dore, to Shori, and to all of yours. And a special hello to you all.\n\nAnd so — be well. Yours, [signature]" },
+    "The Decision": { date: "1 Aug 1908", img: "images/1908-aug-montreal.jpeg", translation: "My beloved Dorele,\n\nI received your letter yesterday, Saturday, and it hurt me a little, to my sorrow.\n\nAbout your feelings on my traveling: in your last letter — before this one — you urged me to come sooner, and now you write the opposite. My dear, I don't understand this sudden change of heart. If there's a reason, you should have written it to me. In any case, I'm telling you that next week, or perhaps the week after, I'll set out for London. I already have work lined up there, and my wages are as follows: for the first stretch I earn about a dollar for four days' work, and this week I've made around three (or three and a half) dollars. That's in English money, and there's a little more besides.\n\nIt suits me better to work through the London season, since work in London is worth more. Lately business here has been poor, and above all life here is dull and hard. If a man can make a go of the trade and something comes of it, then his future is secure — but as things stand, life here is very dry, and it isn't worth tormenting yourself over it, because I think I'll do far better in London than here." },
+    "Three Pounds Enclosed": { date: "1 Sep 1916", img: "images/1916-business.jpeg", translation: "Diamondstein & Co.\nFur Dealers and Job Buyers — Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 1, 1916\n\nDear Dora and darling kiddies,\n\nSorry I did not write to you on Sunday, as I could not get stamps. I am glad to know that you and the children are improving. Alice tells me that you are growing fat and in height, and I am glad to hear that Gladys has become straight, and that the baby is improving well.\n\nI will write to you when I will be coming down. Tell Sarah that I spoke to Father and he will send her £1 tomorrow. He is busy down the West End every evening.\n\nEnclosed you will find three pounds.\n\nYour loving husband,\nDad" },
+    "The Zeppelin, Again": { date: "3 Sep 1916", img: "images/1916-zeppelin-again.jpeg", translation: "[Letterhead:] S. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam" },
+    "Dancing at Maxine's": { date: "29 Jul 1919", img: "images/1919-mama.jpeg", translation: "Phone: Central 4432\nS. Diamondstein, Fur & Skin Dealer\n37 Fashion Street, Brick Lane, London, E. 1\n\nJuly 29, 1919\n\nDear Mama and Kiddies,\n\nYou surprise me — no letter this morning. What, have you forgotten you have left a husband all alone? You must have been having a fine time getting your dressmaking done.\n\nI wonder if you have received the parcel. I enclosed some cards, and I forgot to put the name of the Roll on them, and thought of it afterward.\n\nI went to take my dancing lesson yesterday, then had supper at Pezio's, and after that went round to Leon's and danced at Maxine's with Dora. I am doing it very well. I have also arranged to take three more lessons." },
+    "The House That Got Away": { date: "30 Dec 1924", img: "images/1924-house.jpeg", translation: "Dec 30th, 1924\n\nDear Dora and kiddies,\n\nI received your two letters today and am very sorry that you did not see your way clear to buy the house. Of course, it is no good buying a house and then being sorry for it afterward. Anyhow, better luck next time. You cannot imagine what a fuss I am made of.\n\nI am feeling quite well. The weather is fine and cold, with no snow. I have seen [dear?] all [people?] Brothers, and expect him to come from Kimoora today. I have bought a few furs. I have also wired to Fred Hutt Co. about prices and have a good reply. In here it is a bit high. Anyhow, I shall be going to Leipzig next week.\n\nDon't say anything to anybody about me buying goods, as it is not advisable. How are you all keeping? Mother is very happy about it. She looks quite well. There is no more news.\n\nI remain your loving husband and dad,\n\nSam" },
+    "Eight Pounds": { date: "11 Aug 1926", img: "images/1926-eight-pounds.jpeg", translation: "Telephone No. CLERKENWELL 5281.\nS. DIAMONDSTEIN, Furs and Skins.\nAnd at 3, Sandy's Row, Bishopsgate, E.1.\n23, Australian Avenue, Barbican, E.C.1.\nTelegraphic Address: Diamofurz, Barb, London.\n\nLondon, Aug 11 1926\n\nDear Dora & Children,\n\nEnclosed please find eight pounds. I hope it will cover your expenses; if not, write by return. I feel quite well. I hope you are keeping — fine weather, otherwise there is no news.\n\nYour devoted husband, Dad\nSam" },
+    "Get Well Soon, Mummy": { date: "13 Aug 1920", img: "images/1920-gladys-mum.jpeg", translation: "208 Amhurst Road\nHackney\nAugust 13th, 1920\n\nMy darling Mummy,\n\nI hope my letter will reach you in the best of health, and when we come to see you I hope we will be able to take you home. Dear Daddy has bought Beaty and myself a painting box, one writing pad, one bottle of ink, two pens, and two copy books. Dear Mummy, I hope you will be better soon. Don't worry, dear Mummy. Love to all, from your loving Daddy, Beaty, and Gladys.\nxxxxxxxxxxxxxxxxxxxxxxxxx" },
+    "Pontoon at Bournemouth": { date: "29 Dec 1923", img: "images/1923-bournemouth.jpeg", translation: "[Letterhead — 'BERACHAH,' a high-class boarding establishment. Proprietors: Mr. & Mrs. Grossman. Full sea views, south aspect. Phone 2890. 7 Kerley Road, West Cliff, Bournemouth. Book to West Station.]\n\nDecember 29th, 1923\n\nDear Daddy,\n\nWe received your letter and the money this morning, and Mummy is quite satisfied with the new place, because we don't have to walk far before we come to the seafront. At Bress's we used to play \"pontoon,\" and at first Gladys and I won a shilling each; and on the third night I was banker three times and won three shillings and threepence. For a Christmas present, Mummy bought us a silver thimble each for a shilling, and a bracelet costing 2s. 11½d. But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each. I hope you have not forgotten what you promised us for a Christmas present; in case you have, I'll just remind you: it was a five-pound note each.\n\nDear Daddy, a Yiddish phrase here, unreadable — because we have not written to you, as the posts are very odd Christmas week. Today it was simply scorching, and I would have gone in to bathe if I had had a costume, and Mummy would have let me. This afternoon we went into the Winter Gardens and saw our pennyworth — it was simply lovely (in its dreams!). Will you write and say whether you are going to your weekly boxing match regularly? Please excuse the writing, as I have got a rotten pen. Gladys is getting on splendidly, and we are having a ripping time [...]" },
+    "A Camera for Beatrice": { date: "15 Aug 1924", img: "images/1924-camera.jpeg", translation: "[Letterhead] S. Diamondstein — Furs & Skins\nTelephone: Clerkenwell 5281\n23 Australian Avenue, Barbican, London, E.C.1\n[stamped no.] 446\n\nAugust 15, 1924\n\nMy dear Dora and daughters,\n\nI am sending you a ten-pound cheque for Mr. Weinberg, and two pounds cash for yourself, and for Beatrice her camera to snap the fisher she is catching in bed.\n\nThere is no news of any interest to you. I have done a bit of business this week, so I am feeling better. I hope you are enjoying yourself — of course, I can leave all that to you.\n\nI am going to the theatre tonight.\n\nYour loving Dad\nx x x x + x x + x x x [kisses]" },
+    "How Is Cynthia?": { date: "c. Sep–Oct 1924", img: "images/1924-cynthia.jpeg", translation: "Dear Dora and kiddies,\n\nI arrived at Berlin on Thursday and stayed there one day. I saw a doctor, and he has put me on a diet for five days before he can examine me properly, so I have left for Leipzig. I will be here till Thursday and then go back to Berlin, and I hope to leave for home next Saturday. Meanwhile, I am feeling quite well.\n\nHow is everybody at home? Why don't you write? I have done some business in Riga, and I will try to do some at Leipzig if possible.\n\nSee Morry Sagon again, and this time, if he does not pay up, go up to my solicitor — Johnny knows where — and you can look up the ledger. I think it is since Sept 10, 1924, that he owes me £17. Summon him, and don't let them humbug you about any more.\n\nHow are the children? How is Cynthia? Have I spelled her name Beaty?\n\nYour loving husband, Dad Sam" },
+    "My Sister's Operation": { date: "3 Jan 1923", img: "images/1923-leipzig.jpeg", translation: "Hotel der Kaiserhof, Robert Börner — Leipzig\nLeipzig, 3 January 1923\n\nMy dear Dora Kiddies,\n\nJust a line to tell you I am quite well, in the best of health. I arrived in Leipzig on Tuesday morning. Business is very hard to do. I will stay here until Saturday morning, then I will go to Berlin, as my sister has to undergo an operation, so I will wait for a few days to see how she comes through it. I do expect to be home for next Saturday week, about the 12th or 14th of January. Sonia is with me in Leipzig for the few days I am here, as Marie also went home last week. There is no more news.\n\nI remain your loving husband and dad,\nSam" },
+    "A Hard Plan": { date: "c. 1907–1908", img: "images/1907-mr-dean-montreal.jpeg", translation: "My dear uncle Reuben,\n\nI hope this finds you living well, in good health, and thriving in everything, from the bottom of my heart.\n\nDear uncle, the fur trade is not the best here. As for our plan, it is, sadly, a hard one. When you have no money, there is nothing at all you can do. As I wrote in the first letter — once things change for me, I'll write you more plainly.\n\nStay well. From me, your nephew.\n\nWarm regards to everyone — to him and his wife, and to the others with their wives, and to the Applestein family — to you all, our love, in one word: to every last one of you." },
+  };
+
+  const featuredKeys = ["Sam", "Dora"];
+  const daughterKeys = ["Gladys", "Beatrice", "Cynthia"];
+  const samFamilyKeys = ["Getzel", "Deborah Tomshinsky (unconfirmed)", "Sonia"];
+  const doraFamilyKeys = ["Reuven", "Hinde", "Yehuda-Leib", "Sarah Nygate", "Cousin Alice", "John Felkov"];
+  const featuredRow = document.getElementById('featured-row');
+  const daughtersRow = document.getElementById('daughters-row');
+  const samFamilyGrid = document.getElementById('sam-family-grid');
+  const doraFamilyGrid = document.getElementById('dora-family-grid');
+
+  featuredKeys.forEach((name, i) => {
+    const p = people[name];
+    const el = document.createElement('div');
+    el.className = 'featured-person';
+    el.dataset.person = name;
+    el.innerHTML = `<img src="images/${p.img}" alt="${name}"><div class="fp-name">${name}</div><div class="fp-role">${p.role}</div><div class="fp-dates mono">${p.dates}</div>`;
+    featuredRow.appendChild(el);
+    if (i === 0) {
+      const connector = document.createElement('div');
+      connector.className = 'featured-connector';
+      connector.innerHTML = `<div class="amp">&amp;</div><div class="married-label">married 1911<br>first cousins</div>`;
+      featuredRow.appendChild(connector);
+    }
+  });
+
+  daughterKeys.forEach(name => {
+    const p = people[name];
+    const el = document.createElement('div');
+    el.className = 'daughter-card';
+    el.dataset.person = name;
+    el.innerHTML = `<img src="images/${p.img}" alt="${name}"><div class="dc-name">${name}</div><div class="dc-role">${p.role}</div>`;
+    daughtersRow.appendChild(el);
+  });
+
+  function buildCastCard(name, grid) {
+    const p = people[name];
+    const el = document.createElement('div');
+    el.className = 'cast-card';
+    el.dataset.person = name;
+    const displayName = name.replace(' (unconfirmed)', '');
+    el.innerHTML = `<img src="images/${p.img}" alt="${displayName}"><div class="cc-name">${displayName}</div><div class="cc-role">${p.role}</div>`;
+    grid.appendChild(el);
+  }
+  samFamilyKeys.forEach(name => buildCastCard(name, samFamilyGrid));
+  doraFamilyKeys.forEach(name => buildCastCard(name, doraFamilyGrid));
+
+  const overlay = document.getElementById('person-overlay');
+  const letterOverlay = document.getElementById('letter-overlay');
+
+  function openLetterModal(title) {
+    const l = letters[title];
+    if (!l) return;
+    document.getElementById('lm-date').textContent = l.date;
+    document.getElementById('lm-title').textContent = title;
+    const scanEl = document.getElementById('lm-scan');
+    if (l.img) {
+      scanEl.innerHTML = `<img src="${l.img}" alt="${title}">`;
+    } else {
+      scanEl.innerHTML = `<div class="lm-scan-note">[scan on file, not included in this wireframe]</div>`;
+    }
+    document.getElementById('lm-translation').textContent = l.translation;
+    letterOverlay.classList.add('open');
+  }
+
+  function openPersonModal(name) {
+    const p = people[name];
+    document.getElementById('pm-photo').src = `images/${p.img}`;
+    document.getElementById('pm-name').textContent = name;
+    document.getElementById('pm-dates').innerHTML = p.dates;
+    document.getElementById('pm-role').textContent = p.role;
+    document.getElementById('pm-bio').innerHTML = p.bio;
+    const labelEl = document.getElementById('pm-letters-label');
+    const listEl = document.getElementById('pm-letters-list');
+    if (p.letters.length === 0) {
+      labelEl.textContent = '';
+      listEl.innerHTML = `<div class="mono" style="font-size:0.8rem; color:rgba(26,26,26,0.4);">No letters in this sample &mdash; see the <a href="letters.html" style="color:var(--rust);">full archive</a></div>`;
+    } else {
+      labelEl.textContent = `Appears in (${p.letters.length})`;
+      listEl.innerHTML = p.letters.map(t => `<button class="pm-letter-item" data-title="${t}">${t} &rarr;</button>`).join('');
+      listEl.querySelectorAll('.pm-letter-item').forEach(btn => {
+        btn.addEventListener('click', () => openLetterModal(btn.dataset.title));
+      });
+    }
+    overlay.classList.add('open');
+  }
+  document.querySelectorAll('.featured-person, .daughter-card, .cast-card').forEach(el => {
+    el.addEventListener('click', () => openPersonModal(el.dataset.person));
+  });
+  document.getElementById('modal-close').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+  document.getElementById('letter-modal-close').addEventListener('click', () => letterOverlay.classList.remove('open'));
+  letterOverlay.addEventListener('click', (e) => { if (e.target === letterOverlay) letterOverlay.classList.remove('open'); });
+})();
+</script>
+
+</body>
+</html>
