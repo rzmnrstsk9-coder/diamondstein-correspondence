@@ -59,6 +59,25 @@
   .person-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.08rem; }
   .person-role { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.03em; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
   .person-bio { font-size: 0.88rem; line-height: 1.6; color: rgba(26,26,26,0.72); }
+
+  /* Progressive reveal — the technical + AI-honesty detail. Sits below the people grid
+     as its own block, collapsed by default so it never interrupts the lay-audience read;
+     open for anyone curious about the machinery. */
+  .bio-more { max-width: 640px; margin: 2.5rem auto 0; background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 1.2rem 1.5rem; }
+  .bio-more[open] { padding-bottom: 1.5rem; }
+  .bio-more > summary { cursor: pointer; list-style: none; font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.03em; color: var(--navy); display: inline-flex; align-items: center; gap: 0.5rem; }
+  .bio-more > summary::-webkit-details-marker { display: none; }
+  .bio-more > summary::before { content: '\25B8'; font-size: 0.72rem; transition: transform 0.15s ease; }
+  .bio-more[open] > summary::before { transform: rotate(90deg); }
+  .bio-more > summary:hover { color: var(--rust); }
+  .bio-detail { font-size: 0.88rem; line-height: 1.7; color: rgba(26,26,26,0.72); margin-top: 1rem; }
+  .bio-detail p { margin-bottom: 0.9rem; }
+  .bio-detail p:last-child { margin-bottom: 0; }
+  .bio-detail b { color: var(--navy); font-weight: 600; }
+  .tool-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .tool-list li { padding: 0.55rem 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 0.85rem; line-height: 1.55; color: rgba(26,26,26,0.68); }
+  .tool-list li:first-child { border-top: none; }
+  .tool-list .tool-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; color: var(--rust); }
 </style>
 </head>
 <body>
@@ -191,9 +210,27 @@
           <div class="person-role">Systems architect</div>
         </div>
       </div>
-      <div class="person-bio">A Vancouver-based designer and technologist, roughly twenty-five years into building the systems behind creative work &mdash; a decade at Radical Entertainment, then directing the art of <i>Glitch</i> for the studio that became Slack, then founding studios of his own. On this project: built the pipeline and registry that turn fragile, half-legible letters into a structured, searchable archive &mdash; with one rule built into its bones: it can never present a guess as a fact.</div>
+      <div class="person-bio">A Vancouver-based designer and technologist, roughly twenty-five years into building the systems behind creative work &mdash; a decade at Radical Entertainment, then directing the art of <i>Glitch</i> for the studio that became Slack, then founding studios of his own. On this project: built the machinery that turns a box of fragile, half-legible pages into a structured, searchable archive; the rules that keep that archive honest; and the system that gives the material shape and meaning, then narrative &mdash; and ultimately an engaging, living account. One rule is built into its bones: it can never present a guess as a fact.</div>
     </div>
   </div>
+
+  <details class="bio-more">
+    <summary>How the machinery actually works &mdash; and how the AI was kept honest</summary>
+    <div class="bio-detail">
+      <p><b>First, an assembly line for the pages.</b> Each scan moves through the same steps in order &mdash; read the handwriting, translate it, piece together the damaged parts &mdash; and every step saves its work as tidy, labelled information rather than loose text. Older readings are never painted over. When a new reading disagrees with an earlier one, both are kept, so a genuine uncertainty is remembered instead of quietly smoothed away.</p>
+      <p><b>Then, a way to keep it all honest.</b> Every person, place, date, and photo the letters mention gets its own entry in a <b>registry</b> &mdash; think of it as a card catalogue, one drawer for people, one for places, one for dates, one for the photographs. Nothing counts as a fact until it's actually confirmed: a claim starts life marked &ldquo;unverified&rdquo; and only crosses over deliberately. Each entry remembers exactly which page it came from and how sure we are, and where two readings disagree it keeps both rather than picking a favourite. Best of all, the honesty isn't just a promise: the system checks itself automatically, and if anything points to a source that doesn't exist or slips in a fact with no page behind it, the whole thing refuses to build.</p>
+      <p><b>A layer that decides what to publish.</b> The registries hold <i>everything the letters actually support</i> &mdash; the full, honest record, warts and gaps included. But not all of it belongs on a public page, and the same fact can be told well or badly. So a second layer, a <b>manifest</b>, sits on top and makes the <i>editorial</i> calls: which items to show, in what order, with what wording. The split is deliberate &mdash; one side is the historian (what's true), the other is the storyteller (how to tell it). If something's <i>historically wrong</i>, you fix it in the record; if it's merely <i>told better or worse</i>, you change it in the manifest &mdash; and the two never get confused.</p>
+      <p><b>Last, giving the material shape &mdash; a living system.</b> From that one honest foundation the same material is projected into different views &mdash; a browsable shelf of letters, a woven story, a family roster &mdash; each drawn from the shared source, so no version can wander off and invent its own version of events. Nothing here is a static web page hand-built once; the whole site is <i>regenerated</i> from the data. Correct a name at the root, rebuild, and the fix appears everywhere at once &mdash; on the letter, in the story, on the roster &mdash; with nothing patched by hand. It's less a finished website than a living record that can keep growing as more of the family's story surfaces.</p>
+      <p><b>Where the AI fits &mdash; and where it deliberately doesn't.</b> Much of this was built with two AI assistants working alongside the two of us, one paired with each person: one helping build the machinery, one helping with the reading and editing. But the design draws a hard line around what AI is <i>allowed</i> to decide. It reads, translates, and drafts &mdash; it never gets the final word on what's true. A person confirms every reading; an AI's confident-sounding guess carries no more weight than that, and where the letters are too damaged to know, the honest answer is to say so rather than let a machine paper over the gap. The goal was never to hand family history to a computer &mdash; it was to use these tools carefully enough that a family with no Yiddish reader left could recover its own story <i>without</i> quietly inventing the parts it couldn't recover.</p>
+      <p><b>The tools that made it possible.</b> For anyone curious about the actual stack:</p>
+      <ul class="tool-list">
+        <li><span class="tool-name">Transkribus</span> &mdash; handwriting recognition trained on real early-20th-century Yiddish script. It did the first pass at turning the handwriting into text (and it's the <i>only</i> tool trusted to read the Yiddish, precisely because it was measured against known pages).</li>
+        <li><span class="tool-name">Claude</span> &mdash; translated the transcribed letters, and built the pipeline, the honesty rules, and the site itself.</li>
+        <li><span class="tool-name">Gemini</span> &mdash; a second, independent translator, used as a cross-check: where it and Claude agreed we trusted it more, and it was never allowed to quietly overrule the primary reading.</li>
+        <li><span class="tool-name">ComfyUI</span> <i>(soon)</i> &mdash; for regenerating the illustrated portraits from recipes, so even the artwork stays reproducible rather than hand-made once and forgotten.</li>
+      </ul>
+    </div>
+  </details>
 </div>
 
 </body>

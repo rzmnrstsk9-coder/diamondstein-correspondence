@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Diamondstein Correspondence — Experiment: Grouped Doors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f0eee9; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a;
+    --ink-soft: rgba(255,255,255,0.75); --ink-faint: rgba(255,255,255,0.5);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: #0f0d0a; color: #fff; font-family: 'Inter', sans-serif; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  /* ---- experiment badge (this page only — not part of the design being tested) ---- */
+  .experiment-banner {
+    position: sticky; top: 0; z-index: 50;
+    background: #3a2a12; border-bottom: 1px solid rgba(232,201,138,0.35);
+    color: #e8c98a; font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem;
+    padding: 0.6rem 1.25rem; text-align: center; line-height: 1.5;
+  }
+  .experiment-banner strong { color: #fff; letter-spacing: 0.04em; }
+  .experiment-banner a { color: #e8c98a; text-decoration: underline; text-decoration-color: rgba(232,201,138,0.4); }
+  .experiment-banner a:hover { text-decoration-color: #e8c98a; }
+
+  .hero {
+    min-height: 92vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 3rem 1.5rem;
+    background-image: linear-gradient(rgba(10,8,6,0.72), rgba(10,8,6,0.82)),
+      url('images/1901-montreal.jpeg'), url('images/1916-zeppelin-again.jpeg'), url('images/1924-house.jpeg');
+    background-size: cover, 34% 100%, 34% 100%, 34% 100%;
+    background-position: center, left center, center center, right center;
+    background-repeat: no-repeat;
+  }
+  .hero-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #e8c98a; margin-bottom: 1.25rem; }
+  .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 700; line-height: 1.05; max-width: 16ch; margin-bottom: 1.25rem; }
+  .hero-sub { font-size: clamp(1rem, 2.2vw, 1.2rem); color: var(--ink-soft); max-width: 46ch; line-height: 1.6; margin-bottom: 1.25rem; }
+  .hero-experiment { font-size: 0.78rem; color: rgba(255,255,255,0.45); max-width: 42ch; line-height: 1.5; margin-bottom: 2.25rem; }
+  .hero-experiment a { color: #e8c98a; text-decoration: underline; text-decoration-color: rgba(232,201,138,0.4); }
+  .hero-experiment a:hover { text-decoration-color: #e8c98a; }
+  .hero-scroll { display: inline-flex; flex-direction: column; align-items: center; gap: 0.5rem; background: none; border: none; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; animation: bob 2s ease-in-out infinite; transition: color 0.15s ease; }
+  .hero-scroll:hover { color: #fff; }
+  .hero-scroll .scroll-arrow { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  .doors { background: var(--cream); color: var(--ink); padding: 4rem 1.5rem 5rem; }
+  .doors-intro { text-align: center; max-width: 56ch; margin: 0 auto 3.5rem; }
+  .doors-intro p { font-size: 1rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
+
+  /* ---- grouped clusters ---- */
+  .door-cluster { max-width: 1100px; margin: 0 auto 3.25rem; }
+  .door-cluster:last-child { margin-bottom: 0; }
+  .cluster-head { display: flex; align-items: baseline; gap: 0.85rem; margin-bottom: 1.1rem; padding: 0 0.1rem; }
+  .cluster-number { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 600; color: var(--rust); border: 1px solid rgba(193,72,31,0.3); border-radius: 999px; padding: 0.15rem 0.55rem; flex-shrink: 0; }
+  .cluster-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.1rem; }
+  .cluster-sub { font-size: 0.82rem; color: rgba(26,26,26,0.5); margin-left: auto; text-align: right; max-width: 34ch; line-height: 1.4; }
+  .door-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+
+  .door {
+    display: flex; flex-direction: column; background: #fff; border-radius: 16px; overflow: hidden; text-decoration: none; color: var(--ink);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.06);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .door:hover { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(0,0,0,0.14); }
+  .door-img { position: relative; width: 100%; aspect-ratio: 16/9; overflow: hidden; background: var(--cream-dim, #e8e4da); flex-shrink: 0; }
+  .door-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s ease; }
+  .door:hover .door-img img { transform: scale(1.04); }
+  .door-img.duo { display: flex; }
+  .door-img.duo img { width: 50%; height: 100%; }
+  .door.wide .door-img { aspect-ratio: 21/9; }
+  .door-content { padding: 1.5rem 1.75rem 1.75rem; }
+  .door-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.6rem; }
+  .door-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 0.6rem; }
+  .door-body { font-size: 0.88rem; line-height: 1.55; color: rgba(26,26,26,0.65); margin-bottom: 1rem; }
+  .door-time { font-size: 0.72rem; font-weight: 700; color: var(--navy); font-family: 'IBM Plex Mono', monospace; }
+  .door.wide { grid-column: span 2; }
+  @media (max-width: 700px) { .door.wide { grid-column: span 1; } .cluster-head { flex-direction: column; align-items: flex-start; gap: 0.35rem; } .cluster-sub { margin-left: 0; text-align: left; } }
+
+  .note { max-width: 700px; margin: 3.5rem auto 0; text-align: center; font-size: 0.8rem; color: rgba(26,26,26,0.45); line-height: 1.6; padding: 0 1.5rem; }
+</style>
+</head>
+<body>
+<div style="background:#c1481f;color:#fff;text-align:center;padding:0.55rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;letter-spacing:0.03em;">Prototype — for review purposes, not the final site</div>
+
+
+<div class="experiment-banner">
+  <strong>EXPERIMENTAL REFINEMENT</strong> — card-hierarchy test: grouping the doors into 3 clusters,
+  with "Context &amp; Process" leading (project-first, not story-first). Random Quotes removed; a new
+  "This Project, Explained" door added; "Explainers" renamed "Historical Context". Not the canonical
+  page — see the original <a href="index.html">index.html</a>.
+</div>
+
+<div class="hero">
+  <p class="hero-kicker">A Family Archive, 1901&ndash;1942</p>
+  <h1 class="hero-title display">The Diamondstein Correspondence</h1>
+  <p class="hero-sub">141 letters and postcards, kept in a box for a hundred years, now read for the first time &mdash; the story of Sam and Dora, told as fully as the evidence allows.</p>
+  <p class="hero-experiment mono">Also: a real experiment in using AI to do genealogical research honestly &mdash; see <a href="how-made.html">How This Was Made</a></p>
+  <button class="hero-scroll" onclick="document.getElementById('doors').scrollIntoView({behavior:'smooth'})">
+    <span>Choose how you want to see it</span>
+    <span class="scroll-arrow">&darr;</span>
+  </button>
+</div>
+
+<div class="doors" id="doors">
+  <div class="doors-intro">
+    <p>There's no one right way through this. Pick a door &mdash; each one gives you a different amount of the story, at a different pace.</p>
+  </div>
+
+  <div class="door-cluster">
+    <div class="cluster-head">
+      <span class="cluster-number">1</span>
+      <span class="cluster-title display">Context &amp; Process</span>
+      <span class="cluster-sub">Start here &mdash; what this project is, and how it was made</span>
+    </div>
+    <div class="door-grid">
+      <a class="door" href="overview-simple-experiment.html">
+        <div class="door-img"><img src="images/1901-montreal.jpeg" alt="Scan: Sam's first letter, 1901"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">New &middot; ~30 sec</div>
+          <div class="door-title">This Project, Explained</div>
+          <div class="door-body">What this project actually is &mdash; a century-old letter archive, translated and honesty-checked with AI &mdash; before you pick anything else.</div>
+          <div class="door-time">The elevator pitch</div>
+        </div>
+      </a>
+      <a class="door" href="explainers-experiment.html">
+        <div class="door-img"><img src="images/scene-06-the-panic-outside.png" alt="Illustration: the Panic of 1907"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">Worth knowing first &middot; ~3 min</div>
+          <div class="door-title">Historical Context</div>
+          <div class="door-body">Worth knowing before the letters make full sense &mdash; why Yiddish, why letters worked like texting, the Pale of Settlement, cousin marriage, and more.</div>
+          <div class="door-time">12 short explainers + glossary</div>
+        </div>
+      </a>
+      <a class="door" href="how-made.html">
+        <div class="door-img"><img src="images/how-made-illustration.png" alt="Illustration: three independent readings of a letter, compared under a magnifying glass"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">An AI research experiment</div>
+          <div class="door-title">How This Was Made</div>
+          <div class="door-body">No one left in the family reads Yiddish well enough to check this alone &mdash; this is a real experiment in whether AI can do genealogical research honestly, and exactly how we made sure nothing got made up.</div>
+          <div class="door-time">8 steps, 3 rules</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="door-cluster">
+    <div class="cluster-head">
+      <span class="cluster-number">2</span>
+      <span class="cluster-title display">Read the Story</span>
+      <span class="cluster-sub">The same arc, three different lengths and formats</span>
+    </div>
+    <div class="door-grid">
+      <a class="door" href="long-read.html">
+        <div class="door-img"><img src="images/scene-09-crossing-in-the-mail.png" alt="Illustration: letters crossing in the mail"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">Start here &middot; ~30 min</div>
+          <div class="door-title">Read the Story: Complete Version</div>
+          <div class="door-body">The whole arc, every detail &mdash; six chapters, book-style with a cover and back page, letters linked inline.</div>
+          <div class="door-time">6 chapters, cover to back cover</div>
+        </div>
+      </a>
+      <a class="door" href="story-excerpt.html">
+        <div class="door-img"><img src="images/scene-04-atlantic-crossing.png" alt="Illustration: Sam's Atlantic crossing"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">Shorter version &middot; ~10 min</div>
+          <div class="door-title">Read the Story: Condensed Version</div>
+          <div class="door-body">The same story, condensed &mdash; five chapters, with the maps, portraits, and illustrations woven in exactly where they belong, not off in their own section.</div>
+          <div class="door-time">All 5 chapters built out below</div>
+        </div>
+      </a>
+      <a class="door" href="pictures.html">
+        <div class="door-img"><img src="images/scene-05-austrian-christian.png" alt="Illustration: Sam passing as an Austrian Christian"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">Browse</div>
+          <div class="door-title">The Story in Pictures</div>
+          <div class="door-body">23 illustrated scenes, if you'd rather see it than read it.</div>
+          <div class="door-time">A visual retelling</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div class="door-cluster">
+    <div class="cluster-head">
+      <span class="cluster-number">3</span>
+      <span class="cluster-title display">Explore the Archive</span>
+      <span class="cluster-sub">No fixed order &mdash; browse people, places, letters, and lines</span>
+    </div>
+    <div class="door-grid">
+      <a class="door" href="letters.html">
+        <div class="door-img"><img src="images/1901-montreal.jpeg" alt="Scan: Sam's first letter, 1901"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">Browse</div>
+          <div class="door-title">Every Letter</div>
+          <div class="door-body">Letters and postcards, translated and transcribed, sorted by era.</div>
+          <div class="door-time">81 of 141, in this wireframe</div>
+        </div>
+      </a>
+      <a class="door" href="family.html">
+        <div class="door-img duo"><img src="images/sam.png" alt="Sam Diamondstein"><img src="images/dora.png" alt="Dora Diamondstein"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">Browse</div>
+          <div class="door-title">Meet the Family</div>
+          <div class="door-body">Sam, Dora, and everyone else who appears in the letters &mdash; click anyone for their story.</div>
+          <div class="door-time">13 people</div>
+        </div>
+      </a>
+      <a class="door" href="journey.html">
+        <div class="door-img"><img src="images/scattering.png" alt="Map: the scattering of the family across the world"></div>
+        <div class="door-content">
+          <div class="door-eyebrow">~5 min</div>
+          <div class="door-title">Follow the Journey</div>
+          <div class="door-body">Every place this family went, on a map &mdash; each one explained, not just shown.</div>
+          <div class="door-time">5 maps + timeline</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <p class="note">This is an experimental refinement of the site-structure wireframe, testing whether grouping the doors into clusters (Context &amp; Process / Read the Story / Explore the Archive) eases visual navigation versus one flat grid, and whether leading with "Context &amp; Process" (project explanation first) orients a first-time visitor better than leading with the narrative &mdash; and whether "Random Quotes" earns its place as a top-level door at all (removed here). "Every Letter" uses real data for a representative 81 of the archive's 141 items to keep this page a manageable size &mdash; everything else here is complete.</p>
+</div>
+
+</body>
+</html>

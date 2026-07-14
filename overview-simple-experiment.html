@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>This Project, Explained — The Diamondstein Correspondence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
+
+  .experiment-banner {
+    background: #3a2a12; border-bottom: 1px solid rgba(193,72,31,0.35);
+    color: #e8c98a; font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem;
+    padding: 0.6rem 1.25rem; text-align: center; line-height: 1.5;
+  }
+  .experiment-banner strong { color: #fff; letter-spacing: 0.04em; }
+  .experiment-banner a { color: #e8c98a; text-decoration: underline; text-decoration-color: rgba(232,201,138,0.4); }
+  .experiment-banner a:hover { text-decoration-color: #e8c98a; }
+
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: var(--ink); color: #fff; }
+  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
+  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+
+  .pitch { max-width: 620px; margin: 0 auto; padding: 5rem 1.5rem 3rem; text-align: center; }
+  .pitch p.kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 1rem; }
+  .pitch h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.9rem, 4.5vw, 2.7rem); line-height: 1.15; margin-bottom: 1.6rem; }
+  .pitch p.lead { font-size: 1.12rem; line-height: 1.75; color: rgba(26,26,26,0.78); }
+  .pitch p.lead + p.lead { margin-top: 1.1rem; }
+
+  .at-a-glance {
+    margin: 2.6rem auto 0; max-width: 620px; padding: 1.1rem 1.5rem;
+    border-top: 1px solid rgba(0,0,0,0.1); border-bottom: 1px solid rgba(0,0,0,0.1);
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; color: var(--navy); font-weight: 600;
+    text-align: center; letter-spacing: 0.01em;
+  }
+
+  .next-steps { max-width: 620px; margin: 3rem auto 5rem; padding: 0 1.5rem; text-align: center; }
+  .next-steps p { font-size: 0.92rem; color: rgba(26,26,26,0.6); margin-bottom: 1.1rem; }
+  .next-links { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; }
+  .next-links a { font-size: 0.86rem; font-weight: 600; text-decoration: none; color: var(--ink); background: #fff; border: 1px solid rgba(0,0,0,0.1); padding: 0.6rem 1.1rem; border-radius: 999px; box-shadow: 0 6px 16px rgba(0,0,0,0.05); transition: transform 0.15s ease, border-color 0.15s ease; }
+  .next-links a:hover { transform: translateY(-2px); border-color: var(--rust); }
+</style>
+</head>
+<body>
+<div style="background:#c1481f;color:#fff;text-align:center;padding:0.55rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;letter-spacing:0.03em;">Prototype — for review purposes, not the final site</div>
+
+
+<div class="experiment-banner">
+  <strong>EXPERIMENTAL REFINEMENT</strong> — a new "explain it simply" door, tried as its own page.
+  Not linked from the canonical site yet — see <a href="index-experiment-grouped-doors.html">the grouped-doors experiment</a>.
+</div>
+
+<div class="topbar">
+  <a class="back" href="index-experiment-grouped-doors.html#doors">&larr; Back to doors</a>
+  <span class="crumb">This Project, Explained</span>
+</div>
+
+<div class="pitch">
+  <p class="kicker mono">The Short Version</p>
+  <h1 class="display">This Project, Explained</h1>
+  <p class="lead">This is a hundred-year-old family letter archive &mdash; 141 letters and postcards, most of them in Yiddish &mdash; being read, translated, and published in full for the first time, with AI doing the heavy lifting on the transcription and translation.</p>
+  <p class="lead">No one left in the family reads Yiddish well enough to check that work alone, so this project is also a real test of whether AI can do that kind of research honestly: every claim traces back to the actual scanned page, uncertain readings are marked as uncertain instead of smoothed into confident prose, and nothing gets invented to fill a gap.</p>
+  <p class="lead">That verified research doesn't just sit as raw data, either &mdash; it's been pulled together into an actual narrative, a real story about Sam and Dora with a beginning, middle, and end. But the story is assembled strictly from what the research supports: every scene traces back to a specific letter or fact, and where the record runs out, the story says so instead of quietly filling the gap.</p>
+  <p class="lead">The result is this site &mdash; the letters themselves, transcribed and translated, alongside the family story built from them, from research to narrative, with nothing invented along the way.</p>
+</div>
+
+<div class="at-a-glance">141 letters &amp; postcards &middot; 1901&ndash;1942 &middot; Yiddish &rarr; English &middot; AI-assisted, honesty-checked</div>
+
+<div class="next-steps">
+  <p>Want more?</p>
+  <div class="next-links">
+    <a href="how-made.html">How this was made &middot; the honesty rules</a>
+    <a href="story-excerpt.html">Read the family story &middot; ~10 min</a>
+    <a href="letters.html">Browse the letters themselves</a>
+  </div>
+</div>
+
+</body>
+</html>
