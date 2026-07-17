@@ -190,6 +190,9 @@
   .footer-credit { font-size: 0.85rem; color: rgba(26,26,26,0.4); max-width: 52ch; margin: 0 auto; line-height: 1.6; }
   .footer-credit a { color: rgba(26,26,26,0.55); }
   .footer-credit a:hover { color: var(--rust); }
+  .footer-contact { font-size: 0.85rem; color: rgba(26,26,26,0.4); margin-top: 0.6rem; }
+  .footer-contact a { color: rgba(26,26,26,0.55); }
+  .footer-contact a:hover { color: var(--rust); }
 </style>
 </head>
 <body>
@@ -329,6 +332,7 @@
     <a href="how-made.html">How This Was Made</a>
   </nav>
   <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="how-made.html">How This Was Made</a> for the full process.</p>
+  <p class="footer-contact">Questions or corrections? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
 </footer>
 
 <!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
@@ -958,6 +962,13 @@
     const scrollEl = wrap.querySelector('.letters-scroll');
     wrap.querySelector('.scroll-arrow-btn.left').addEventListener('click', () => scrollEl.scrollBy({ left: -400, behavior: 'smooth' }));
     wrap.querySelector('.scroll-arrow-btn.right').addEventListener('click', () => scrollEl.scrollBy({ left: 400, behavior: 'smooth' }));
+  });
+
+  // Obfuscated mailto (Paul's ask, 2026-07-16): the address never appears as plain text in
+  // the HTML source -- assembled at runtime, so a static-HTML scraper never sees it, while
+  // real visitors with JS get a normal working mailto: link.
+  document.querySelectorAll('.footer-contact-link[data-u]').forEach(el => {
+    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
   });
 })();
 </script>

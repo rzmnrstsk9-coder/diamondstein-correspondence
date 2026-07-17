@@ -113,3 +113,6 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
 .footer-credit { font-size:var(--text-sm); color:var(--ink-faint); max-width:52ch; margin:0 auto; line-height:1.6; }
 .footer-credit a { color:var(--ink-soft); }
 .footer-credit a:hover { color:var(--rust); }
+.footer-contact { font-size:var(--text-sm); color:var(--ink-faint); margin-top:var(--space-2); }
+.footer-contact a { color:var(--ink-soft); }
+.footer-contact a:hover { color:var(--rust); }

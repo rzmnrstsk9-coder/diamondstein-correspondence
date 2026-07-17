@@ -237,7 +237,17 @@
     <a href="../../how-made.html">How This Was Made</a>
   </nav>
   <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="../../how-made.html">How This Was Made</a> for the full process.</p>
+  <p class="footer-contact">Questions or corrections? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
 </footer>
+
+<script>
+  // Obfuscated mailto (Paul's ask, 2026-07-16): the address never appears as plain text in
+  // the HTML source -- assembled at runtime, so a static-HTML scraper never sees it, while
+  // real visitors with JS get a normal working mailto: link.
+  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
+    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
+  });
+</script>
 
 </body>
 </html>
