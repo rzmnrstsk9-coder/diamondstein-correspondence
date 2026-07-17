@@ -20,41 +20,20 @@
 
   .hero {
     position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 3rem 1.5rem; overflow: hidden; background: #0f0d0a;
-  }
-  .hero::before {
-    content: ''; position: absolute; inset: 0;
-    background-image: url('images/box-of-letters.jpeg'); background-size: cover; background-position: center 30%;
-    filter: grayscale(90%) brightness(0.85); opacity: 0.92;
-  }
-  /* The spotlight fades in on load: the dark vignette is at full strength from frame one (never
-     animates); only the center gradient stop's alpha animates, 0.9 (matching the surround -- no
-     visible hole) down to 0 (fully see-through -- the spotlight "opens", revealing the box).
-     Prototyped at docs/prototypes/paul/spotlight-experiment-2026-07-15/. */
-  @property --hole-a {
-    syntax: '<number>'; inherits: false; initial-value: 0.9;
-  }
-  .hero::after {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse 34% 26% at 50% 36%, rgba(10, 8, 6, var(--hole-a)) 0%, rgba(10,8,6,0.9) 78%, rgba(10,8,6,0.9) 100%);
-    animation: spotlight-reveal 3.5s ease-out forwards;
-  }
-  @keyframes spotlight-reveal {
-    from { --hole-a: 0.9; }
-    to   { --hole-a: 0; }
+    text-align: center; padding: 6rem 1.5rem 4rem; overflow: hidden; background: #0f0d0a;
   }
   .hero > * { position: relative; z-index: 1; }
 
-  .hero-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #e8c98a; margin-bottom: 1.25rem; }
-  .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 700; line-height: 1.05; max-width: 16ch; margin-bottom: 1.25rem; }
-  .hero-sub { font-size: clamp(1rem, 2.2vw, 1.2rem); color: var(--ink-soft); max-width: 46ch; line-height: 1.6; margin-bottom: 1.25rem; }
-  .hero-experiment { font-size: 0.78rem; color: rgba(255,255,255,0.45); max-width: 42ch; line-height: 1.5; margin-bottom: 2.25rem; }
+  .hero-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #e8c98a; margin-bottom: 1.4rem; }
+  .hero-plate { max-width: 720px; width: 100%; margin-bottom: 1.8rem; border-radius: 10px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(232,201,138,0.25); }
+  .hero-plate img { width: 100%; display: block; }
+  .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 700; line-height: 1.05; max-width: 16ch; margin-bottom: 1.3rem; }
+  .hero-sub { font-size: clamp(1rem, 2.2vw, 1.2rem); color: var(--ink-soft); max-width: 58ch; line-height: 1.6; margin-bottom: 1.4rem; }
+  .hero-experiment { font-size: 0.78rem; color: rgba(255,255,255,0.45); max-width: 42ch; line-height: 1.5; margin-bottom: 2rem; }
   .hero-experiment a { color: #e8c98a; text-decoration: underline; text-decoration-color: rgba(232,201,138,0.4); }
   .hero-experiment a:hover { text-decoration-color: #e8c98a; }
-  .hero-scroll { display: inline-flex; flex-direction: column; align-items: center; gap: 0.5rem; background: none; border: none; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; animation: bob 2s ease-in-out infinite; transition: color 0.15s ease; }
-  .hero-scroll:hover { color: #fff; }
-  .hero-scroll .scroll-arrow { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 1rem; }
-  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  .hero-scroll { display: inline-flex; align-items: center; gap: 0.6rem; background: #e8c98a; color: #1a1300; border: none; border-radius: 999px; padding: 0.8rem 1.6rem; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; transition: background 0.2s ease, transform 0.2s ease; }
+  .hero-scroll:hover { background: #f0dba8; transform: translateY(-1px); }
 
   .doors { background: var(--cream); color: var(--ink); padding: 4rem 1.5rem 5rem; }
   .doors-intro { text-align: center; max-width: 56ch; margin: 0 auto 3rem; }
@@ -101,6 +80,9 @@
     font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; line-height: 1.5; transition: background 0.15s ease;
   }
   .mini-card-more:hover { background: #22405e; }
+  .fm-answer a { color: var(--rust); text-decoration: underline; text-decoration-color: rgba(193,72,31,0.4); }
+  .fm-answer .marker { font-family: 'IBM Plex Mono', monospace; font-size: 0.85em; background: rgba(0,0,0,0.05); padding: 0.1em 0.4em; border-radius: 4px; }
+
   .story-row { display: flex; gap: 1rem; flex-wrap: wrap; }
   .story-tile {
     flex: 1 1 260px; background: #fff; border-radius: 12px; overflow: hidden; text-decoration: none; color: var(--ink);
@@ -199,12 +181,15 @@
 
 <div class="hero">
   <p class="hero-kicker">A Family Archive, 1900&ndash;1926</p>
+  <figure class="hero-plate">
+    <img src="images/scene-crossing-in-the-mail.png" alt="Illustration of Sam and Dora each writing letters, with envelopes crossing the ocean between them">
+  </figure>
   <h1 class="hero-title display">The Sam and Dora Letters</h1>
-  <p class="hero-sub">141 letters in Yiddish and English, written between 1900 and 1926 and kept in a box for a hundred years, now read for the first time &mdash; the story of Sam and Dora's courtship, their settlement in England, marriage and children, and a family's growing prosperity.</p>
+  <p class="hero-sub">A box of about 140 letters was found in storage in Vancouver &mdash; half in English cursive, half in Yiddish no one in the family could read. They turned out to be Sam and Dora Diamondstein's, great-grandparents of one of this site's creators, writing to each other in the early 1900s. AI translated and transcribed every one, then helped rebuild the story from family trees, research, and memory. This is what resulted.</p>
   <p class="hero-experiment mono">Also: a real experiment in using AI to do genealogical research honestly.<br>See <a href="how-made.html">How This Was Made</a></p>
-  <button class="hero-scroll" onclick="document.getElementById('doors').scrollIntoView({behavior:'smooth'})">
-    <span>Choose how you want to explore</span>
-    <span class="scroll-arrow">&darr;</span>
+  <button class="hero-scroll mono" onclick="document.getElementById('doors').scrollIntoView({behavior:'smooth'})">
+    <span>Enter the archive</span>
+    <span>&darr;</span>
   </button>
 </div>
 
