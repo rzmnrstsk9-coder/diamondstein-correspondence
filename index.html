@@ -14,26 +14,63 @@
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
-  body { background: #0f0d0a; color: #fff; font-family: 'Inter', sans-serif; }
+  body {
+    color: #fff; font-family: 'Inter', sans-serif;
+    background:
+      linear-gradient(rgba(15,13,10,0.88), rgba(15,13,10,0.88)),
+      url('images/background.jpg');
+    background-size: cover; background-position: center; background-attachment: fixed;
+  }
   .display { font-family: 'Bricolage Grotesque', sans-serif; }
   .mono { font-family: 'IBM Plex Mono', monospace; }
 
-  .hero {
-    position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 6rem 1.5rem 4rem; overflow: hidden; background: #0f0d0a;
-  }
-  .hero > * { position: relative; z-index: 1; }
+  /* ---- scroll-progress rail: subtle, only for the onboarding sequence (masthead -> closing) ---- */
+  .progress-rail { position: fixed; right: 2rem; top: 50%; transform: translateY(-50%); z-index: 150; width: 2px; height: 140px; background: rgba(255,255,255,0.15); border-radius: 2px; opacity: 0; transition: opacity 0.4s ease; }
+  .progress-rail.show { opacity: 1; }
+  .progress-fill { width: 100%; height: 0%; background: #e8c98a; border-radius: 2px; transition: height 0.1s linear; }
+  @media (max-width: 760px) { .progress-rail { display: none; } }
 
-  .hero-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #e8c98a; margin-bottom: 1.4rem; }
-  .hero-plate { max-width: 720px; width: 100%; margin-bottom: 1.8rem; border-radius: 10px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid rgba(232,201,138,0.25); }
-  .hero-plate img { width: 100%; display: block; }
-  .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 700; line-height: 1.05; max-width: 16ch; margin-bottom: 1.3rem; }
-  .hero-sub { font-size: clamp(1rem, 2.2vw, 1.2rem); color: var(--ink-soft); max-width: 58ch; line-height: 1.6; margin-bottom: 1.4rem; }
-  .hero-experiment { font-size: 0.78rem; color: rgba(255,255,255,0.45); max-width: 42ch; line-height: 1.5; margin-bottom: 2rem; }
+  /* ---- opening: masthead visible immediately, then the reveal sequence, NYT scrollytelling-style.
+     Same spotlight treatment as the previous hero: full-bleed photo, dark vignette, the center
+     gradient stop's alpha animates in on load so the spotlight "opens" over the box. */
+  .masthead {
+    position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 3rem 1.5rem; overflow: hidden; background: #0f0d0a;
+  }
+  .masthead::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: url('images/box-of-letters.jpeg'); background-size: cover; background-position: center 30%;
+    filter: grayscale(90%) brightness(0.85); opacity: 0.92;
+  }
+  @property --hole-a {
+    syntax: '<number>'; inherits: false; initial-value: 0.9;
+  }
+  .masthead::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 34% 26% at 50% 36%, rgba(10, 8, 6, var(--hole-a)) 0%, rgba(10,8,6,0.9) 78%, rgba(10,8,6,0.9) 100%);
+    animation: spotlight-reveal 3.5s ease-out forwards;
+  }
+  @keyframes spotlight-reveal {
+    from { --hole-a: 0.9; }
+    to   { --hole-a: 0; }
+  }
+  .masthead > * { position: relative; z-index: 1; }
+  .hero-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #e8c98a; margin-bottom: 1.25rem; }
+  .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 700; line-height: 1.05; max-width: 16ch; margin-bottom: 1.25rem; }
+  .scroll-cue { margin-top: 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; animation: bob 2s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  /* ---- the reveal sequence: one idea per screen, no buttons, no numbers -- just scroll ---- */
+  .reveal { min-height: 78vh; display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
+  .reveal-inner { max-width: 620px; text-align: center; opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2,0.8,0.2,1); }
+  .reveal.in .reveal-inner { opacity: 1; transform: translateY(0); }
+  .reveal-text { font-size: clamp(1.3rem, 3vw, 1.7rem); line-height: 1.55; color: #fff; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; }
+  .reveal-text em { color: #e8c98a; font-style: normal; }
+
+  .closing { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 1.5rem 5rem; }
+  .hero-experiment { font-size: 0.78rem; color: rgba(255,255,255,0.45); max-width: 42ch; line-height: 1.5; }
   .hero-experiment a { color: #e8c98a; text-decoration: underline; text-decoration-color: rgba(232,201,138,0.4); }
   .hero-experiment a:hover { text-decoration-color: #e8c98a; }
-  .hero-scroll { display: inline-flex; align-items: center; gap: 0.6rem; background: #e8c98a; color: #1a1300; border: none; border-radius: 999px; padding: 0.8rem 1.6rem; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; transition: background 0.2s ease, transform 0.2s ease; }
-  .hero-scroll:hover { background: #f0dba8; transform: translateY(-1px); }
 
   .doors { background: var(--cream); color: var(--ink); padding: 4rem 1.5rem 5rem; }
   .doors-intro { text-align: center; max-width: 56ch; margin: 0 auto 3rem; }
@@ -179,18 +216,48 @@
 </head>
 <body>
 
-<div class="hero">
+<div class="progress-rail" id="progress-rail">
+  <div class="progress-fill" id="progress-fill"></div>
+</div>
+
+<div class="masthead">
   <p class="hero-kicker">A Family Archive, 1900&ndash;1926</p>
-  <figure class="hero-plate">
-    <img src="images/scene-crossing-in-the-mail.png" alt="Illustration of Sam and Dora each writing letters, with envelopes crossing the ocean between them">
-  </figure>
   <h1 class="hero-title display">The Sam and Dora Letters</h1>
-  <p class="hero-sub">A box of about 140 letters was found in storage in Vancouver &mdash; half in English cursive, half in Yiddish no one in the family could read. They turned out to be Sam and Dora Diamondstein's, great-grandparents of one of this site's creators, writing to each other in the early 1900s. AI translated and transcribed every one, then helped rebuild the story from family trees, research, and memory. This is what resulted.</p>
+  <p class="scroll-cue">Scroll to begin &darr;</p>
+</div>
+
+<section class="reveal" data-step="1">
+  <div class="reveal-inner">
+    <p class="reveal-text">A box of about <em>140 letters</em> was found in storage in Vancouver.</p>
+  </div>
+</section>
+
+<section class="reveal" data-step="2">
+  <div class="reveal-inner">
+    <p class="reveal-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p>
+  </div>
+</section>
+
+<section class="reveal" data-step="3">
+  <div class="reveal-inner">
+    <p class="reveal-text">They turned out to be <em>Sam and Dora Diamondstein's</em> &mdash; great-grandparents of one of this site's creators, writing to each other in the early 1900s.</p>
+  </div>
+</section>
+
+<section class="reveal" data-step="4">
+  <div class="reveal-inner">
+    <p class="reveal-text"><em>AI</em> translated and transcribed every one, then helped rebuild the story from family trees, research, and memory.</p>
+  </div>
+</section>
+
+<section class="reveal" data-step="5">
+  <div class="reveal-inner">
+    <p class="reveal-text">This is what resulted.</p>
+  </div>
+</section>
+
+<div class="closing">
   <p class="hero-experiment mono">Also: a real experiment in using AI to do genealogical research honestly.<br>See <a href="how-made.html">How This Was Made</a></p>
-  <button class="hero-scroll mono" onclick="document.getElementById('doors').scrollIntoView({behavior:'smooth'})">
-    <span>Enter the archive</span>
-    <span>&darr;</span>
-  </button>
 </div>
 
 <div class="doors" id="doors">
@@ -955,6 +1022,36 @@
   document.querySelectorAll('.footer-contact-link[data-u]').forEach(el => {
     el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
   });
+
+  // Scroll-reveal onboarding (Paul's ask, 2026-07-17): one idea per screen, fading in as it's
+  // scrolled into view -- no buttons, no numbers. Prototyped at
+  // docs/prototypes/paul/onboarding-scroll-reveal-2026-07-17/.
+  const reveals = document.querySelectorAll('.reveal');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.45 });
+  reveals.forEach(r => revealObserver.observe(r));
+
+  // Scroll-progress rail: fills as the reader moves through the onboarding sequence
+  // (masthead -> closing), fades out once the doors section (real site content) is reached.
+  const rail = document.getElementById('progress-rail');
+  const fill = document.getElementById('progress-fill');
+  const mastheadEl = document.querySelector('.masthead');
+  const doorsEl = document.getElementById('doors');
+
+  function updateProgress() {
+    const startY = mastheadEl.offsetTop;
+    const endY = doorsEl.offsetTop;
+    const current = window.scrollY + window.innerHeight * 0.5;
+    let progress = (current - startY) / (endY - startY);
+    progress = Math.max(0, Math.min(1, progress));
+    fill.style.height = (progress * 100) + '%';
+    rail.classList.toggle('show', progress > 0.02 && progress < 0.98);
+  }
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  window.addEventListener('resize', updateProgress);
+  updateProgress();
 })();
 </script>
 
