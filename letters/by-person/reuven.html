@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letters by Person — The Sam and Dora Letters (1900&ndash;1926)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>
+  .era-heading { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; max-width: 1200px; margin: 2.5rem auto 1rem; padding: 0 1.5rem; }
+  .era-group:first-of-type .era-heading { margin-top: 0; }
+
+  /* Era pill nav — same classes/values as letters.html (not yet a shared components.css
+     primitive; using identical names now so a future consolidation is a drop-in). Filters by
+     show/hide over server-rendered .era-group sections (see script below), not a rebuilt grid. */
+  .group-row { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem; }
+  .group-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid rgba(26,26,26,0.15); background: #fff; color: var(--ink); cursor: pointer; transition: all 0.15s ease; }
+  .group-btn:hover { border-color: var(--rust); }
+  .group-btn.active { background: var(--rust); border-color: var(--rust); color: #fff; }
+  .group-dates { opacity: 0.6; font-size: 0.94em; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../../index.html#doors">&larr; Back to start</a>
+  <span class="crumb">Letters by Person</span>
+</div>
+<div class="demo-banner">Letters mentioning Reuven Diamondstein (2)</div>
+
+<div class="head">
+  <p class="kicker">Filtered by Person</p>
+  <h1 class="display">Letters mentioning Reuven Diamondstein</h1>
+  <p class="sub">Sorted into the eras of the story. Click any card for the full translation.
+    &nbsp;&middot;&nbsp;<a href="../../letters.html">&larr; full archive</a></p>
+</div>
+<div class="group-row" id="group-row"><button class="group-btn active" data-era="all">All (2)</button><button class="group-btn" data-era="The Courtship">The Courtship <span class="group-dates">c. 1900–1911</span> (2)</button></div><div class="era-group" data-era="The Courtship"><h2 class="era-heading">The Courtship</h2><div class="letters-grid"><button class="letter-card" data-title="A Hard Plan" data-item="manifest:letter/a-hard-plan" data-artifact="mr-dean-montreal-1"><div class="lc-thumb"><img data-field="image" data-artifact="mr-dean-montreal-1" data-provenance="archival-scan" src="../../images/mr-dean-montreal-1.jpeg" alt="A Hard Plan" loading="lazy"></div><div class="lc-body"><div class="lc-date mono" data-field="date" data-artifact="mr-dean-montreal-1">c. 1907–1908</div><div class="lc-title" data-field="title" data-artifact="mr-dean-montreal-1">A Hard Plan</div><div class="lc-summary" data-field="summary" data-artifact="mr-dean-montreal-1">Sam writes to uncle Reuven in London from Montreal, explaining their money-dependent plan is stalled and the fur trade isn&#x27;t panning out there.</div></div></button><button class="letter-card" data-title="Mixed Yiddish and English" data-item="manifest:letter/scan-33" data-artifact="scan-33"><div class="lc-thumb"><img data-field="image" data-artifact="scan-33" data-provenance="archival-scan" src="../../images/scan-33.jpeg" alt="Mixed Yiddish and English" loading="lazy"></div><div class="lc-body"><div class="lc-date mono" data-field="date" data-artifact="scan-33">circa 1907-1908</div><div class="lc-title" data-field="title" data-artifact="scan-33">Mixed Yiddish and English</div><div class="lc-summary" data-field="summary" data-artifact="scan-33">Sam writes to Dora, commenting fondly on her mixed Yiddish-English handwriting and mentioning a separate letter he wrote to Uncle Ber.</div></div></button></div></div>
+
+<!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
+     letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
+     + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
+     zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
+     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
+     rather than the partial forking into two shapes (single-honest-core principle applied to
+     markup, not just behavior). -->
+<div class="overlay" id="person-overlay">
+  <div class="person-modal">
+    <button class="close-btn" id="person-modal-close">&times;</button>
+    <div class="pm-top">
+      <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div>
+        <div class="pm-name" id="pm-name"></div>
+        <div class="pm-dates mono" id="pm-dates"></div>
+        <div class="pm-role" id="pm-role"></div>
+      </div>
+    </div>
+    <div class="pm-bio" id="pm-bio"></div>
+    <div class="pm-letters-label" id="pm-letters-label"></div>
+    <div id="pm-letters-list"></div>
+  </div>
+</div>
+
+<div class="overlay" id="letter-overlay">
+  <div class="letter-modal" id="lm-card">
+    <button class="close-btn" id="modal-close">&times;</button>
+    <div class="lm-date mono" id="lm-date"></div>
+    <div class="lm-title" id="lm-title"></div>
+    <div class="lm-scan" id="lm-scan"></div>
+    <div class="lm-capsule" id="lm-capsule">
+      <button class="lm-lang-btn on" data-lang="en" id="lm-lang-en">English</button>
+      <button class="lm-lang-btn" data-lang="yi" id="lm-lang-yi">ייִדיש</button>
+    </div>
+    <div class="lm-body" id="lm-body"></div>
+    <div class="modal-nav-row" id="modal-nav-row">
+      <button class="nav-btn" id="modal-prev" aria-label="Previous letter">&larr;</button>
+      <div class="modal-position mono" id="modal-position"></div>
+      <button class="nav-btn" id="modal-next" aria-label="Next letter">&rarr;</button>
+    </div>
+  </div>
+</div>
+
+<button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
+<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""><figcaption id="zoom-overlay-cap" class="zoom-cap" style="display:none;"></figcaption></div>
+
+
+<script>
+  window.MODAL_CONFIG = { langToggle: true, prevNext: true, imgPathMatch: "anywhere" };
+  window.MODAL_LETTERS = [ {
+  "date": "c. 1907–1908",
+  "title": "A Hard Plan",
+  "img": "../../images/mr-dean-montreal-1.jpeg",
+  "summary": "Sam writes to uncle Reuven in London from Montreal, explaining their money-dependent plan is stalled and the fur trade isn't panning out there.",
+  "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — this letter is addressed to \"uncle Reuven\" (Sam's uncle and Dora's father) about a stalled \"plan\" that \"is, sadly, a hard one\" for lack of money, the same money-dependent plan described across the already-dated June-August 1908 Montreal cluster of letters; the fur trade being \"not the best here in this place\" matches Sam's known Montreal stint doing casual labor outside the fur trade.[/low-confidence]\n\n[low-confidence]Note: who is where — Sam is writing FROM Montreal, TO uncle Reuven, who is in the UK (London), not both in the same place. Not stated as a dateline/location in the letter itself (no \"written from Montreal\" line survives), but supported by: \"the fur trade is not the best here in this place\" matching Sam's documented Montreal casual-labor stint (no capital/local network there); grouping with the dated June-August 1908 Montreal cluster (same \"our plan... when you have no money\" thread); and Reuven being separately documented as dying in London in 1934, consistent with his household being UK-based well before this letter. Reuven is simultaneously Sam's paternal uncle (Getzel and Reuven were brothers) and, at this point, his future father-in-law.[/low-confidence]\n\nMy dear uncle Reuven,\n\nI hope this finds you living well, in good health, and thriving in everything, from the bottom of my heart.\n\nDear uncle, the fur trade is not the best here. As for our plan, it is, sadly, a hard one. When you have no money, there is nothing at all you can do. As I wrote in the first letter — once things change for me, I'll write you more plainly.\n\nStay well. From me, your nephew\n\nWarm regards to everyone — to him and his wife, and to the others with their wives, and to the Applestein family — to you all, our love, in one word: to every last one of you.",
+  "transcription": "לועכטפער יונקעל רוויבן אונז וועטס\nששוטע פינדע לעבט וואָפל\nאב פון געזונס אטפיק און אלעם פוןזיכט\nווערטדער יוקעל דיאן פער טרייד אז גאָכ=\nניט אַעבעסטען היר אין בעלעדע\nוועגען אונזער פלאן איז לאדער צערווייש\nגארוסט ווען מען האָט קיין געצט קען מען\nגאר ליסט טפון יוציין וויל אין האָביאיג\nגעשריבין אין דעג ערשטען צעטער\nווען אין לוועל פאַבין ויר וועל איך\nגליב שרייבען. ל3 4 בליים געזינט פון מיר\nאייערער שליך אק שאוז געריסען\nזאלענען מיט זיין פרוין לען מיט פרויען\nוויידען מיטשעכע עפללטיין אייך אונזער\nלעכען אין איינעם וואָרט! אלעמעף\nNI",
+  "yiddish": "לועכטפער יונקעל רוויבן אונז וועטס\nששוטע פינדע לעבט וואָפל\nאב פון געזונס אטפיק און אלעם פוןזיכט\nווערטדער יוקעל דיאן פער טרייד אז גאָכ=\nניט אַעבעסטען היר אין בעלעדע\nוועגען אונזער פלאן איז לאדער צערווייש\nגארוסט ווען מען האָט קיין געצט קען מען\nגאר ליסט טפון יוציין וויל אין האָביאיג\nגעשריבין אין דעג ערשטען צעטער\nווען אין לוועל פאַבין ויר וועל איך\nגליב שרייבען. ל3 4 בליים געזינט פון מיר\nאייערער שליך אק שאוז געריסען\nזאלענען מיט זיין פרוין לען מיט פרויען\nוויידען מיטשעכע עפללטיין אייך אונזער\nלעכען אין איינעם וואָרט! אלעמעף\nNI",
+  "era": "The Courtship",
+  "curated": true,
+  "artifact": "mr-dean-montreal-1",
+  "img_provenance": "archival-scan",
+  "item_id": "manifest:letter/a-hard-plan"
+},
+{
+  "date": "circa 1907-1908",
+  "title": "Mixed Yiddish and English",
+  "img": "../../images/scan-33.jpeg",
+  "summary": "Sam writes to Dora, commenting fondly on her mixed Yiddish-English handwriting and mentioning a separate letter he wrote to Uncle Ber.",
+  "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — addressed to a \"dear [Dora],\" remarks that her handwriting mixes Yiddish and English (consistent with Dora already living in a London-based, English-speaking household during the courtship, per Reuven/Hinde being in London), and mentions writing a separate letter to \"Uncle Ber\"; the intimate, chatty register matches Sam's other dated Montreal letters to Dora.[/low-confidence]\n\nWhat more can I write you? [low-confidence]I could have written you a whole world of things, but[/low-confidence] no new thought comes to me to put down, so I just have to sit and think of what to write. [low-confidence]And your [note?] is, after all, good....[/low-confidence]\n\nMy dear [low-confidence][Dora?][/low-confidence] — this I forgot to write. It makes me glad that you read and write whenever you have the time. Only I wonder greatly: your handwriting has gotten quite spoiled. You mix Yiddish and English a great deal in your writing. Still, I understand you [low-confidence]even when you hold back as you write — that much I can tell.[/low-confidence]\n\n[low-confidence]... no ... From me, if ... you will forgive [the remark?]. Say yes.[/low-confidence]\n\nI have [low-confidence]written[/low-confidence] Uncle [low-confidence][Ber?][/low-confidence] a letter. [low-confidence]Your ...! ... tell people ... about my writing, because I ... what the people want to know ...[/low-confidence]",
+  "transcription": "וואָס זאל איך דיר ווייטער שרייבען\nאון פול דאָס אז וועלט געקענט שרייבען אונדשרן\nלען צין פען ווילט לגעגען אימשלאַנד ניריל זיי וויי\nדיא פֿען טייג ליפט זייאן גוט מיר ניסט איין נייע\nגעדאנקען צום צצייבען מוז אג זיצען און ז טריפ\nוואָס צוו שרייבען. אונז דיין קלפ איז דאַך טריס\nגוט.... קין ליבענדע צערעלע דאס האב אג\nפערגעסען צוא שרייבען. עס פרייט מיר ז עסס\nווילס דון וולעזט אונד שרייבסט ווען דוא האַסט\nצייט. ניר מיר וואונדער זייער דיין האַנטשייק\nאיז זייער געספאַילט דוין פלעקסט זייער פון\nרייבען אידש אונד ענגליס ווייל איך פֿערשטיין\nהילטו זיך ווען דוא שרייבסט דאס  וויס איך\nשרייב יוזאעלעכט נעב ליסט קיין נישטיס\nשון מיר איב פֿערהילף דוא וועסט עןטשולדיקט\n50 דרבעערקונג זאָג יעס. איז האָב\nגעסרייקען זוך\nאנקעל בוע איין בריגט דיין\nעצטע! וואָר זאג מענשען צולס אוים וווף\nמיין שרייבען וויילט איך נימט וואָס וויהל דיא צליטע\nאו\nווייסען זיין דאך זלעסט",
+  "yiddish": "וואָס זאל איך דיר ווייטער שרייבען\nאון פול דאָס אז וועלט געקענט שרייבען אונדשרן\nלען צין פען ווילט לגעגען אימשלאַנד ניריל זיי וויי\nדיא פֿען טייג ליפט זייאן גוט מיר ניסט איין נייע\nגעדאנקען צום צצייבען מוז אג זיצען און ז טריפ\nוואָס צוו שרייבען. אונז דיין קלפ איז דאַך טריס\nגוט.... קין ליבענדע צערעלע דאס האב אג\nפערגעסען צוא שרייבען. עס פרייט מיר ז עסס\nווילס דון וולעזט אונד שרייבסט ווען דוא האַסט\nצייט. ניר מיר וואונדער זייער דיין האַנטשייק\nאיז זייער געספאַילט דוין פלעקסט זייער פון\nרייבען אידש אונד ענגליס ווייל איך פֿערשטיין\nהילטו זיך ווען דוא שרייבסט דאס  וויס איך\nשרייב יוזאעלעכט נעב ליסט קיין נישטיס\nשון מיר איב פֿערהילף דוא וועסט עןטשולדיקט\n50 דרבעערקונג זאָג יעס. איז האָב\nגעסרייקען זוך\nאנקעל בוע איין בריגט דיין\nעצטע! וואָר זאג מענשען צולס אוים וווף\nמיין שרייבען וויילט איך נימט וואָס וויהל דיא צליטע\nאו\nווייסען זיין דאך זלעסט",
+  "era": "The Courtship",
+  "curated": false,
+  "artifact": "scan-33",
+  "img_provenance": "archival-scan",
+  "item_id": "manifest:letter/scan-33"
+} ];
+  window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
+</script>
+<script src="../../assets/modal.js"></script>
+<script>
+(function() {
+  // Era pill filter (Paul's ask, 2026-07-13): show/hide pre-rendered .era-group sections.
+  document.querySelectorAll('.group-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const era = btn.dataset.era;
+      document.querySelectorAll('.group-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.era-group').forEach(section => {
+        section.style.display = (era === 'all' || section.dataset.era === era) ? '' : 'none';
+      });
+    });
+  });
+
+  // Server-rendered .letter-card buttons carry data-title — open by title via the shared opener.
+  document.querySelectorAll('.letter-card').forEach(card => {
+    card.addEventListener('click', () => window.openLetterModal(card.dataset.title));
+  });
+  // ?jump= deep-link is handled by the shared modal.js (it owns the modal). Do NOT duplicate
+  // it here — a second handler would fire openLetterModal twice on a ?jump load.
+})();
+</script>
+
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Site navigation">
+    <a href="../../index.html">Home</a>
+    <a href="../../letters.html">Every Letter</a>
+    <a href="../../family.html">The Family</a>
+    <a href="../../story-excerpt.html">Read the Story</a>
+    <a href="../../long-read.html">Complete Version</a>
+    <a href="../../journey.html">Follow the Journey</a>
+    <a href="../../pictures.html">The Story in Pictures</a>
+    <a href="../../how-made.html">How This Was Made</a>
+  </nav>
+  <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="../../how-made.html">How This Was Made</a> for the full process.</p>
+</footer>
+
+</body>
+</html>

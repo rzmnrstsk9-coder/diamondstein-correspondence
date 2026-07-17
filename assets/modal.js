@@ -1,0 +1,203 @@
+// modal.js — the shared modal shell's behavior (modal-dedup, 2026-07-14). Verbatim lift of
+// letters.html's rich JS (the canonical source: En<->Yiddish toggle + prev/next + zoom +
+// ?jump=). Every door sets window.MODAL_CONFIG + window.MODAL_LETTERS (+ window.MODAL_PEOPLE
+// where used) in its own inline <script> BEFORE this file loads. The honesty core
+// (formatBody/esc/escape-at-build) is UNCONDITIONAL — no config key disables it.
+(function() {
+  const CONFIG = Object.assign(
+    {langToggle: true, prevNext: true, imgPathMatch: "root"}, window.MODAL_CONFIG || {});
+  const letters = window.MODAL_LETTERS || [];
+  const titleIndex = window.MODAL_TITLE_INDEX || {};
+  const people = window.MODAL_PEOPLE || {};
+
+  const zoomOverlay = document.getElementById('zoom-overlay');
+  const zoomOverlayImg = document.getElementById('zoom-overlay-img');
+  const zoomOverlayCap = document.getElementById('zoom-overlay-cap');
+  const zoomCloseBtn = document.getElementById('zoom-close');
+
+  function openZoom(src, alt, caption = '') {
+    zoomOverlayImg.src = src;
+    zoomOverlayImg.alt = alt || '';
+    if (zoomOverlayCap) {
+      zoomOverlayCap.textContent = caption || '';       // escape-at-the-sink
+      zoomOverlayCap.style.display = caption ? 'block' : 'none';
+    }
+    zoomOverlay.classList.add('open');
+    zoomCloseBtn.style.display = 'flex';
+  }
+  function closeZoom() {
+    zoomOverlay.classList.remove('open');
+    zoomCloseBtn.style.display = 'none';
+  }
+  zoomOverlay.addEventListener('click', closeZoom);
+  zoomCloseBtn.addEventListener('click', closeZoom);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
+    ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  // The reusable confidence/uncertainty pattern (spec §3, non-configurable): escape FIRST
+  // (untrusted corpus text), then turn inline markers into styled spans + reusable .tip
+  // tooltips. Never removes a marker's meaning (honesty). Every door gets this unconditionally
+  // — THIS is how the dedup fixes pictures.html's dropped-confidence-marker bug by construction.
+  const GAP_TIP = { '[illegible]': 'Illegible in the scan', '[unclear]': 'Unclear in the scan',
+                    '[uncertain]': 'Uncertain reading' };
+
+  function formatBody(text) {
+    let h = esc(text);
+    h = h.replace(/\[low-confidence\]([\s\S]*?)\[\/low-confidence\]/g,
+      (_, inner) => `<span class="conf-low tip" data-tip="Low confidence translation">${inner}</span>`);
+    h = h.replace(/\[(illegible|unclear|uncertain)\]/g, (m, kind) =>
+      `<span class="conf-gap tip" data-tip="${GAP_TIP['[' + kind + ']']}">[${kind}]</span>`);
+    return h;
+  }
+
+  const order = letters.map((_, i) => i);
+  let modalIdx = 0;
+  let modalLang = 'en';
+
+  const overlay = document.getElementById('letter-overlay');
+  const personOverlay = document.getElementById('person-overlay');
+
+  // Non-configurable feature visibility: langToggle/prevNext hide the rich chrome for doors
+  // that don't use it, rather than forking the shared partial into two shapes.
+  const capsuleEl = document.getElementById('lm-capsule');
+  if (capsuleEl && !CONFIG.langToggle) capsuleEl.style.display = 'none';
+  const navRowEl = document.getElementById('modal-nav-row');
+  if (navRowEl && !CONFIG.prevNext) navRowEl.style.display = 'none';
+
+  function setLang(lang) {
+    if (!CONFIG.langToggle) return;
+    const l = letters[order[modalIdx]];
+    const hasYiddish = !!(l.yiddish && l.yiddish.length);
+    if (lang === 'yi' && !hasYiddish) return;         // guard: never switch to an absent original
+    modalLang = lang;
+    document.getElementById('lm-lang-en').classList.toggle('on', lang === 'en');
+    document.getElementById('lm-lang-yi').classList.toggle('on', lang === 'yi');
+    const body = document.getElementById('lm-body');
+    // PROVENANCE STAMP: data-field tracks the VISIBLE content so a "fix this" routes to the
+    // right field — Yiddish shows the transcription, English shows the translation.
+    if (lang === 'yi') { body.setAttribute('dir', 'rtl'); body.setAttribute('data-field', 'transcription'); body.innerHTML = formatBody(l.yiddish); }
+    else { body.setAttribute('dir', 'ltr'); body.setAttribute('data-field', 'translation'); body.innerHTML = formatBody(l.translation); }
+  }
+
+  function _matchesImgPath(img) {
+    return CONFIG.imgPathMatch === "anywhere"
+      ? img.indexOf('images/') !== -1
+      : img.indexOf('images/') === 0;
+  }
+
+  function renderModalContent() {
+    const l = letters[order[modalIdx]];
+    const modalCard = document.getElementById('lm-card');
+    modalCard.setAttribute('data-item', l.item_id);
+    if (l.artifact) modalCard.setAttribute('data-artifact', l.artifact);
+    else modalCard.removeAttribute('data-artifact');
+    document.getElementById('lm-title').setAttribute('data-field', 'title');
+    document.getElementById('lm-date').setAttribute('data-field', 'date');
+    document.getElementById('lm-date').textContent = l.date;
+    document.getElementById('lm-title').textContent = l.title;
+    const scanEl = document.getElementById('lm-scan');
+    scanEl.setAttribute('data-field', 'image');
+    if (l.artifact) scanEl.setAttribute('data-artifact', l.artifact);
+    else scanEl.removeAttribute('data-artifact');
+    if (l.img_provenance) scanEl.setAttribute('data-provenance', l.img_provenance);
+    else scanEl.removeAttribute('data-provenance');
+    if (l.img && _matchesImgPath(l.img)) {
+      scanEl.innerHTML = `<img src="${esc(l.img)}" alt="${esc(l.title)}">`;
+      const scanImg = scanEl.querySelector('img');
+      scanImg.addEventListener('click', () => openZoom(scanImg.src, scanImg.alt));
+    } else {
+      scanEl.innerHTML = `<div class="lm-scan-note">[scan on file, not included in this wireframe]</div>`;
+    }
+    if (CONFIG.langToggle) {
+      const hasYiddish = !!(l.yiddish && l.yiddish.length);
+      const yiBtn = document.getElementById('lm-lang-yi');
+      yiBtn.disabled = !hasYiddish;
+      yiBtn.title = hasYiddish ? '' : 'No Yiddish original on file';
+      setLang('en');                                    // always default to English on open
+    } else {
+      // no toggle: render the translation unconditionally through the SAME honesty core
+      // (formatBody) — this is the pictures/story honesty-bug fix, by construction.
+      const body = document.getElementById('lm-body');
+      body.setAttribute('dir', 'ltr');
+      body.setAttribute('data-field', 'translation');
+      body.innerHTML = formatBody(l.translation);
+    }
+    if (CONFIG.prevNext) {
+      document.getElementById('modal-position').textContent = `${modalIdx + 1} / ${order.length}`;
+    }
+  }
+
+  function openModal(i) {
+    modalIdx = order.indexOf(i);
+    renderModalContent();
+    overlay.classList.add('open');
+  }
+
+  function openLetterModal(title) {
+    const i = titleIndex[title];
+    if (i === undefined) return;
+    openModal(i);
+  }
+
+  function openPersonModal(nodeId) {
+    const p = people[nodeId];
+    if (!p) return;
+    document.getElementById('pm-photo').src = p.img;
+    document.getElementById('pm-photo').alt = p.canonical;
+    document.getElementById('pm-name').textContent = p.canonical;
+    document.getElementById('pm-dates').innerHTML = p.dates;
+    document.getElementById('pm-role').innerHTML = p.role;
+    document.getElementById('pm-bio').innerHTML = p.bio;
+    const labelEl = document.getElementById('pm-letters-label');
+    const listEl = document.getElementById('pm-letters-list');
+    if (p.letters_total === 0) {
+      labelEl.textContent = '';
+      listEl.innerHTML = `<div class="pm-no-letters">No letters in this archive &mdash; see the <a href="letters.html" style="color:var(--rust);">full archive</a></div>`;
+    } else {
+      labelEl.textContent = `Appears in (${p.letters_total})`;
+      const overflow = p.letters_total - p.letters.length;
+      // p.letters titles are ALREADY html-escaped server-side (modal_island.py) — do NOT esc()
+      // again here (the same double-escape trap fixed on the story door 2026-07-12).
+      const overflowHtml = overflow > 0
+        ? `<a class="pm-letter-item pm-more" href="${p.letters_page}">+${overflow} more &rarr;</a>`
+        : '';
+      listEl.innerHTML = p.letters.map(t =>
+        `<button class="pm-letter-item" data-title="${t}">${t} &rarr;</button>`
+      ).join('') + overflowHtml;
+      listEl.querySelectorAll('.pm-letter-item[data-title]').forEach(btn => {
+        btn.addEventListener('click', () => openLetterModal(btn.dataset.title));
+      });
+    }
+    personOverlay.classList.add('open');
+  }
+
+  document.getElementById('modal-close').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+  if (CONFIG.prevNext) {
+    document.getElementById('modal-prev').addEventListener('click', () => {
+      modalIdx = (modalIdx - 1 + order.length) % order.length;
+      renderModalContent();
+    });
+    document.getElementById('modal-next').addEventListener('click', () => {
+      modalIdx = (modalIdx + 1) % order.length;
+      renderModalContent();
+    });
+  }
+  if (CONFIG.langToggle) {
+    document.getElementById('lm-lang-en').addEventListener('click', () => setLang('en'));
+    document.getElementById('lm-lang-yi').addEventListener('click', () => setLang('yi'));
+  }
+  document.getElementById('person-modal-close').addEventListener('click', () => personOverlay.classList.remove('open'));
+  personOverlay.addEventListener('click', (e) => { if (e.target === personOverlay) personOverlay.classList.remove('open'); });
+
+  const jumpTitle = new URLSearchParams(window.location.search).get('jump');
+  if (jumpTitle) openLetterModal(jumpTitle);
+
+  // exposed for each door's own card-click wiring (kept local per the spec's Non-Goals)
+  window.openModal = openModal;
+  window.openLetterModal = openLetterModal;
+  window.openPersonModal = openPersonModal;
+  window.openZoom = openZoom;   // story-excerpt.html's inline-figure zoom already reuses this name
+})();

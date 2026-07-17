@@ -1,0 +1,115 @@
+/* components.css — shared element classes for the Diamondstein site.
+   References ONLY tokens (tokens.css). Page-unique LAYOUT stays inline per page. */
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--cream); color:var(--ink); font-family:var(--font-body); }
+.display { font-family:var(--font-display); }
+.mono { font-family:var(--font-mono); }
+
+.letters-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+  gap:var(--space-5); max-width:1200px; margin:0 auto; padding:0 var(--space-5); }
+.letter-card { background:var(--surface); border-radius:var(--radius-card); overflow:hidden;
+  padding-bottom:var(--space-4); cursor:pointer; border:1px solid var(--line);
+  box-shadow:var(--shadow-rest); transition:transform .15s ease, box-shadow .15s ease;
+  text-align:left; display:block; width:100%; }
+.letter-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+.letter-card .lc-body { padding:0 1.3rem; }
+.lc-thumb { width:100%; aspect-ratio:4/3; background:var(--cream-dim); margin-bottom:var(--space-3); }
+.lc-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+.lc-thumb.placeholder { display:flex; align-items:center; justify-content:center;
+  border-bottom:1px dashed var(--line-strong);
+  background-image:repeating-linear-gradient(135deg, var(--fill-sunken) 0 10px, transparent 10px 20px); }
+.lc-thumb-label { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--ink-faint);
+  text-align:center; line-height:1.4; padding:0 var(--space-2); }
+.lc-date { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--navy);
+  font-weight:600; margin-bottom:var(--space-1); }
+.lc-title { font-family:var(--font-display); font-weight:700; font-size:var(--text-md);
+  margin-bottom:var(--space-1); }
+.lc-summary { font-size:var(--text-sm); line-height:1.5; color:var(--ink-soft);
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+
+.overlay { display:none; position:fixed; inset:0; background:var(--scrim); z-index:100;
+  align-items:center; justify-content:center; padding:var(--space-6) 1rem; }
+.overlay.open { display:flex; }
+.letter-modal { background:var(--cream); border-radius:var(--radius-panel); max-width:560px;
+  width:100%; max-height:85vh; overflow-y:auto; padding:var(--space-6) 2.2rem; position:relative; }
+.close-btn { position:absolute; top:0.8rem; right:1rem; background:none; border:none;
+  font-size:var(--text-xl); cursor:pointer; color:var(--ink-soft); line-height:1; }
+.close-btn:hover { color:var(--ink); }
+.lm-date { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--navy); font-weight:600; margin-bottom:0.3rem; }
+.lm-title { font-family:var(--font-display); font-weight:700; font-size:var(--text-xl); margin-bottom:1rem; }
+.lm-scan-note { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--ink-faint); margin-bottom:1rem; font-style:italic; }
+.lm-scan img { width:100%; border-radius:var(--radius-img); margin-bottom:var(--space-4); display:block; cursor:zoom-in; transition:opacity .15s ease; }
+.lm-scan img:hover { opacity:0.92; }
+.zoom-overlay { display:none; position:fixed; inset:0; background:var(--scrim-deep); z-index:200; align-items:center; justify-content:center; padding:var(--space-6); cursor:zoom-out; }
+.zoom-overlay.open { display:flex; }
+.zoom-overlay img { max-width:100%; max-height:100%; border-radius:10px; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
+.zoom-close { position:fixed; top:1.2rem; right:1.5rem; z-index:201; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.25); color:#fff; width:40px; height:40px; border-radius:var(--radius-circle); font-size:var(--text-lg); cursor:pointer; }
+.lm-body { font-size:var(--text-base); line-height:1.7; white-space:pre-wrap; color:var(--text-confident); }
+.lm-body[dir="rtl"] { line-height:1.9; font-size:var(--text-md); text-align:right; }
+.lm-capsule { display:inline-flex; border:1px solid var(--line-strong); border-radius:var(--radius-pill); overflow:hidden; margin-bottom:1.1rem; font-family:var(--font-mono); font-size:var(--text-xs); }
+.lm-lang-btn { border:none; background:var(--surface); color:var(--ink); padding:0.35rem 1rem; cursor:pointer; }
+.lm-lang-btn.on { background:var(--rust); color:#fff; }
+.lm-lang-btn:disabled { color:var(--ink-faint); cursor:not-allowed; }
+.conf-low { color:var(--text-uncertain); border-radius:3px; cursor:help; transition:background .12s, color .12s; }
+.conf-low:hover { background:rgba(193,72,31,0.14); color:var(--ink); }
+.conf-gap { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--navy); background:rgba(42,74,106,0.08); border:1px dashed rgba(42,74,106,0.4); border-radius:var(--radius-chip); padding:0.02rem 0.38rem; white-space:nowrap; cursor:help; transition:background .12s; }
+.conf-gap:hover { background:rgba(193,72,31,0.16); border-color:var(--rust); color:var(--ink); }
+.tip { position:relative; }
+.tip::after { content:attr(data-tip); position:absolute; left:50%; bottom:100%; transform:translate(-50%,-6px); background:var(--ink); color:var(--cream); font-family:var(--font-mono); font-size:var(--text-xs); white-space:nowrap; padding:0.3rem 0.55rem; border-radius:6px; opacity:0; pointer-events:none; transition:opacity .12s; z-index:5; box-shadow:0 4px 14px rgba(0,0,0,0.25); }
+.tip:hover::after { opacity:1; }
+.modal-nav-row { display:flex; align-items:center; justify-content:space-between; margin-top:var(--space-5); padding-top:var(--space-4); border-top:1px solid var(--line); }
+.modal-position { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--ink-faint); }
+.nav-btn { width:40px; height:40px; border-radius:var(--radius-circle); border:1px solid var(--line-strong); background:var(--surface); cursor:pointer; font-size:var(--text-md); }
+.nav-btn:hover { border-color:var(--rust); }
+.nav-btn:disabled { opacity:0.3; cursor:default; }
+
+/* Site chrome — promoted from the byte-identical inline <style> blocks of letters.html,
+   by-person.html, story-excerpt.html (verified 2026-07-13). pictures.html's .topbar is a DARK
+   variant (different bg/padding/border) and stays page-local — see its own <style> block. */
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:var(--space-4) var(--space-6); background:var(--ink); color:#fff; }
+.topbar a.back { display:inline-flex; align-items:center; gap:var(--space-1); font-size:var(--text-sm); font-weight:600; text-decoration:none; color:#fff; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.22); padding:0.45rem 0.95rem; border-radius:var(--radius-pill); transition:background .15s ease, border-color .15s ease, transform .15s ease; }
+.topbar a.back:hover { background:var(--rust); border-color:var(--rust); transform:translateX(-2px); }
+.topbar .crumb { font-family:var(--font-mono); font-size:var(--text-xs); letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.5); }
+.demo-banner { background:#2a2118; color:var(--gold); text-align:center; font-family:var(--font-mono); font-size:var(--text-sm); padding:var(--space-3) 1rem; line-height:1.5; }
+
+.head { max-width:680px; margin:0 auto; padding:var(--space-7) 1.5rem 1rem; text-align:center; }
+.head p.kicker { font-family:var(--font-mono); font-size:var(--text-sm); letter-spacing:0.1em; text-transform:uppercase; color:var(--rust); margin-bottom:0.8rem; }
+.head h1 { font-family:var(--font-display); font-weight:700; font-size:var(--text-hero); margin-bottom:1rem; }
+.head p.sub { font-size:var(--text-md); line-height:1.65; color:var(--ink-body); }
+
+/* Person-card (.cast-card/.pc-*) — the person-card element's renders_as (pipeline/stages/render/
+   engine/element.py::_person_card). Pre-staged: no door emits person-card until Task 5's build. */
+.cast-card { background:var(--surface); border-radius:var(--radius-card); border:1px solid var(--line);
+  box-shadow:var(--shadow-rest); padding-bottom:var(--space-4); cursor:pointer; overflow:hidden;
+  text-align:center; transition:transform .15s ease, box-shadow .15s ease; }
+.cast-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-hover); }
+.pc-photo { width:100%; aspect-ratio:1/1; background:var(--cream-dim); }
+.pc-photo img { width:100%; height:100%; object-fit:cover; display:block; }
+.pc-photo.placeholder { display:flex; align-items:center; justify-content:center;
+  background-image:repeating-linear-gradient(135deg, var(--fill-sunken) 0 10px, transparent 10px 20px); }
+.pc-photo-label { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--ink-faint);
+  text-align:center; line-height:1.4; padding:0 var(--space-2); }
+.pc-name { font-weight:700; font-size:var(--text-md); line-height:1.3; min-height:2.6em;
+  margin:var(--space-3) var(--space-2) 0; text-wrap:balance; }
+.pc-dates { font-size:var(--text-xs); color:var(--navy); margin-top:var(--space-1); }
+.pc-dates.unknown { color:var(--ink-faint); font-style:italic; }
+.pc-role { font-size:var(--text-sm); color:var(--ink-soft); margin-top:var(--space-1);
+  padding:0 var(--space-2); }
+.cast-card.featured { padding-bottom:var(--space-5); }
+.cast-card.featured .pc-photo { aspect-ratio:1/1; }
+.cast-card.featured .pc-name { font-size:var(--text-lg); }
+
+/* Site-wide footer (added 2026-07-16, per Paul's site-changes wishlist item 4). Deliberately
+   self-contained (own background/color) so it reads consistently regardless of the page's own
+   body theme -- pictures.html and index.html both differ from the shared cream body. */
+.site-footer { background:var(--cream); color:var(--ink); border-top:1px solid var(--line);
+  padding:var(--space-6) var(--space-6) var(--space-5); text-align:center; }
+.footer-nav { display:flex; flex-wrap:wrap; justify-content:center; gap:var(--space-2) var(--space-4);
+  margin-bottom:var(--space-4); font-family:var(--font-mono); font-size:var(--text-xs);
+  text-transform:uppercase; letter-spacing:0.06em; }
+.footer-nav a { color:var(--ink-soft); text-decoration:none; }
+.footer-nav a:hover { color:var(--rust); }
+.footer-credit { font-size:var(--text-sm); color:var(--ink-faint); max-width:52ch; margin:0 auto; line-height:1.6; }
+.footer-credit a { color:var(--ink-soft); }
+.footer-credit a:hover { color:var(--rust); }

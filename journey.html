@@ -3,198 +3,157 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Follow the Journey — The Diamondstein Correspondence</title>
+<title>Follow the Journey &mdash; The Sam and Dora Letters</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/components.css">
 <style>
-  :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; --gold: #8a6d2e; }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
-  .display { font-family: 'Bricolage Grotesque', sans-serif; }
-  .mono { font-family: 'IBM Plex Mono', monospace; }
-  a { color: inherit; }
-
-  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: var(--ink); color: #fff; }
-  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
-  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
-  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
-
-  .head { max-width: 720px; margin: 0 auto; padding: 3.5rem 1.5rem 1rem; text-align: center; }
-  .head p.kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.8rem; }
-  .head h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 1rem; }
-  .head p.sub { font-size: 1.02rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
-
-  /* timeline */
-  .timeline-wrap { max-width: 900px; margin: 3rem auto 4rem; padding: 0 1.5rem; }
-  .timeline-legend { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1.5rem; font-size: 0.76rem; font-family: 'IBM Plex Mono', monospace; }
-  .timeline-legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
-  .timeline-legend i { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
-  .timeline { position: relative; padding-left: 1.6rem; border-left: 2px solid rgba(26,26,26,0.12); }
-  .t-node { position: relative; padding: 0 0 1.6rem 1.2rem; }
-  .t-node:last-child { padding-bottom: 0; }
-  .t-node::before { content: ''; position: absolute; left: -1.98rem; top: 0.25rem; width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--cream); }
+  /* timeline — HORIZONTAL (redesigned 2026-07-16, Paul's ask: was a vertical left-rail; item 8
+     from the site-changes memo). A scroll-snap row of fixed-width cards, connected by a
+     horizontal line that scrolls WITH the content (a ::before on .timeline itself, inside the
+     scroll container, so it stays aligned under every dot at any scroll position). Same
+     scroll-arrow-btn pattern index.html's letters-scroll-wrap already uses. */
+  .journey { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  .timeline-wrap { position: relative; max-width: 1000px; margin: 3rem auto 4rem; padding: 0 2.8rem; }
+  .timeline { position: relative; display: flex; gap: 1.8rem; overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; padding: 2.2rem 0.6rem 1rem; -webkit-overflow-scrolling: touch; }
+  .timeline::-webkit-scrollbar { height: 4px; }
+  .timeline::-webkit-scrollbar-thumb { background: rgba(26,26,26,0.15); border-radius: 999px; }
+  .timeline::before { content: ''; position: absolute; left: 0.6rem; right: 0.6rem; top: 2.75rem; height: 2px; background: rgba(26,26,26,0.12); z-index: 0; }
+  .t-node { position: relative; z-index: 1; flex: 0 0 200px; scroll-snap-align: start; text-align: center; }
+  .t-node::before { content: ''; display: block; width: 13px; height: 13px; border-radius: 50%; border: 3px solid var(--cream); margin: 0 auto 0.9rem; }
   .t-node.travel::before { background: var(--navy); }
   .t-node.career::before { background: var(--rust); }
   .t-node.family::before { background: var(--gold); }
-  .t-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; font-weight: 600; color: rgba(26,26,26,0.5); margin-bottom: 0.15rem; }
-  .t-text { font-size: 0.94rem; line-height: 1.4; }
+  .t-date { font-family: var(--font-mono); font-size: 0.76rem; font-weight: 600; color: rgba(26,26,26,0.5); margin-bottom: 0.4rem; }
+  .t-text { font-size: 0.92rem; line-height: 1.45; }
+  /* .t-context has no prototype rule (the prototype has no source-tier marker) — a minimal
+     honest treatment distinguishing external-history context from a corpus claim: muted,
+     italic, set apart from the milestone label it follows. */
+  .t-context { display: block; margin-top: 0.35rem; font-size: 0.7rem; font-style: italic; color: rgba(26,26,26,0.45); }
 
-  /* map sections */
-  .map-section { max-width: 1000px; margin: 0 auto 3rem; padding: 0 1.5rem; }
-  .map-card { display: grid; grid-template-columns: 1.1fr 1fr; gap: 0; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 14px 34px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.06); }
-  .map-card img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 260px; background: var(--cream-dim); cursor: zoom-in; transition: opacity 0.15s ease; }
-  .map-card img:hover { opacity: 0.92; }
-  .map-copy { padding: 2rem 2.2rem; display: flex; flex-direction: column; justify-content: center; }
-  .map-era { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.6rem; }
-  .map-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; margin-bottom: 0.9rem; }
-  .map-body p { font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.75); margin-bottom: 0.8rem; }
-  .map-body p:last-child { margin-bottom: 0; }
-  @media (max-width: 760px) { .map-card { grid-template-columns: 1fr; } .map-card img { min-height: 200px; } }
-  .map-card.reverse { direction: rtl; } .map-card.reverse .map-copy { direction: ltr; }
+  .t-scroll-btn { position: absolute; top: 2.75rem; transform: translateY(-50%); z-index: 2; width: 38px; height: 38px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.1); background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.1); cursor: pointer; font-size: 0.95rem; transition: background 0.15s ease; }
+  .t-scroll-btn:hover { background: var(--cream); }
+  .t-scroll-btn.left { left: 0; }
+  .t-scroll-btn.right { right: 0; }
+  @media (max-width: 640px) { .timeline-wrap { padding: 0 1.5rem; } .t-scroll-btn { display: none; } }
 
-  .end-note { max-width: 700px; margin: 1rem auto 5rem; text-align: center; font-size: 0.85rem; color: rgba(26,26,26,0.5); line-height: 1.6; padding: 0 1.5rem; }
-
-  .zoom-overlay { display: none; position: fixed; inset: 0; background: rgba(10,8,6,0.85); z-index: 200; align-items: center; justify-content: center; padding: 2rem; cursor: zoom-out; }
-  .zoom-overlay.open { display: flex; }
-  .zoom-overlay img { max-width: 100%; max-height: 100%; border-radius: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
-  .zoom-close { position: fixed; top: 1.2rem; right: 1.5rem; z-index: 201; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); color: #fff; width: 40px; height: 40px; border-radius: 50%; font-size: 1.3rem; cursor: pointer; display: none; }
+  /* maps — lifted from the same prototype */
+  .maps { max-width: 1000px; margin: 0 auto 3rem; padding: 0 1.5rem; }
+  .map-card { display: grid; grid-template-columns: 1.1fr 1fr; gap: 0; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 14px 34px rgba(0,0,0,0.08); border: 1px solid rgba(0,0,0,0.06); margin-bottom: 2.5rem; }
+  .map-card:last-child { margin-bottom: 0; }
+  .map-body img { width: 100%; height: 100%; object-fit: cover; display: block; min-height: 260px; background: var(--cream-dim); cursor: zoom-in; transition: opacity 0.15s ease; }
+  .map-body img:hover { opacity: 0.92; }
+  .map-section { padding: 2rem 2.2rem; display: flex; flex-direction: column; justify-content: center; }
+  .map-era { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.6rem; }
+  .map-title { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; margin-bottom: 0.9rem; }
+  .map-copy { font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.75); }
+  @media (max-width: 760px) { .map-card { grid-template-columns: 1fr; } .map-body img { min-height: 200px; } }
 </style>
 </head>
 <body>
-<div style="background:#c1481f;color:#fff;text-align:center;padding:0.55rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;letter-spacing:0.03em;">Prototype — for review purposes, not the final site</div>
-
 
 <div class="topbar">
   <a class="back" href="index.html#doors">&larr; Back to start</a>
   <span class="crumb">Follow the Journey</span>
 </div>
 
-<div class="head">
-  <p class="kicker">Where They Went, and Why It Mattered</p>
-  <h1 class="display">Follow the Journey</h1>
-  <p class="sub">Five maps trace this family's movement across sixty years. Each one only makes sense with the story behind it &mdash; so here it is, alongside.</p>
-</div>
+<header class="head">
+  <p class="kicker">Follow the Journey</p>
+  <h1 class="display">A Life in Motion</h1>
+</header>
 
-<div class="timeline-wrap">
-  <div class="timeline-legend">
-    <span><i style="background:var(--navy)"></i>travel</span>
-    <span><i style="background:var(--rust)"></i>career</span>
-    <span><i style="background:var(--gold)"></i>family</span>
-  </div>
-  <div class="timeline">
-    <div class="t-node family"><div class="t-date">c.1880</div><div class="t-text">Born in Korsovka, Latvia</div></div>
-    <div class="t-node travel"><div class="t-date">1901</div><div class="t-text">Emigrates alone to Montreal</div></div>
-    <div class="t-node career"><div class="t-date">1907</div><div class="t-text">The Panic of 1907 wipes out his work</div></div>
-    <div class="t-node travel"><div class="t-date">1908</div><div class="t-text">Gives up on Montreal for London, for good</div></div>
-    <div class="t-node family"><div class="t-date">1911</div><div class="t-text">Marries Dora</div></div>
-    <div class="t-node family"><div class="t-date">1913&ndash;23</div><div class="t-text">Has three daughters: Gladys, Beatrice, Cynthia</div></div>
-    <div class="t-node career"><div class="t-date">1916</div><div class="t-text">Develops his own fur business</div></div>
-    <div class="t-node family"><div class="t-date">1919&ndash;26</div><div class="t-text">Sends his family to the coast every summer</div></div>
-    <div class="t-node career"><div class="t-date">1916&ndash;30s</div><div class="t-text">Business and residence steadily move up the ladder</div></div>
-    <div class="t-node family"><div class="t-date">1978&ndash;Today</div><div class="t-text">Sam and Dora die (1978, 1984); four more generations follow, down to the great-grandson who recovers these letters and builds this project</div></div>
-  </div>
-</div>
+<main class="journey">
+  <section class="timeline-wrap">
+    <button class="t-scroll-btn left" id="t-scroll-left" type="button" aria-label="Scroll timeline left">&larr;</button>
+    <div class="timeline" id="timeline"><div class="t-node family" data-tier="corpus"><div class="t-date mono">c.1880</div><div class="t-text">Born in Korsovka, Latvia</div></div><div class="t-node travel" data-tier="corpus"><div class="t-date mono">1901</div><div class="t-text">Emigrates alone to Montreal</div></div><div class="t-node career" data-tier="external-history"><div class="t-date mono">1907</div><div class="t-text">The Panic of 1907 wipes out his work<span class="t-context">historical context</span></div></div><div class="t-node travel" data-tier="corpus"><div class="t-date mono">1908</div><div class="t-text">Gives up on Montreal for London, for good</div></div><div class="t-node family" data-tier="corpus"><div class="t-date mono">1911</div><div class="t-text">Marries Dora</div></div><div class="t-node family" data-tier="corpus"><div class="t-date mono">1913&ndash;23</div><div class="t-text">Has three daughters: Gladys, Beatrice, Cynthia</div></div><div class="t-node career" data-tier="corpus"><div class="t-date mono">1916</div><div class="t-text">Develops his own fur business</div></div><div class="t-node family" data-tier="corpus"><div class="t-date mono">1919&ndash;26</div><div class="t-text">Sends his family to the coast every summer</div></div><div class="t-node career" data-tier="corpus"><div class="t-date mono">1916&ndash;30s</div><div class="t-text">Business and residence steadily move up the ladder</div></div><div class="t-node family" data-tier="descendant"><div class="t-date mono">1978&ndash;Today</div><div class="t-text">Sam and Dora die (1978, 1984); four more generations follow, down to the great-grandson who recovers these letters and builds this project</div></div></div>
+    <button class="t-scroll-btn right" id="t-scroll-right" type="button" aria-label="Scroll timeline right">&rarr;</button>
+  </section>
+  <section class="maps"><div class="map-card"><div class="map-body"><img data-field="image" data-media="map-scattering" data-provenance="ai-generated" src="media/map-scattering.png" alt="The Scattering"></div><div class="map-section"><div class="map-era">Before the Letters &middot; 1880s&ndash;1900s</div><div class="map-title">The Scattering</div><div class="map-copy">Before there's a "Sam and Dora" story, there's a much bigger one: David and Keila-Tsirel's ten children, scattering out of the Latvian-Lithuanian Pale in every direction &mdash; to Montreal, to London, to South Africa, to Palestine. Sam and Dora's letters are really just the surviving fragment of that much larger diaspora. This map is the reason the correspondence exists at all: once a family scatters this widely, letters stop being a nicety and become the only way anyone stays a family.</div></div></div><div class="map-card"><div class="map-body"><img data-field="image" data-media="map-emigration" data-provenance="ai-generated" src="media/map-emigration.png" alt="Emigration"></div><div class="map-section"><div class="map-era">The Courtship &middot; 1901</div><div class="map-title">Emigration</div><div class="map-copy">In 1901 Sam left Korsovka alone, around eighteen to twenty-one, for Montreal &mdash; the route ran overland to a Channel port, then steerage across the Atlantic on one of the emigrant lines running Europe to Canada. He and Dora were already cousins who'd grown up together; from this point on, for a decade, everything between them happens on paper. This is the first map in the story because it's the one that turns them into letter-writers.</div></div></div><div class="map-card"><div class="map-body"><img data-field="image" data-media="map-back-and-forth" data-provenance="ai-generated" src="media/map-back-and-forth.png" alt="Back and Forth"></div><div class="map-section"><div class="map-era">The Courtship &middot; 1901&ndash;1908</div><div class="map-title">Back and Forth</div><div class="map-copy">Montreal didn't stick the first time, or the second. Sam crossed back and forth across the Atlantic more than once in this decade, chasing work, each attempt undone by the same thing: the Panic of 1907 gutted whatever he'd built. By 1908 he gave up on Canada for good and went to London instead &mdash; the decision that actually determines the rest of the story, made only after Montreal had failed him twice.</div></div></div><div class="map-card"><div class="map-body"><img data-field="image" data-media="map-london" data-provenance="ai-generated" src="media/map-london.png" alt="London"></div><div class="map-section"><div class="map-era">The War Years &middot; 1908&ndash;1930s</div><div class="map-title">London</div><div class="map-copy">London is where Sam and Dora actually build their life: married in 1911, three daughters by 1923, and a fur business Sam develops himself from 1916 onward. The map of their addresses over these two decades is really a map of that business's slow climb &mdash; each move up the ladder shows up as a better postcode.</div></div></div><div class="map-card"><div class="map-body"><img data-field="image" data-media="map-travelling-years" data-provenance="ai-generated" src="media/map-travelling-years.png" alt="The Fur Trade"></div><div class="map-section"><div class="map-era">The Travelling Years &middot; 1916&ndash;1930s</div><div class="map-title">The Fur Trade</div><div class="map-copy">Once the business is established, Sam is on the road constantly &mdash; the London fur trade ran on buying trips out to the Continent and selling trips around Britain's coastal resort towns, where the seasonal money was. This map and the family's own summers at the coast are the same story seen from two sides: he travels for the furs, and sends Dora and the girls to the seaside on what that travel earns.</div></div></div></section>
+</main>
 
-<div class="map-section">
-  <div class="map-card">
-    <img src="images/scattering.png" alt="Map: the scattering of David and Keila-Tsirel's children">
-    <div class="map-copy">
-      <div class="map-era">Before the Letters &middot; 1880s&ndash;1900s</div>
-      <div class="map-title">The Scattering</div>
-      <div class="map-body">
-        <p>Before there's a "Sam and Dora" story, there's a much bigger one: David and Keila-Tsirel's ten children, scattering out of the Latvian-Lithuanian Pale in every direction &mdash; to Montreal, to London, to South Africa, to Palestine. Sam and Dora's letters are really just the surviving fragment of that much larger diaspora.</p>
-        <p>This map is the reason the correspondence exists at all: once a family scatters this widely, letters stop being a nicety and become the only way anyone stays a family.</p>
+<!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
+     letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
+     + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
+     zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
+     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
+     rather than the partial forking into two shapes (single-honest-core principle applied to
+     markup, not just behavior). -->
+<div class="overlay" id="person-overlay">
+  <div class="person-modal">
+    <button class="close-btn" id="person-modal-close">&times;</button>
+    <div class="pm-top">
+      <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div>
+        <div class="pm-name" id="pm-name"></div>
+        <div class="pm-dates mono" id="pm-dates"></div>
+        <div class="pm-role" id="pm-role"></div>
       </div>
+    </div>
+    <div class="pm-bio" id="pm-bio"></div>
+    <div class="pm-letters-label" id="pm-letters-label"></div>
+    <div id="pm-letters-list"></div>
+  </div>
+</div>
+
+<div class="overlay" id="letter-overlay">
+  <div class="letter-modal" id="lm-card">
+    <button class="close-btn" id="modal-close">&times;</button>
+    <div class="lm-date mono" id="lm-date"></div>
+    <div class="lm-title" id="lm-title"></div>
+    <div class="lm-scan" id="lm-scan"></div>
+    <div class="lm-capsule" id="lm-capsule">
+      <button class="lm-lang-btn on" data-lang="en" id="lm-lang-en">English</button>
+      <button class="lm-lang-btn" data-lang="yi" id="lm-lang-yi">ייִדיש</button>
+    </div>
+    <div class="lm-body" id="lm-body"></div>
+    <div class="modal-nav-row" id="modal-nav-row">
+      <button class="nav-btn" id="modal-prev" aria-label="Previous letter">&larr;</button>
+      <div class="modal-position mono" id="modal-position"></div>
+      <button class="nav-btn" id="modal-next" aria-label="Next letter">&rarr;</button>
     </div>
   </div>
 </div>
 
-<div class="map-section">
-  <div class="map-card reverse">
-    <img src="images/emigration.png" alt="Map: Sam's 1901 emigration route from Korsovka to Montreal">
-    <div class="map-copy">
-      <div class="map-era">The Courtship &middot; 1901</div>
-      <div class="map-title">Emigration</div>
-      <div class="map-body">
-        <p>In 1901 Sam left Korsovka alone, around eighteen to twenty-one, for Montreal &mdash; the route ran overland to a Channel port, then steerage across the Atlantic on one of the emigrant lines running Europe to Canada.</p>
-        <p>He and Dora were already cousins who'd grown up together; from this point on, for a decade, everything between them happens on paper. This is the first map in the story because it's the one that turns them into letter-writers.</p>
-      </div>
-    </div>
-  </div>
-</div>
+<button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
+<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""><figcaption id="zoom-overlay-cap" class="zoom-cap" style="display:none;"></figcaption></div>
 
-<div class="map-section">
-  <div class="map-card">
-    <img src="images/back-and-forth.png" alt="Map: crossings back and forth between Montreal and Europe, 1901-1908">
-    <div class="map-copy">
-      <div class="map-era">The Courtship &middot; 1901&ndash;1908</div>
-      <div class="map-title">Back and Forth</div>
-      <div class="map-body">
-        <p>Montreal didn't stick the first time, or the second. Sam crossed back and forth across the Atlantic more than once in this decade, chasing work, each attempt undone by the same thing: the Panic of 1907 gutted whatever he'd built.</p>
-        <p>By 1908 he gave up on Canada for good and went to London instead &mdash; the decision that actually determines the rest of the story, made only after Montreal had failed him twice.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="map-section">
-  <div class="map-card reverse">
-    <img src="images/london.png" alt="Map: Sam and Dora's addresses across two decades in London">
-    <div class="map-copy">
-      <div class="map-era">The War Years &middot; 1908&ndash;1930s</div>
-      <div class="map-title">London</div>
-      <div class="map-body">
-        <p>London is where Sam and Dora actually build their life: married in 1911, three daughters by 1923, and a fur business Sam develops himself from 1916 onward. The map of their addresses over these two decades is really a map of that business's slow climb &mdash; each move up the ladder shows up as a better postcode.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="map-section">
-  <div class="map-card">
-    <img src="images/travelling-years.png" alt="Map: Sam's fur-trade travel across Britain and the Continent">
-    <div class="map-copy">
-      <div class="map-era">The Travelling Years &middot; 1916&ndash;1930s</div>
-      <div class="map-title">The Fur Trade</div>
-      <div class="map-body">
-        <p>Once the business is established, Sam is on the road constantly &mdash; the London fur trade ran on buying trips out to the Continent and selling trips around Britain's coastal resort towns, where the seasonal money was.</p>
-        <p>This map and the family's own summers at the coast are the same story seen from two sides: he travels for the furs, and sends Dora and the girls to the seaside on what that travel earns.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<p class="end-note">Wireframe note: map images and captions above are placeholders standing in for the real map assets and full research narrative &mdash; the pairing pattern (map + 2&ndash;3 sentences of real context, not a one-line label) is the point being demonstrated.</p>
-
-<button class="zoom-close" id="zoom-close">&times;</button>
-<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""></div>
 
 <script>
+  window.MODAL_CONFIG = { langToggle: false, prevNext: false, imgPathMatch: "root" };
+  window.MODAL_LETTERS = [];
+  window.MODAL_PEOPLE = {};
+</script>
+<script src="assets/modal.js"></script>
+<script>
 (function() {
-  const overlay = document.getElementById('zoom-overlay');
-  const overlayImg = document.getElementById('zoom-overlay-img');
-  const closeBtn = document.getElementById('zoom-close');
-
-  function openZoom(src, alt) {
-    overlayImg.src = src;
-    overlayImg.alt = alt || '';
-    overlay.classList.add('open');
-    closeBtn.style.display = 'flex';
-  }
-  function closeZoom() {
-    overlay.classList.remove('open');
-    closeBtn.style.display = 'none';
-  }
-
-  document.querySelectorAll('.map-card img').forEach(img => {
-    img.addEventListener('click', () => openZoom(img.src, img.alt));
+  // Maps are the only clickable images on this door -- open the shared zoom overlay (Paul's ask,
+  // 2026-07-16: every other door's images already do this; journey's never did).
+  document.querySelectorAll('.map-body img').forEach(img => {
+    img.addEventListener('click', () => window.openZoom(img.src, img.alt));
   });
-  overlay.addEventListener('click', closeZoom);
-  closeBtn.addEventListener('click', closeZoom);
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
+
+  // Horizontal timeline scroll arrows (same pattern as index.html's letters-scroll-wrap).
+  const timeline = document.getElementById('timeline');
+  document.getElementById('t-scroll-left').addEventListener('click', () => timeline.scrollBy({ left: -420, behavior: 'smooth' }));
+  document.getElementById('t-scroll-right').addEventListener('click', () => timeline.scrollBy({ left: 420, behavior: 'smooth' }));
 })();
 </script>
+
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Site navigation">
+    <a href="index.html">Home</a>
+    <a href="letters.html">Every Letter</a>
+    <a href="family.html">The Family</a>
+    <a href="story-excerpt.html">Read the Story</a>
+    <a href="long-read.html">Complete Version</a>
+    <a href="journey.html">Follow the Journey</a>
+    <a href="pictures.html">The Story in Pictures</a>
+    <a href="how-made.html">How This Was Made</a>
+  </nav>
+  <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="how-made.html">How This Was Made</a> for the full process.</p>
+</footer>
 
 </body>
 </html>
