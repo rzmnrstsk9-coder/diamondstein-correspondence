@@ -66,6 +66,8 @@
   .reveal.in .reveal-inner { opacity: 1; transform: translateY(0); }
   .reveal-text { font-size: clamp(1.3rem, 3vw, 1.7rem); line-height: 1.55; color: #fff; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; }
   .reveal-text em { color: #e8c98a; font-style: normal; }
+  .reveal-arrow { display: inline-block; margin-top: 1.75rem; font-size: 1.6rem; color: #e8c98a; text-decoration: none; animation: bob 2s ease-in-out infinite; transition: opacity 0.2s ease; }
+  .reveal-arrow:hover { opacity: 0.7; }
 
   .closing { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 1.5rem 5rem; }
   .hero-experiment { font-size: 0.78rem; color: rgba(255,255,255,0.45); max-width: 42ch; line-height: 1.5; }
@@ -252,7 +254,8 @@
 
 <section class="reveal" data-step="5">
   <div class="reveal-inner">
-    <p class="reveal-text">This is what resulted.</p>
+    <p class="reveal-text">This web site is what resulted.</p>
+    <a href="#doors" class="reveal-arrow" aria-label="Scroll down to the site content">&darr;</a>
   </div>
 </section>
 
