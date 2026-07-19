@@ -1,0 +1,49 @@
+/* tokens.css — the design-token layer for the Diamondstein site. :root ONLY.
+   Reviewable design vocabulary (spec 2026-07-13-css-design-system-foundation).
+   Snap within semantic clusters only. Explore via <html data-theme="…">. */
+
+:root, :root[data-theme="default"] {
+  /* Color — brand */
+  --cream:#f0eee9; --cream-dim:#e8e4da; --ink:#1a1a1a; --rust:#c1481f; --navy:#2a4a6a;
+  --gold:#e8c98a;
+
+  /* Color — text scale on light (collapses ~12 ink alphas -> 4) */
+  --ink-strong:rgba(26,26,26,0.88); --ink-body:rgba(26,26,26,0.72);
+  --ink-soft:rgba(26,26,26,0.55);   --ink-faint:rgba(26,26,26,0.40);
+
+  /* Color — dark-surface context (zones opt in; NOT prefers-color-scheme) */
+  --surface-dark:#131110; --surface-darker:#0a0908;
+  --ink-on-dark:rgba(255,255,255,0.90); --ink-on-dark-soft:rgba(255,255,255,0.55);
+  --navy-on-dark:#6a9acc;
+
+  /* Color — lines, fills, scrims */
+  --surface:#ffffff; --line:rgba(0,0,0,0.08); --line-strong:rgba(0,0,0,0.15);
+  --fill-sunken:rgba(0,0,0,0.04); --scrim:rgba(10,8,6,0.72); --scrim-deep:rgba(10,8,6,0.85);
+
+  /* Type — families */
+  --font-display:'Bricolage Grotesque',sans-serif; --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+
+  /* Type — scale (collapses ~27 -> 8) */
+  --text-xs:0.72rem; --text-sm:0.85rem; --text-base:0.92rem; --text-md:1.02rem;
+  --text-lg:1.3rem;  --text-xl:1.4rem;  --text-2xl:2rem;     --text-hero:clamp(1.8rem,4vw,2.6rem);
+
+  /* Space — scale (collapses ~29 -> 7) */
+  --space-1:0.4rem; --space-2:0.6rem; --space-3:0.9rem; --space-4:1.2rem;
+  --space-5:1.5rem; --space-6:2.2rem; --space-7:3.5rem;
+
+  /* Radius — ladder (scales with element size) */
+  --radius-chip:4px; --radius-img:8px; --radius-card:12px;
+  --radius-panel:16px; --radius-pill:999px; --radius-circle:50%;
+
+  /* Elevation — 3 shadows */
+  --shadow-rest:0 4px 14px rgba(0,0,0,0.04); --shadow-hover:0 10px 24px rgba(0,0,0,0.09);
+  --shadow-modal:0 30px 80px rgba(0,0,0,0.40);
+}
+
+/* Confidence — honesty encoding. SEPARATE bare :root (never a themeable block)
+   so no data-theme override can collapse the delta. Excluded from the snap. */
+:root {
+  --text-confident:rgba(26,26,26,0.85);
+  --text-uncertain:rgba(26,26,26,0.50);
+}

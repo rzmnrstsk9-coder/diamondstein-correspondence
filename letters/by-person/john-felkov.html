@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letters by Person — The Sam and Dora Letters (1900&ndash;1926)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>
+  .era-heading { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; max-width: 1200px; margin: 2.5rem auto 1rem; padding: 0 1.5rem; }
+  .era-group:first-of-type .era-heading { margin-top: 0; }
+
+  /* Era pill nav — same classes/values as letters.html (not yet a shared components.css
+     primitive; using identical names now so a future consolidation is a drop-in). Filters by
+     show/hide over server-rendered .era-group sections (see script below), not a rebuilt grid. */
+  .group-row { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem; }
+  .group-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; padding: 0.5rem 1rem; border-radius: 999px; border: 1px solid rgba(26,26,26,0.15); background: #fff; color: var(--ink); cursor: pointer; transition: all 0.15s ease; }
+  .group-btn:hover { border-color: var(--rust); }
+  .group-btn.active { background: var(--rust); border-color: var(--rust); color: #fff; }
+  .group-dates { opacity: 0.6; font-size: 0.94em; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../../index.html#doors">&larr; Back to start</a>
+  <span class="crumb">Letters by Person</span>
+</div>
+<div class="demo-banner">Letters mentioning John Felkov (1)</div>
+
+<div class="head">
+  <p class="kicker">Filtered by Person</p>
+  <h1 class="display">Letters mentioning John Felkov</h1>
+  <p class="sub">Sorted into the eras of the story. Click any card for the full translation.
+    &nbsp;&middot;&nbsp;<a href="../../letters.html">&larr; full archive</a></p>
+</div>
+<div class="group-row" id="group-row"><button class="group-btn active" data-era="all">All (1)</button><button class="group-btn" data-era="The War Years">The War Years <span class="group-dates">1916</span> (1)</button></div><div class="era-group" data-era="The War Years"><h2 class="era-heading">The War Years</h2><div class="letters-grid"><button class="letter-card" data-title="The Zeppelin, Again" data-item="manifest:letter/the-zeppelin-again" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london"><div class="lc-thumb"><img data-field="image" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london" data-provenance="archival-scan" src="../../images/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.jpeg" alt="The Zeppelin, Again" loading="lazy"></div><div class="lc-body"><div class="lc-date mono" data-field="date" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london">3 Sep 1916</div><div class="lc-title" data-field="title" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london">The Zeppelin, Again</div><div class="lc-summary" data-field="summary" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london">Sam writes Dora that he watched a Zeppelin shot down over London and asks after her and the kiddies at the seaside.</div></div></button></div></div>
+
+<!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
+     letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
+     + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
+     zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
+     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
+     rather than the partial forking into two shapes (single-honest-core principle applied to
+     markup, not just behavior). -->
+<div class="overlay" id="person-overlay">
+  <div class="person-modal">
+    <button class="close-btn" id="person-modal-close">&times;</button>
+    <div class="pm-top">
+      <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div>
+        <div class="pm-name" id="pm-name"></div>
+        <div class="pm-dates mono" id="pm-dates"></div>
+        <div class="pm-role" id="pm-role"></div>
+      </div>
+    </div>
+    <div class="pm-bio" id="pm-bio"></div>
+    <div class="pm-letters-label" id="pm-letters-label"></div>
+    <div id="pm-letters-list"></div>
+  </div>
+</div>
+
+<div class="overlay" id="letter-overlay">
+  <div class="letter-modal" id="lm-card">
+    <button class="close-btn" id="modal-close">&times;</button>
+    <div class="lm-date mono" id="lm-date"></div>
+    <div class="lm-title" id="lm-title"></div>
+    <div class="lm-scan" id="lm-scan"></div>
+    <div class="lm-capsule" id="lm-capsule">
+      <button class="lm-lang-btn on" data-lang="en" id="lm-lang-en">English</button>
+      <button class="lm-lang-btn" data-lang="yi" id="lm-lang-yi">ייִדיש</button>
+    </div>
+    <div class="lm-body" id="lm-body"></div>
+    <div class="modal-nav-row" id="modal-nav-row">
+      <button class="nav-btn" id="modal-prev" aria-label="Previous letter">&larr;</button>
+      <div class="modal-position mono" id="modal-position"></div>
+      <button class="nav-btn" id="modal-next" aria-label="Next letter">&rarr;</button>
+    </div>
+  </div>
+</div>
+
+<button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
+<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""><figcaption id="zoom-overlay-cap" class="zoom-cap" style="display:none;"></figcaption></div>
+
+
+<script>
+  window.MODAL_CONFIG = { langToggle: true, prevNext: true, imgPathMatch: "anywhere" };
+  window.MODAL_LETTERS = [ {
+  "date": "3 Sep 1916",
+  "title": "The Zeppelin, Again",
+  "img": "../../images/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.jpeg",
+  "summary": "Sam writes Dora that he watched a Zeppelin shot down over London and asks after her and the kiddies at the seaside.",
+  "translation": "[Letterhead:]\nS. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam",
+  "transcription": "[printed letterhead:]\nS. Diamondstein & Co.,        37, FASHION STREET,\nFUR DEALERS AND JOB BUYERS.        BRICK LANE, E.\nImporters and Exporters        All communications addressed to :\n        34, ALVINGTON CRESCENT, DALSTON, N.\n\nLondon, aa Sept 3 1916\n\nDear Dora\nsuprised that I did not have a note from\nyou on Satorday morning are you\nenjoing [enjoying] yourselfs is the weather fine\nI am quite well you hove [have] nothing\nto worry for about me. no doubt you\nhove heard we brought down a Zep.\nit wos a fine site [sight] I and John hove been\nat that time in Leons place I may come\ndown next week End hove [have] you recievd\nme pound. are the kiddis enjoing themselfs\nare they good and dont worry you much\nI remain your loving Husband\nSam\n",
+  "yiddish": "",
+  "era": "The War Years",
+  "curated": true,
+  "artifact": "1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london",
+  "img_provenance": "archival-scan",
+  "item_id": "manifest:letter/the-zeppelin-again"
+} ];
+  window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
+</script>
+<script src="../../assets/modal.js"></script>
+<script>
+(function() {
+  // Era pill filter (Paul's ask, 2026-07-13): show/hide pre-rendered .era-group sections.
+  document.querySelectorAll('.group-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const era = btn.dataset.era;
+      document.querySelectorAll('.group-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.era-group').forEach(section => {
+        section.style.display = (era === 'all' || section.dataset.era === era) ? '' : 'none';
+      });
+    });
+  });
+
+  // Server-rendered .letter-card buttons carry data-title — open by title via the shared opener.
+  document.querySelectorAll('.letter-card').forEach(card => {
+    card.addEventListener('click', () => window.openLetterModal(card.dataset.title));
+  });
+  // ?jump= deep-link is handled by the shared modal.js (it owns the modal). Do NOT duplicate
+  // it here — a second handler would fire openLetterModal twice on a ?jump load.
+})();
+</script>
+
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Site navigation">
+    <a href="../../index.html">Home</a>
+    <a href="../../letters.html">Every Letter</a>
+    <a href="../../family.html">The Family</a>
+    <a href="../../story-excerpt.html">Read the Story</a>
+    <a href="../../long-read.html">Complete Version</a>
+    <a href="../../journey.html">Follow the Journey</a>
+    <a href="../../pictures.html">The Story in Pictures</a>
+    <a href="../../how-made.html">How This Was Made</a>
+  </nav>
+  <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="../../how-made.html">How This Was Made</a> for the full process.</p>
+  <p class="footer-contact">Questions or corrections? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
+</footer>
+
+<script>
+  // Obfuscated mailto (Paul's ask, 2026-07-16): the address never appears as plain text in
+  // the HTML source -- assembled at runtime, so a static-HTML scraper never sees it, while
+  // real visitors with JS get a normal working mailto: link.
+  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
+    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
+  });
+</script>
+
+</body>
+</html>
