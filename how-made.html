@@ -3,102 +3,236 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How This Was Made &mdash; The Sam and Dora Letters</title>
+<title>How This Was Made — The Diamondstein Correspondence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/tokens.css">
-<link rel="stylesheet" href="assets/components.css">
 <style>
-  .how-made { max-width: 780px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
 
-  .phase-label { margin: 3.5rem 0 0; text-align: center; font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rust); }
-  .steps-wrap .phase-label:first-child { margin-top: 1rem; }
-  .phase-sub { max-width: 620px; margin: 0.6rem auto 0; text-align: center; font-size: var(--text-md); line-height: 1.6; color: var(--ink-soft); }
-  .steps { margin: 3rem 0; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: var(--ink); color: #fff; }
+  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
+  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+
+  .head { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem 1rem; text-align: center; }
+  .head p.kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.8rem; }
+  .head h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 1rem; }
+  .head p.sub { font-size: 1.05rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
+
+  .phase-label { max-width: 780px; margin: 3.5rem auto 0; padding: 0 1.5rem; text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rust); }
+  .phase-sub { max-width: 620px; margin: 0.6rem auto 0; padding: 0 1.5rem; text-align: center; font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.65); }
+  .steps { max-width: 780px; margin: 3rem auto; padding: 0 1.5rem; }
   .step { display: flex; gap: 1.5rem; margin-bottom: 2.5rem; }
-  .step:last-child { margin-bottom: 0; }
-  .step-num { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; background: var(--rust); color: #fff; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; }
+  .step-num { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; background: var(--rust); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; }
   .step-body { flex: 1; padding-top: 0.3rem; }
-  .step-title { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; margin-bottom: 0.5rem; }
-  .step-text { font-size: var(--text-md); line-height: 1.7; color: var(--ink-soft); }
-  .step-example { margin-top: 0.9rem; background: var(--surface); border-radius: 10px; padding: 0.9rem 1.1rem; font-size: var(--text-sm); line-height: 1.6; color: var(--ink-soft); border-left: 3px solid var(--navy); }
+  .step-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.25rem; margin-bottom: 0.5rem; }
+  .step-text { font-size: 0.98rem; line-height: 1.7; color: rgba(26,26,26,0.78); }
+  .step-example { margin-top: 0.9rem; background: #fff; border-radius: 10px; padding: 0.9rem 1.1rem; font-size: 0.86rem; line-height: 1.6; color: rgba(26,26,26,0.65); border-left: 3px solid var(--navy); }
   .step-example b { color: var(--navy); }
+  .connector { width: 2px; background: rgba(0,0,0,0.1); margin: 0 auto -1.5rem; height: 1.5rem; }
 
-  .principles { margin: 0 0 5rem; }
-  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
-  .principle-card { background: var(--surface); border-radius: 12px; padding: 1.3rem 1.4rem; border: 1px solid var(--line); }
-  .principle-title { font-weight: 700; font-size: var(--text-md); margin-bottom: 0.5rem; color: var(--rust); }
-  .principle-body { font-size: var(--text-sm); line-height: 1.55; color: var(--ink-soft); }
+  .principles { max-width: 780px; margin: 0 auto 5rem; padding: 0 1.5rem; }
+  .principles h2 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; text-align: center; margin-bottom: 2rem; }
+  .principle-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; }
+  .principle-card { background: #fff; border-radius: 12px; padding: 1.3rem 1.4rem; border: 1px solid rgba(0,0,0,0.06); }
+  .principle-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem; color: var(--rust); }
+  .principle-body { font-size: 0.86rem; line-height: 1.55; color: rgba(26,26,26,0.7); }
 
-  .people { margin: 0 0 3rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-  .person-card { background: var(--surface); border-radius: 14px; padding: 1.6rem 1.6rem 1.8rem; border: 1px solid var(--line); }
+  .method-figure { max-width: 900px; margin: 2.5rem auto 0; padding: 0 1.5rem; }
+  .method-figure img { width: 100%; border-radius: 14px; display: block; box-shadow: 0 20px 50px rgba(0,0,0,0.12); }
+  .method-figure figcaption { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.45); text-align: center; margin-top: 0.9rem; }
+
+  .people { max-width: 780px; margin: 0 auto 5rem; padding: 0 1.5rem; }
+  .people h2 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; text-align: center; margin-bottom: 0.6rem; }
+  .people-sub { text-align: center; font-size: 0.92rem; color: rgba(26,26,26,0.6); max-width: 52ch; margin: 0 auto 2rem; line-height: 1.6; }
+  .people-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+  .person-card { background: #fff; border-radius: 14px; padding: 1.6rem 1.6rem 1.8rem; border: 1px solid rgba(0,0,0,0.06); }
   .person-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
-  .person-avatar { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: #fff; }
+  .person-avatar { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.05rem; color: #fff; }
   .person-avatar.paul { background: var(--rust); }
   .person-avatar.fernando { background: var(--navy); }
-  .person-name { font-family: var(--font-display); font-weight: 700; font-size: 1.08rem; }
-  .person-role { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.03em; color: var(--ink-faint); margin-top: 0.2rem; }
-  .person-bio { font-size: var(--text-sm); line-height: 1.6; color: var(--ink-soft); }
+  .person-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.08rem; }
+  .person-role { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.03em; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
+  .person-bio { font-size: 0.88rem; line-height: 1.6; color: rgba(26,26,26,0.72); }
 
-  .under-the-hood { margin: 0 0 3rem; }
-  .reveal { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 1.2rem 1.5rem; }
-  .reveal[open] { padding-bottom: 1.5rem; }
-  .reveal > summary { cursor: pointer; list-style: none; font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.03em; color: var(--navy); }
-  .reveal > summary::-webkit-details-marker { display: none; }
-  .reveal-body { font-size: var(--text-sm); line-height: 1.7; color: var(--ink-soft); margin-top: 1rem; }
-  .reveal-body p { margin-bottom: 0.9rem; }
-  .reveal-body p:last-child { margin-bottom: 0; }
-  .reveal-body b { color: var(--navy); font-weight: 600; }
-  .item-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
-  .item-list li { padding: 0.55rem 0; border-top: 1px solid var(--line); font-size: var(--text-sm); line-height: 1.55; color: var(--ink-soft); }
-  .item-list li:first-child { border-top: none; }
-  .item-list .term { font-family: var(--font-mono); font-size: var(--text-sm); font-weight: 600; color: var(--rust); }
+  /* Progressive reveal — the technical + AI-honesty detail. Sits below the people grid
+     as its own block, collapsed by default so it never interrupts the lay-audience read;
+     open for anyone curious about the machinery. */
+  .bio-more { max-width: 640px; margin: 2.5rem auto 0; background: #fff; border: 1px solid rgba(0,0,0,0.06); border-radius: 12px; padding: 1.2rem 1.5rem; }
+  .bio-more[open] { padding-bottom: 1.5rem; }
+  .bio-more > summary { cursor: pointer; list-style: none; font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.03em; color: var(--navy); display: inline-flex; align-items: center; gap: 0.5rem; }
+  .bio-more > summary::-webkit-details-marker { display: none; }
+  .bio-more > summary::before { content: '\25B8'; font-size: 0.72rem; transition: transform 0.15s ease; }
+  .bio-more[open] > summary::before { transform: rotate(90deg); }
+  .bio-more > summary:hover { color: var(--rust); }
+  .bio-detail { font-size: 0.88rem; line-height: 1.7; color: rgba(26,26,26,0.72); margin-top: 1rem; }
+  .bio-detail p { margin-bottom: 0.9rem; }
+  .bio-detail p:last-child { margin-bottom: 0; }
+  .bio-detail b { color: var(--navy); font-weight: 600; }
+  .tool-list { list-style: none; margin: 0.4rem 0 0; padding: 0; }
+  .tool-list li { padding: 0.55rem 0; border-top: 1px solid rgba(0,0,0,0.06); font-size: 0.85rem; line-height: 1.55; color: rgba(26,26,26,0.68); }
+  .tool-list li:first-child { border-top: none; }
+  .tool-list .tool-name { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; font-weight: 600; color: var(--rust); }
 </style>
 </head>
 <body>
+<div style="background:#c1481f;color:#fff;text-align:center;padding:0.55rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;letter-spacing:0.03em;">Prototype — for review purposes, not the final site</div>
+
 
 <div class="topbar">
   <a class="back" href="index.html#doors">&larr; Back to start</a>
   <span class="crumb">How This Was Made</span>
 </div>
 
-<header class="head">
+<div class="head">
   <p class="kicker">An Experiment in AI-Assisted Genealogical Research</p>
-  <h1>How This Was Made</h1>
+  <h1 class="display">How This Was Made</h1>
   <p class="sub">This project is two things at once: the recovered story of Sam and Dora, and a real, honest test of whether AI tools can be trusted to help with family history research at all. No one left in the family reads Yiddish well enough to check this alone &mdash; so here's exactly how we made sure nothing got made up.</p>
-</header>
+</div>
 
-<main class="how-made">
-  <section class="steps-wrap"><div class="phase-label">Phase One &mdash; Getting the Words Right</div><div class="steps"><div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Scan it first</div><div class="step-text">Every letter and postcard was scanned first, before anything else happened to it. That scan is the one fixed, unarguable thing in this whole project &mdash; every fact on this site has to trace back to it.</div></div></div><div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Read it three times, separately</div><div class="step-text">Each page was read independently by three different tools, without letting them see each other's answers first. That independence matters: if all three land on the same reading without coordinating, it's a much stronger sign the reading is actually right, not just repeated.</div><div class="step-example"><b>Why it matters:</b> a lot of this correspondence is badly damaged &mdash; faded ink, torn pages, garbled Yiddish handwriting. A single reading, however confident it sounds, can quietly be wrong. Three independent readings expose that.</div></div></div><div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Compare the answers</div><div class="step-text">Where all three readings agreed, we trust it and move on. Where they didn't &mdash; and on the worst-damaged pages, they often didn't &mdash; we show both readings side by side and say so plainly, instead of quietly picking the one that sounds better.</div><div class="step-example"><b>What this looks like on the page:</b> phrases like &ldquo;[illegible]&rdquo; or notes that a name or date is uncertain aren't a formatting choice &mdash; they're the honest record of what the source actually supports.</div></div></div><div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">A person checks it</div><div class="step-text">A family member read every single letter in this archive, fixed anything a computer couldn't know &mdash; a family nickname, a local street, a relative's face in a photo &mdash; and approved what you see on this site. Nothing here is published un-reviewed.</div></div></div></div><div class="phase-label">Phase Two &mdash; Turning Verified Letters Into a Story</div><p class="phase-sub">Getting an honest translation is only half the job. The letters also had to become a story &mdash; connected across decades, explained where they assume things a modern reader wouldn't know, and honest about which parts are solid and which are educated guesses.</p><div class="steps"><div class="step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Put everything in order</div><div class="step-text">Every letter and document was dated as precisely as the evidence allowed, then grouped into the eras you see on this site &mdash; the Courtship, the War Years, the Travelling Years &mdash; based on where Sam was actually writing from and what he was doing, not by assumption.</div><div class="step-example"><b>Where a date wasn't certain:</b> the site says so directly &mdash; &ldquo;c. 1907&ndash;1908&rdquo; means a best estimate, not a known fact dressed up to look precise.</div></div></div><div class="step"><div class="step-num">6</div><div class="step-body"><div class="step-title">Bring in outside history, clearly labeled</div><div class="step-text">Some of what makes the letters make sense isn't in the letters at all &mdash; what the Panic of 1907 actually was, how emigration routes worked, why a Yiddish-speaking family would leave the Pale of Settlement. That's real historical research, brought in on purpose and clearly marked as background &mdash; never blended into what the letters themselves say.</div></div></div><div class="step"><div class="step-num">7</div><div class="step-body"><div class="step-title">Look for patterns across the whole archive</div><div class="step-text">Some of this site's biggest findings aren't from any single letter &mdash; they only show up when you count across all of them: how many surviving letters are in Sam's hand versus Dora's (none of hers survive, though Sam's own letters make clear she wrote back &mdash; "I received your letter" &mdash; so this is about what was kept, not what existed), how many open with some version of &ldquo;no letter from you,&rdquo; which years have almost nothing at all. These are measurable facts about the collection itself, not interpretation.</div></div></div><div class="step"><div class="step-num">8</div><div class="step-body"><div class="step-title">Flag the guesses as guesses</div><div class="step-text">Where the story connects two things that no letter actually states outright &mdash; like whether the wedding dowry became the seed money for Sam's fur business &mdash; that connection is labeled as speculation, not fact. Family memory (a name from a family tree, a date recalled by a living relative) gets used too, but always held at a lower confidence than an actual document, and never silently upgraded into one.</div></div></div></div></section>
-  <section class="principles"><div class="principle-card" data-item="how-made:principle-the-scan-is-ground-truth"><div class="principle-title">The scan is ground truth</div><div class="principle-body" data-field="text">Every claim on this site &mdash; every date, every name, every quote &mdash; has to trace back to a scanned page, a family tree record, or named family testimony. If it can't, it doesn't get stated as fact.</div></div><div class="principle-card" data-item="how-made:principle-honesty-over-fluency"><div class="principle-title">Honesty over fluency</div><div class="principle-body" data-field="text">It would be easy to smooth over the gaps and write confident, tidy prose. We didn't. Where the letters are ambiguous, this site stays ambiguous too &mdash; uncertainty is preserved, not polished away.</div></div><div class="principle-card" data-item="how-made:principle-rigor-builds-the-archive-a-person"><div class="principle-title">Rigor builds the archive; a person tells the story</div><div class="principle-body" data-field="text">The full, honest record behind this site is exhaustive on purpose. But the story you actually read &mdash; what's featured, in what order, in whose voice &mdash; is a family member's own editorial retelling of that record, not a claim that anything left out is untrue.</div></div></section>
-  <section class="people"><div class="person-card"><div class="person-head"><div class="person-avatar paul">PL</div><div><div class="person-name">Paul Levine</div><div class="person-role">Project originator &middot; family archivist &middot; design lead</div></div></div><div class="person-bio">A retired graphic designer who ran Tangent Design. Two earlier projects share a thread with this one &mdash; <i>Barbed Wire</i>, a beloved 1990s Vancouver webzine, and <i>Raising the Dead</i> (2002), a Canada Council&ndash;funded interactive memorial for his brother Richard &mdash; whose files, decades later, turned out to hold the box of letters this whole project is built from. On this project: supplied the letters and family testimony, reviews and approves every reading, holds final editorial authority, and personally designed this entire site.</div></div><div class="person-card"><div class="person-head"><div class="person-avatar fernando">FM</div><div><div class="person-name">Fernando Medrano</div><div class="person-role">Systems architect</div></div></div><div class="person-bio">A Vancouver-based designer and technologist, roughly twenty-five years into building the systems behind creative work &mdash; a decade at Radical Entertainment, then directing the art of <i>Glitch</i> for the studio that became Slack, then founding studios of his own. On this project: built the machinery that turns a box of fragile, half-legible pages into a structured, searchable archive; the rules that keep that archive honest; and the system that gives the material shape and meaning, then narrative &mdash; and ultimately an engaging, living account. One rule is built into its bones: it can never present a guess as a fact.</div></div></section>
-  <section class="under-the-hood"><details class="reveal"><summary>Under the hood &mdash; a more technical look, and how the AI was kept honest</summary><div class="reveal-body"><p><b>The architecture is deliberately rigorous and opinionated.</b> It isn't a loose bag of scripts that happen to produce a website; it's a designed system with a point of view about honesty, and that view is enforced in the structure itself. The central principle is a strict <i>division of labour</i>: the work is split among a chain of specialists &mdash; a transcriber, a translator, an archivist, an editor &mdash; each with exactly one job and a clean handoff to the next. No single step is trusted to do everything, and no later step is allowed to quietly rewrite what an earlier one established. That separation is what lets the system be genuinely honest rather than merely careful.</p><p><b>First, the transcriber and the translator.</b> The <b>transcriber</b> is <b>Transkribus</b>, a handwriting-recognition model trained specifically on this era's Yiddish script; it turns the strokes on a scan into text. Then the <b>translators</b> &mdash; more than one AI model, working <i>independently</i> &mdash; render it into English, and their readings are compared so agreement is earned rather than assumed. Every hand-off is saved as structured, labelled data, not loose text, and nothing is ever overwritten: when a later reading disagrees with an earlier one, both are kept, so a genuine uncertainty is remembered instead of quietly smoothed away.</p><p><b>Then, the archivist.</b> Picture a meticulous archivist who keeps a card catalogue &mdash; one drawer for people, one for places, one for dates, one for the photographs. Every person, place, date, and photo the letters mention gets its own card in the matching <b>registry</b>. This archivist is strict: nothing is filed as a fact until it's actually confirmed &mdash; a card starts life stamped &ldquo;unverified&rdquo; and is only promoted deliberately &mdash; and every card notes exactly which page it came from and how sure we are. Where two readings disagree, the archivist keeps both cards rather than picking a favourite. And this archivist never sleeps or cuts corners: the catalogue audits itself, and if any card points to a source that doesn't exist or claims a fact with no page behind it, the whole thing refuses to open for business until it's fixed.</p><p><b>Then, the editor.</b> The archivist's catalogue holds <i>everything the letters actually support</i> &mdash; the full, honest record, warts and gaps included. But not all of it belongs on a public page, and the same true fact can be told well or badly. So a second role sits above the archivist: an editor, working from a running list called the <b>manifest</b>, who makes the taste calls &mdash; which items to show, in what order, with what wording. The division of labour is deliberate: the archivist guards <i>what's true</i>, the editor decides <i>how to tell it</i>, and neither is allowed to do the other's job. So if something is <i>historically wrong</i>, the archivist corrects the record; if it's merely <i>told better or worse</i>, the editor changes the manifest &mdash; and the truth and the telling never get tangled up in each other.</p><p><b>Last, giving the material shape &mdash; a living system.</b> From that one honest catalogue the same material is laid out in different ways &mdash; a browsable shelf of letters, a woven story, a family roster &mdash; each drawn from the archivist's records, so no version can wander off and invent its own account of events. Nothing here is a static web page hand-built once; the whole site is <i>regenerated</i> from the data. Correct a name at the root, rebuild, and the fix appears everywhere at once &mdash; on the letter, in the story, on the roster &mdash; with nothing patched by hand. It's less a finished website than a living record that can keep growing as more of the family's story surfaces.</p><p><b>Where the AI fits &mdash; and where it deliberately doesn't.</b> Much of this was built with two AI assistants working alongside the two of us, one paired with each person. Their role is broader than it might seem: the same models both <i>wrote the software</i> &mdash; the pipeline, the honesty checks, the site itself &mdash; and did the <i>interpretive</i> work of translating the letters, drawing out recurring themes, and shaping the raw material into a narrative. But the design draws a hard line around what AI is <i>allowed</i> to decide. It reads, translates, drafts, and builds &mdash; it never gets the final word on what's true. A person confirms every reading; an AI's confident-sounding guess carries no more weight than that, and where the letters are too damaged to know, the honest answer is to say so rather than let a machine paper over the gap. The goal was never to hand family history to a computer &mdash; it was to use these tools carefully enough that a family with no Yiddish reader left could recover its own story <i>without</i> quietly inventing the parts it couldn't recover.</p><p><b>The tools that made it possible.</b> For anyone curious about the actual stack:</p><ul class="item-list"><li><span class="term">Transkribus</span> &mdash; handwriting recognition trained on real early-20th-century Yiddish script. It did the first pass at turning the handwriting into text (and it's the <i>only</i> tool trusted to read the Yiddish, precisely because it was measured against known pages).</li><li><span class="term">Claude</span> &mdash; did double duty: wrote the software (pipeline, honesty checks, the site) <i>and</i> the interpretive work (translation, theme extraction, shaping the narrative).</li><li><span class="term">Gemini</span> &mdash; a second, independent translator, used as a cross-check: where it and Claude agreed we trusted it more, and it was never allowed to quietly overrule the primary reading.</li><li><span class="term">ComfyUI</span> <i>(soon)</i> &mdash; for regenerating the illustrated portraits from recipes, so even the artwork stays reproducible rather than hand-made once and forgotten.</li></ul></div></details></section>
-</main>
+<figure class="method-figure">
+  <img src="images/how-made-illustration.png" alt="Illustration: three independent readings of a letter, compared under a magnifying glass, alongside family photographs">
+  <figcaption>Three separate readings of the same page, compared side by side, before a family member has the final say.</figcaption>
+</figure>
 
-<footer class="site-footer">
-  <nav class="footer-nav" aria-label="Site navigation">
-    <a href="index.html">Home</a>
-    <a href="letters.html">Every Letter</a>
-    <a href="family.html">The Family</a>
-    <a href="story-excerpt.html">Read the Story</a>
-    <a href="long-read.html">Complete Version</a>
-    <a href="journey.html">Follow the Journey</a>
-    <a href="pictures.html">The Story in Pictures</a>
-    <a href="how-made.html">How This Was Made</a>
-  </nav>
-  <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="how-made.html">How This Was Made</a> for the full process.</p>
-  <p class="footer-contact">Questions or corrections? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
-</footer>
+<div class="phase-label">Phase One &mdash; Getting the Words Right</div>
 
-<script>
-  // Obfuscated mailto (Paul's ask, 2026-07-16): the address never appears as plain text in
-  // the HTML source -- assembled at runtime, so a static-HTML scraper never sees it, while
-  // real visitors with JS get a normal working mailto: link.
-  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
-    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
-  });
-</script>
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <div class="step-title">Scan it first</div>
+      <div class="step-text">Every letter and postcard was scanned first, before anything else happened to it. That scan is the one fixed, unarguable thing in this whole project &mdash; every fact on this site has to trace back to it.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <div class="step-title">Read it three times, separately</div>
+      <div class="step-text">Each page was read independently by three different tools, without letting them see each other's answers first. That independence matters: if all three land on the same reading without coordinating, it's a much stronger sign the reading is actually right, not just repeated.</div>
+      <div class="step-example"><b>Why it matters:</b> a lot of this correspondence is badly damaged &mdash; faded ink, torn pages, garbled Yiddish handwriting. A single reading, however confident it sounds, can quietly be wrong. Three independent readings expose that.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <div class="step-title">Compare the answers</div>
+      <div class="step-text">Where all three readings agreed, we trust it and move on. Where they didn't &mdash; and on the worst-damaged pages, they often didn't &mdash; we show both readings side by side and say so plainly, instead of quietly picking the one that sounds better.</div>
+      <div class="step-example"><b>What this looks like on the page:</b> phrases like &ldquo;[illegible]&rdquo; or notes that a name or date is uncertain aren't a formatting choice &mdash; they're the honest record of what the source actually supports.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <div class="step-title">A person checks it</div>
+      <div class="step-text">A family member read every single letter in this archive, fixed anything a computer couldn't know &mdash; a family nickname, a local street, a relative's face in a photo &mdash; and approved what you see on this site. Nothing here is published un-reviewed.</div>
+    </div>
+  </div>
+</div>
+
+<div class="phase-label">Phase Two &mdash; Turning Verified Letters Into a Story</div>
+<p class="phase-sub">Getting an honest translation is only half the job. The letters also had to become a story &mdash; connected across decades, explained where they assume things a modern reader wouldn't know, and honest about which parts are solid and which are educated guesses.</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <div class="step-title">Put everything in order</div>
+      <div class="step-text">Every letter and document was dated as precisely as the evidence allowed, then grouped into the eras you see on this site &mdash; the Courtship, the War Years, the Travelling Years &mdash; based on where Sam was actually writing from and what he was doing, not by assumption.</div>
+      <div class="step-example"><b>Where a date wasn't certain:</b> the site says so directly &mdash; &ldquo;c. 1907&ndash;1908&rdquo; means a best estimate, not a known fact dressed up to look precise.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">6</div>
+    <div class="step-body">
+      <div class="step-title">Bring in outside history, clearly labeled</div>
+      <div class="step-text">Some of what makes the letters make sense isn't in the letters at all &mdash; what the Panic of 1907 actually was, how emigration routes worked, why a Yiddish-speaking family would leave the Pale of Settlement. That's real historical research, brought in on purpose and clearly marked as background &mdash; never blended into what the letters themselves say.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">7</div>
+    <div class="step-body">
+      <div class="step-title">Look for patterns across the whole archive</div>
+      <div class="step-text">Some of this site's biggest findings aren't from any single letter &mdash; they only show up when you count across all of them: how many surviving letters are in Sam's hand versus Dora's (none of hers survive, though Sam's own letters make clear she wrote back &mdash; "I received your letter" &mdash; so this is about what was kept, not what existed), how many open with some version of &ldquo;no letter from you,&rdquo; which years have almost nothing at all. These are measurable facts about the collection itself, not interpretation.</div>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">8</div>
+    <div class="step-body">
+      <div class="step-title">Flag the guesses as guesses</div>
+      <div class="step-text">Where the story connects two things that no letter actually states outright &mdash; like whether the wedding dowry became the seed money for Sam's fur business &mdash; that connection is labeled as speculation, not fact. Family memory (a name from a family tree, a date recalled by a living relative) gets used too, but always held at a lower confidence than an actual document, and never silently upgraded into one.</div>
+    </div>
+  </div>
+</div>
+
+<div class="principles">
+  <h2 class="display">Three Rules That Shaped Everything</h2>
+  <div class="principle-grid">
+    <div class="principle-card">
+      <div class="principle-title">The scan is ground truth</div>
+      <div class="principle-body">Every claim on this site &mdash; every date, every name, every quote &mdash; has to trace back to a scanned page, a family tree record, or named family testimony. If it can't, it doesn't get stated as fact.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-title">Honesty over fluency</div>
+      <div class="principle-body">It would be easy to smooth over the gaps and write confident, tidy prose. We didn't. Where the letters are ambiguous, this site stays ambiguous too &mdash; uncertainty is preserved, not polished away.</div>
+    </div>
+    <div class="principle-card">
+      <div class="principle-title">Rigor builds the archive; a person tells the story</div>
+      <div class="principle-body">The full, honest record behind this site is exhaustive on purpose. But the story you actually read &mdash; what's featured, in what order, in whose voice &mdash; is a family member's own editorial retelling of that record, not a claim that anything left out is untrue.</div>
+    </div>
+  </div>
+</div>
+
+<div class="people">
+  <h2 class="display">Who Made This</h2>
+  <p class="people-sub">Two people, working across the AI-versus-honesty line from opposite ends &mdash; one holding the letters and the final say, one building the machinery that keeps the record straight.</p>
+  <div class="people-grid">
+    <div class="person-card">
+      <div class="person-head">
+        <div class="person-avatar paul">PL</div>
+        <div>
+          <div class="person-name">Paul Levine</div>
+          <div class="person-role">Project originator &middot; family archivist &middot; design lead</div>
+        </div>
+      </div>
+      <div class="person-bio">A retired graphic designer who ran Tangent Design. Two earlier projects share a thread with this one &mdash; <i>Barbed Wire</i>, a beloved 1990s Vancouver webzine, and <i>Raising the Dead</i> (2002), a Canada Council&ndash;funded interactive memorial for his brother Richard &mdash; whose files, decades later, turned out to hold the box of letters this whole project is built from. On this project: supplied the letters and family testimony, reviews and approves every reading, holds final editorial authority, and personally designed this entire site.</div>
+    </div>
+    <div class="person-card">
+      <div class="person-head">
+        <div class="person-avatar fernando">FM</div>
+        <div>
+          <div class="person-name">Fernando Medrano</div>
+          <div class="person-role">Systems architect</div>
+        </div>
+      </div>
+      <div class="person-bio">A Vancouver-based designer and technologist, roughly twenty-five years into building the systems behind creative work &mdash; a decade at Radical Entertainment, then directing the art of <i>Glitch</i> for the studio that became Slack, then founding studios of his own. On this project: built the machinery that turns a box of fragile, half-legible pages into a structured, searchable archive; the rules that keep that archive honest; and the system that gives the material shape and meaning, then narrative &mdash; and ultimately an engaging, living account. One rule is built into its bones: it can never present a guess as a fact.</div>
+    </div>
+  </div>
+
+  <details class="bio-more">
+    <summary>Under the hood &mdash; a more technical look, and how the AI was kept honest</summary>
+    <div class="bio-detail">
+      <p><b>The architecture is deliberately rigorous and opinionated.</b> It isn't a loose bag of scripts that happen to produce a website; it's a designed system with a point of view about honesty, and that view is enforced in the structure itself. The central principle is a strict <i>division of labour</i>: the work is split among a chain of specialists &mdash; a transcriber, a translator, an archivist, an editor &mdash; each with exactly one job and a clean handoff to the next. No single step is trusted to do everything, and no later step is allowed to quietly rewrite what an earlier one established. That separation is what lets the system be genuinely honest rather than merely careful.</p>
+      <p><b>First, the transcriber and the translator.</b> The <b>transcriber</b> is <b>Transkribus</b>, a handwriting-recognition model trained specifically on this era's Yiddish script; it turns the strokes on a scan into text. Then the <b>translators</b> &mdash; more than one AI model, working <i>independently</i> &mdash; render it into English, and their readings are compared so agreement is earned rather than assumed. Every hand-off is saved as structured, labelled data, not loose text, and nothing is ever overwritten: when a later reading disagrees with an earlier one, both are kept, so a genuine uncertainty is remembered instead of quietly smoothed away.</p>
+      <p><b>Then, the archivist.</b> Picture a meticulous archivist who keeps a card catalogue &mdash; one drawer for people, one for places, one for dates, one for the photographs. Every person, place, date, and photo the letters mention gets its own card in the matching <b>registry</b>. This archivist is strict: nothing is filed as a fact until it's actually confirmed &mdash; a card starts life stamped &ldquo;unverified&rdquo; and is only promoted deliberately &mdash; and every card notes exactly which page it came from and how sure we are. Where two readings disagree, the archivist keeps both cards rather than picking a favourite. And this archivist never sleeps or cuts corners: the catalogue audits itself, and if any card points to a source that doesn't exist or claims a fact with no page behind it, the whole thing refuses to open for business until it's fixed.</p>
+      <p><b>Then, the editor.</b> The archivist's catalogue holds <i>everything the letters actually support</i> &mdash; the full, honest record, warts and gaps included. But not all of it belongs on a public page, and the same true fact can be told well or badly. So a second role sits above the archivist: an editor, working from a running list called the <b>manifest</b>, who makes the taste calls &mdash; which items to show, in what order, with what wording. The division of labour is deliberate: the archivist guards <i>what's true</i>, the editor decides <i>how to tell it</i>, and neither is allowed to do the other's job. So if something is <i>historically wrong</i>, the archivist corrects the record; if it's merely <i>told better or worse</i>, the editor changes the manifest &mdash; and the truth and the telling never get tangled up in each other.</p>
+      <p><b>Last, giving the material shape &mdash; a living system.</b> From that one honest catalogue the same material is laid out in different ways &mdash; a browsable shelf of letters, a woven story, a family roster &mdash; each drawn from the archivist's records, so no version can wander off and invent its own account of events. Nothing here is a static web page hand-built once; the whole site is <i>regenerated</i> from the data. Correct a name at the root, rebuild, and the fix appears everywhere at once &mdash; on the letter, in the story, on the roster &mdash; with nothing patched by hand. It's less a finished website than a living record that can keep growing as more of the family's story surfaces.</p>
+      <p><b>Where the AI fits &mdash; and where it deliberately doesn't.</b> Much of this was built with two AI assistants working alongside the two of us, one paired with each person. Their role is broader than it might seem: the same models both <i>wrote the software</i> &mdash; the pipeline, the honesty checks, the site itself &mdash; and did the <i>interpretive</i> work of translating the letters, drawing out recurring themes, and shaping the raw material into a narrative. But the design draws a hard line around what AI is <i>allowed</i> to decide. It reads, translates, drafts, and builds &mdash; it never gets the final word on what's true. A person confirms every reading; an AI's confident-sounding guess carries no more weight than that, and where the letters are too damaged to know, the honest answer is to say so rather than let a machine paper over the gap. The goal was never to hand family history to a computer &mdash; it was to use these tools carefully enough that a family with no Yiddish reader left could recover its own story <i>without</i> quietly inventing the parts it couldn't recover.</p>
+      <p><b>The tools that made it possible.</b> For anyone curious about the actual stack:</p>
+      <ul class="tool-list">
+        <li><span class="tool-name">Transkribus</span> &mdash; handwriting recognition trained on real early-20th-century Yiddish script. It did the first pass at turning the handwriting into text (and it's the <i>only</i> tool trusted to read the Yiddish, precisely because it was measured against known pages).</li>
+        <li><span class="tool-name">Claude</span> &mdash; did double duty: wrote the software (pipeline, honesty checks, the site) <i>and</i> the interpretive work (translation, theme extraction, shaping the narrative).</li>
+        <li><span class="tool-name">Gemini</span> &mdash; a second, independent translator, used as a cross-check: where it and Claude agreed we trusted it more, and it was never allowed to quietly overrule the primary reading.</li>
+        <li><span class="tool-name">ComfyUI</span> <i>(soon)</i> &mdash; for regenerating the illustrated portraits from recipes, so even the artwork stays reproducible rather than hand-made once and forgotten.</li>
+      </ul>
+    </div>
+  </details>
+</div>
 
 </body>
 </html>

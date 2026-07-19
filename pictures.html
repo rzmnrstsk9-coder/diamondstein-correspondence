@@ -7,183 +7,180 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/tokens.css">
-<link rel="stylesheet" href="assets/components.css">
 <style>
-  /* Redesigned 2026-07-16 (Paul's ask, item 5): this door never got the shared light design
-     language -- it's the only one with a dark body. Now: cream page + the standard kicker/h1
-     header every other door uses, with the slideshow itself as a self-contained "cinema" card
-     using the design system's own dark-surface-context tokens (tokens.css: --surface-dark/
-     --surface-darker, "zones opt in" -- an intentional dark zone within a light page, not the
-     whole-page dark override this used to be). Captions made more prominent per Paul's ask:
-     larger label/paragraph type, higher-contrast text, more padding. */
-  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
+  :root { --rust: #c1481f; --navy: #6a9acc; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body { background: #0a0908; color: #fff; font-family: 'Inter', sans-serif; display: flex; flex-direction: column; }
   .display { font-family: 'Bricolage Grotesque', sans-serif; }
   .mono { font-family: 'IBM Plex Mono', monospace; }
 
-  .gallery { max-width: 1000px; margin: 0 auto 4rem; padding: 0 1.5rem; }
-  .gallery-card { background: var(--surface-dark); border-radius: var(--radius-panel); overflow: hidden; box-shadow: var(--shadow-hover); }
+  .topbar { flex: 0 0 auto; z-index: 20; display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1.5rem; background: #131110; border-bottom: 1px solid rgba(255,255,255,0.08); }
+  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
+  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
 
-  .stage { position: relative; height: 60vh; min-height: 380px; max-height: 620px; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--surface-darker); }
+  .stage { position: relative; flex: 1 1 auto; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: #000; }
   .stage-img-wrap { position: absolute; inset: 0; overflow: hidden; }
   .slide { position: absolute; inset: 0; transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1); will-change: transform; }
   .slide img { width: 100%; height: 100%; object-fit: contain; display: block; animation: kenburns 9s ease-out forwards; }
   @keyframes kenburns { from { transform: scale(1.0); } to { transform: scale(1.07); } }
 
-  .stage-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); background: rgba(10,9,8,0.55); backdrop-filter: blur(6px); color: #fff; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease, transform 0.15s ease; }
+  .stage-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 56px; height: 56px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); background: rgba(10,9,8,0.55); backdrop-filter: blur(6px); color: #fff; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease, transform 0.15s ease; }
   .stage-nav-btn:hover { background: rgba(193,72,31,0.85); transform: translateY(-50%) scale(1.06); }
-  .stage-nav-btn.prev { left: 1.2rem; }
-  .stage-nav-btn.next { right: 1.2rem; }
-  @media (max-width: 640px) { .stage { height: 44vh; min-height: 280px; } .stage-nav-btn { width: 42px; height: 42px; font-size: 1.1rem; } .stage-nav-btn.prev { left: 0.6rem; } .stage-nav-btn.next { right: 0.6rem; } }
+  .stage-nav-btn.prev { left: 1.5rem; }
+  .stage-nav-btn.next { right: 1.5rem; }
+  @media (max-width: 640px) { .stage-nav-btn { width: 44px; height: 44px; font-size: 1.1rem; } .stage-nav-btn.prev { left: 0.6rem; } .stage-nav-btn.next { right: 0.6rem; } }
 
-  .caption-panel { background: var(--surface-dark); border-top: 1px solid rgba(255,255,255,0.08); padding: 1.6rem 1.8rem; }
+  .caption-panel { flex: 0 0 auto; background: #131110; border-top: 1px solid rgba(255,255,255,0.08); padding: 1.1rem 1.5rem; }
   .caption { max-width: 760px; margin: 0 auto; text-align: left; }
-  .cap-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.6rem; }
-  .cap-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; color: var(--rust); letter-spacing: 0.08em; text-transform: uppercase; }
-  .cap-year { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600; color: var(--gold); background: rgba(232,201,138,0.12); border: 1px solid rgba(232,201,138,0.3); border-radius: 999px; padding: 0.2rem 0.65rem; }
-  .cap-label { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.65rem; line-height: 1.25; margin-bottom: 0.7rem; color: #fff; }
-  .cap-quote { font-style: italic; color: var(--navy-on-dark); font-size: 1rem; line-height: 1.55; margin-bottom: 0.7rem; display: none; }
-  .cap-para { font-size: 1rem; line-height: 1.65; color: var(--ink-on-dark); margin-bottom: 0.8rem; }
+  .cap-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.45rem; }
+  .cap-num { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--rust); letter-spacing: 0.08em; text-transform: uppercase; }
+  .cap-year { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; font-weight: 600; color: #e8c98a; background: rgba(232,201,138,0.12); border: 1px solid rgba(232,201,138,0.3); border-radius: 999px; padding: 0.2rem 0.65rem; }
+  .cap-label { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.35rem; margin-bottom: 0.5rem; }
+  .cap-quote { font-style: italic; color: var(--navy); font-size: 0.94rem; line-height: 1.5; margin-bottom: 0.55rem; display: none; }
+  .cap-para { font-size: 0.85rem; line-height: 1.55; color: rgba(255,255,255,0.8); margin-bottom: 0.65rem; }
   .cap-letters { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .cap-letter-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; padding: 0.35rem 0.75rem; color: var(--gold); text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
-  .cap-letter-tag:hover { background: var(--rust); color: #fff; border-color: var(--rust); }
+  .cap-letter-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; padding: 0.3rem 0.7rem; color: #e8c98a; text-decoration: none; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; }
+  .cap-letter-tag:hover { background: #c1481f; color: #fff; border-color: #c1481f; }
 
-  .filmstrip-nav { display: flex; gap: 0.5rem; padding: 0.7rem 1.2rem 0.9rem; overflow-x: auto; background: var(--surface-darker); }
+  .filmstrip-nav { flex: 0 0 auto; display: flex; gap: 0.5rem; padding: 0.7rem 1.5rem 0.9rem; overflow-x: auto; background: #0a0908; border-top: 1px solid rgba(255,255,255,0.06); }
   .filmstrip-nav::-webkit-scrollbar { height: 4px; }
   .filmstrip-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
   .fn-thumb { position: relative; flex-shrink: 0; width: 68px; height: 48px; border-radius: 4px; overflow: hidden; cursor: pointer; opacity: 0.45; border: 2px solid transparent; transition: opacity 0.15s ease, border-color 0.15s ease; }
   .fn-thumb.active { opacity: 1; border-color: var(--rust); }
   .fn-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .fn-year { position: absolute; left: 0; right: 0; bottom: 0; font-size: 0.52rem; line-height: 1.3; text-align: center; background: rgba(0,0,0,0.65); color: var(--gold); padding: 0.1rem 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .fn-year { position: absolute; left: 0; right: 0; bottom: 0; font-size: 0.52rem; line-height: 1.3; text-align: center; background: rgba(0,0,0,0.65); color: #e8c98a; padding: 0.1rem 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  .progress-bar { height: 3px; background: var(--rust); transition: width 0.2s ease; border-radius: var(--radius-panel) var(--radius-panel) 0 0; }
-  .position-crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--ink-faint); text-align: center; margin: 0.8rem 0 0; }
+  .progress-bar { flex: 0 0 auto; height: 2px; background: var(--rust); transition: width 0.2s ease; }
+
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(10,8,6,0.82); z-index: 100; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .overlay.open { display: flex; }
+  .letter-modal { background: #f0eee9; color: #1a1a1a; border-radius: 16px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .letter-modal .close-btn { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(26,26,26,0.5); line-height: 1; }
+  .letter-modal .close-btn:hover { color: #1a1a1a; }
+  .lm-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
+  .lm-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; margin-bottom: 1rem; }
+  .lm-scan-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: rgba(26,26,26,0.4); margin-bottom: 1rem; font-style: italic; }
+  .lm-scan img { width: 100%; border-radius: 8px; margin-bottom: 1.2rem; display: block; }
+  .lm-translation { font-size: 0.92rem; line-height: 1.7; white-space: pre-wrap; color: rgba(26,26,26,0.85); }
 </style>
 </head>
 <body>
+<div style="background:#c1481f;color:#fff;text-align:center;padding:0.55rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;letter-spacing:0.03em;">Prototype — for review purposes, not the final site</div>
+
+
+<div class="progress-bar" id="progress-bar"></div>
 
 <div class="topbar">
   <a class="back" href="index.html#doors">&larr; Back to start</a>
-  <span class="crumb">The Story in Pictures</span>
+  <span class="crumb mono" id="position-crumb"></span>
 </div>
 
-<header class="head">
-  <p class="kicker">The Story in Pictures</p>
-  <h1 class="display">A Life in Snapshots</h1>
-  <p class="sub">Scenes from the archive, imagined from the letters that describe them. Step through with the arrows, or jump to any moment in the filmstrip below.</p>
-</header>
-
-<div class="gallery">
-  <div class="gallery-card">
-    <div class="progress-bar" id="progress-bar"></div>
-    <div class="stage" id="stage">
-      <div class="stage-img-wrap" id="img-wrap"></div>
-      <button class="stage-nav-btn prev" id="zone-prev" aria-label="Previous scene">&larr;</button>
-      <button class="stage-nav-btn next" id="zone-next" aria-label="Next scene">&rarr;</button>
-    </div>
-    <div class="caption-panel">
-      <div class="caption">
-        <div class="cap-top-row">
-          <div class="cap-num mono" id="cap-num"></div>
-          <div class="cap-year mono" id="cap-year"></div>
-        </div>
-        <div class="cap-label display" id="cap-label"></div>
-        <div class="cap-quote" id="cap-quote"></div>
-        <div class="cap-para" id="cap-para"></div>
-        <div class="cap-letters" id="cap-letters"></div>
-      </div>
-    </div>
-    <div class="filmstrip-nav" id="filmstrip-nav"></div>
-  </div>
-  <p class="position-crumb mono" id="position-crumb"></p>
+<div class="stage" id="stage">
+  <div class="stage-img-wrap" id="img-wrap"></div>
+  <button class="stage-nav-btn prev" id="zone-prev" aria-label="Previous scene">&larr;</button>
+  <button class="stage-nav-btn next" id="zone-next" aria-label="Next scene">&rarr;</button>
 </div>
 
-<!-- Engine-rendered source of truth (server-side render_element output; the scene-panel/
-     filmstrip-thumb contracts read from data/elements.json). Never displayed directly -- the
-     slideshow JS below reads each panel's data-* attrs (data-media/data-provenance, the <img
-     src>, the optional <figcaption>) to drive the interactive stage/caption-bar/filmstrip above,
-     so this DOM IS the data: no parallel hand-authored `panels` array. Honest-absence: label/
-     year/quote/letters have no substrate source (see scene-panel's consumes) and are simply
-     absent from the interactive chrome below, not fabricated. -->
-<div id="engine-panels" hidden>
-<figure class="caption-panel"><img data-field="image" data-media="scene-academy-at-keidan" data-provenance="ai-generated" src="media/scene-academy-at-keidan.png" alt="The academy at Keidan, where Dora&#x27;s brother Yehuda-Leib was educated — the kind of institution that produced the family&#x27;s own literate, biography-writing tradition." loading="lazy"><figcaption class="cap-para">The academy at Keidan, where Dora&#x27;s brother Yehuda-Leib was educated — the kind of institution that produced the family&#x27;s own literate, biography-writing tradition.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-atlantic-crossing" data-provenance="ai-generated" src="media/scene-atlantic-crossing.png" alt="Sam&#x27;s crossing to Montreal, 1901 — alone, around eighteen to twenty-one, on an emigrant-line ship." loading="lazy"><figcaption class="cap-para">Sam&#x27;s crossing to Montreal, 1901 — alone, around eighteen to twenty-one, on an emigrant-line ship.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-the-panic-outside" data-provenance="ai-generated" src="media/scene-the-panic-outside.png" alt="The Panic of 1907 — the second time Montreal failed him." loading="lazy"><figcaption class="cap-para">The Panic of 1907 — the second time Montreal failed him.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-austrian-christian" data-provenance="ai-generated" src="media/scene-austrian-christian.png" alt="“So I said I was an Austrian Christian — and they took me.” Sam&#x27;s own words, 11 June 1901." loading="lazy"><figcaption class="cap-para">“So I said I was an Austrian Christian — and they took me.” Sam&#x27;s own words, 11 June 1901.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-the-shop-sign" data-provenance="ai-generated" src="media/scene-the-shop-sign.png" alt="By 1916, the young man who&#x27;d once posed as an Austrian Christian just to get hired had his own name over a shop door in Brick Lane." loading="lazy"><figcaption class="cap-para">By 1916, the young man who&#x27;d once posed as an Austrian Christian just to get hired had his own name over a shop door in Brick Lane.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-the-zeppelin" data-provenance="ai-generated" src="media/scene-the-zeppelin.png" alt="The Cuffley Zeppelin, mentioned in the same breath as the weather and the kiddies." loading="lazy"><figcaption class="cap-para">The Cuffley Zeppelin, mentioned in the same breath as the weather and the kiddies.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-the-coast" data-provenance="ai-generated" src="media/scene-the-coast.png" alt="Margate. Ramsgate. Westcliff. Bournemouth. Weeks at a time, summer after summer." loading="lazy"><figcaption class="cap-para">Margate. Ramsgate. Westcliff. Bournemouth. Weeks at a time, summer after summer.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-weekly-cheque" data-provenance="ai-generated" src="media/scene-weekly-cheque.png" alt="The same handful of questions, asked and answered, for years." loading="lazy"><figcaption class="cap-para">The same handful of questions, asked and answered, for years.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-furs-by-the-thousand" data-provenance="ai-generated" src="media/scene-furs-by-the-thousand.png" alt="Ninety stone martens. Three thousand dyed moles. One day&#x27;s purchase." loading="lazy"><figcaption class="cap-para">Ninety stone martens. Three thousand dyed moles. One day&#x27;s purchase.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-pontoon-bournemouth" data-provenance="ai-generated" src="media/scene-pontoon-bournemouth.png" alt="“But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each.”" loading="lazy"><figcaption class="cap-para">“But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each.”</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-house-that-got-away" data-provenance="ai-generated" src="media/scene-house-that-got-away.png" alt="“Better luck next time.”" loading="lazy"><figcaption class="cap-para">“Better luck next time.”</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-empty-chair" data-provenance="ai-generated" src="media/scene-empty-chair.png" alt="Every seat at the table is full except Dora&#x27;s own voice." loading="lazy"><figcaption class="cap-para">Every seat at the table is full except Dora&#x27;s own voice.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-third-party" data-provenance="ai-generated" src="media/scene-third-party.png" alt="“Father writes that you are very sad.”" loading="lazy"><figcaption class="cap-para">“Father writes that you are very sad.”</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-no-letter-from-you" data-provenance="ai-generated" src="media/scene-no-letter-from-you.png" alt="A fifth of this entire archive is, in some part, about the act of correspondence itself." loading="lazy"><figcaption class="cap-para">A fifth of this entire archive is, in some part, about the act of correspondence itself.</figcaption></figure><figure class="caption-panel"><img data-field="image" data-media="scene-silence-over-germany" data-provenance="ai-generated" src="media/scene-silence-over-germany.png" alt="Sixteen letters from Germany, c.1922–the late 1930s — uniformly silent on what was coming." loading="lazy"><figcaption class="cap-para">Sixteen letters from Germany, c.1922–the late 1930s — uniformly silent on what was coming.</figcaption></figure></div>
-<div id="engine-thumbs" hidden>
-<button class="fn-thumb" data-index="1"><img data-field="image" data-media="scene-academy-at-keidan" data-provenance="ai-generated" src="media/scene-academy-at-keidan.png" alt=""></button><button class="fn-thumb" data-index="2"><img data-field="image" data-media="scene-atlantic-crossing" data-provenance="ai-generated" src="media/scene-atlantic-crossing.png" alt=""></button><button class="fn-thumb" data-index="3"><img data-field="image" data-media="scene-the-panic-outside" data-provenance="ai-generated" src="media/scene-the-panic-outside.png" alt=""></button><button class="fn-thumb" data-index="4"><img data-field="image" data-media="scene-austrian-christian" data-provenance="ai-generated" src="media/scene-austrian-christian.png" alt=""></button><button class="fn-thumb" data-index="5"><img data-field="image" data-media="scene-the-shop-sign" data-provenance="ai-generated" src="media/scene-the-shop-sign.png" alt=""></button><button class="fn-thumb" data-index="6"><img data-field="image" data-media="scene-the-zeppelin" data-provenance="ai-generated" src="media/scene-the-zeppelin.png" alt=""></button><button class="fn-thumb" data-index="7"><img data-field="image" data-media="scene-the-coast" data-provenance="ai-generated" src="media/scene-the-coast.png" alt=""></button><button class="fn-thumb" data-index="8"><img data-field="image" data-media="scene-weekly-cheque" data-provenance="ai-generated" src="media/scene-weekly-cheque.png" alt=""></button><button class="fn-thumb" data-index="9"><img data-field="image" data-media="scene-furs-by-the-thousand" data-provenance="ai-generated" src="media/scene-furs-by-the-thousand.png" alt=""></button><button class="fn-thumb" data-index="10"><img data-field="image" data-media="scene-pontoon-bournemouth" data-provenance="ai-generated" src="media/scene-pontoon-bournemouth.png" alt=""></button><button class="fn-thumb" data-index="11"><img data-field="image" data-media="scene-house-that-got-away" data-provenance="ai-generated" src="media/scene-house-that-got-away.png" alt=""></button><button class="fn-thumb" data-index="12"><img data-field="image" data-media="scene-empty-chair" data-provenance="ai-generated" src="media/scene-empty-chair.png" alt=""></button><button class="fn-thumb" data-index="13"><img data-field="image" data-media="scene-third-party" data-provenance="ai-generated" src="media/scene-third-party.png" alt=""></button><button class="fn-thumb" data-index="14"><img data-field="image" data-media="scene-no-letter-from-you" data-provenance="ai-generated" src="media/scene-no-letter-from-you.png" alt=""></button><button class="fn-thumb" data-index="15"><img data-field="image" data-media="scene-silence-over-germany" data-provenance="ai-generated" src="media/scene-silence-over-germany.png" alt=""></button></div>
-
-<!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
-     letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
-     + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
-     zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
-     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
-     rather than the partial forking into two shapes (single-honest-core principle applied to
-     markup, not just behavior). -->
-<div class="overlay" id="person-overlay">
-  <div class="person-modal">
-    <button class="close-btn" id="person-modal-close">&times;</button>
-    <div class="pm-top">
-      <img class="pm-photo" id="pm-photo" src="" alt="">
-      <div>
-        <div class="pm-name" id="pm-name"></div>
-        <div class="pm-dates mono" id="pm-dates"></div>
-        <div class="pm-role" id="pm-role"></div>
-      </div>
+<div class="caption-panel">
+  <div class="caption">
+    <div class="cap-top-row">
+      <div class="cap-num mono" id="cap-num"></div>
+      <div class="cap-year mono" id="cap-year"></div>
     </div>
-    <div class="pm-bio" id="pm-bio"></div>
-    <div class="pm-letters-label" id="pm-letters-label"></div>
-    <div id="pm-letters-list"></div>
+    <div class="cap-label display" id="cap-label"></div>
+    <div class="cap-quote" id="cap-quote"></div>
+    <div class="cap-para" id="cap-para"></div>
+    <div class="cap-letters" id="cap-letters"></div>
   </div>
 </div>
+
+<div class="filmstrip-nav" id="filmstrip-nav"></div>
 
 <div class="overlay" id="letter-overlay">
-  <div class="letter-modal" id="lm-card">
-    <button class="close-btn" id="modal-close">&times;</button>
+  <div class="letter-modal">
+    <button class="close-btn" id="letter-modal-close">&times;</button>
     <div class="lm-date mono" id="lm-date"></div>
     <div class="lm-title" id="lm-title"></div>
     <div class="lm-scan" id="lm-scan"></div>
-    <div class="lm-capsule" id="lm-capsule">
-      <button class="lm-lang-btn on" data-lang="en" id="lm-lang-en">English</button>
-      <button class="lm-lang-btn" data-lang="yi" id="lm-lang-yi">ייִדיש</button>
-    </div>
-    <div class="lm-body" id="lm-body"></div>
-    <div class="modal-nav-row" id="modal-nav-row">
-      <button class="nav-btn" id="modal-prev" aria-label="Previous letter">&larr;</button>
-      <div class="modal-position mono" id="modal-position"></div>
-      <button class="nav-btn" id="modal-next" aria-label="Next letter">&rarr;</button>
-    </div>
+    <div class="lm-translation" id="lm-translation"></div>
   </div>
 </div>
 
-<button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
-<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""><figcaption id="zoom-overlay-cap" class="zoom-cap" style="display:none;"></figcaption></div>
-
-
-<script>
-  window.MODAL_CONFIG = { langToggle: true, prevNext: false, imgPathMatch: "root" };
-  window.MODAL_LETTERS = [  ];
-  window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
-</script>
-<script src="assets/modal.js"></script>
-
 <script>
 (function() {
-  // The engine-rendered panels/thumbs ARE the data (see the HTML comment above the containers):
-  // each .caption-panel figure's <img data-media> + optional <figcaption> is read off the DOM,
-  // not from a hand-authored array. Honest-absence: label/year/quote/letters have no substrate
-  // source (scene-panel's `consumes` is media+editorial-caption only, per the element contract),
-  // so the interactive chrome below simply omits them rather than fabricating placeholder values.
-  const panelEls = Array.from(document.querySelectorAll('#engine-panels .caption-panel'));
-  const thumbEls = Array.from(document.querySelectorAll('#engine-thumbs .fn-thumb'));
-  const panels = panelEls.map((el, i) => {
-    const img = el.querySelector('img');
-    const cap = el.querySelector('figcaption');
-    return {
-      num: i + 1,
-      img: img ? img.getAttribute('src') : '',
-      label: '', year: '', quote: '',
-      paragraph: cap ? cap.textContent : '',
-      letters: [],
-    };
-  });
+  const panels = [
+    { num: 1, label: "The Academy at Keidan", year: "c. 1780s", img: "images/scene-01-academy-at-keidan.png", quote: "",
+      paragraph: "This is Sam and Dora's own great-great-grandfather — four generations before either of them was born. His grandson David would father the two brothers, Getzel and Reuven, who'd become Sam's and Dora's own fathers.", letters: [] },
+    { num: 2, label: "The Scattering", year: "c. 1870s–80s", img: "images/scene-02-the-scattering.png", quote: "One generation. Four directions. London, Riga, New York, and the ones who stayed.",
+      paragraph: "David and Keila-Tsirel raised ten children in Korsovka — Sam and Dora's shared grandparents. Two of those ten, brothers Getzel and Reuven, would become Sam's and Dora's own fathers, and their children would one day marry each other.", letters: [] },
+    { num: 3, label: "Korsovka, 1941", year: "1941", img: "images/scene-03-korsovka-1941.png", quote: "Not everyone got out in time.",
+      paragraph: "Sam and Dora's own family split down the middle. Three of their first cousins once removed, from their aunt Zissa's line, stayed behind in Korsovka. In 1941, the family tree simply stops recording them.", letters: [] },
+    { num: 4, label: "The Atlantic Crossing", year: "1901", img: "images/scene-04-atlantic-crossing.png", quote: "1901. Sam crosses alone. Whether he stopped in London on the way is something nobody now knows for certain.",
+      paragraph: "Sam left alone, around eighteen, on a ship bound for Montreal — leaving behind a twelve-year-old cousin named Dora, whom he'd marry a decade later.", letters: [] },
+    { num: 5, label: "“I'm an Austrian Christian”", year: "1901", img: "images/scene-05-austrian-christian.png", quote: "I'm an Austrian Christian.",
+      paragraph: "Newly arrived in Montreal, Sam was turned away as a foreign Jew — so he told the hiring office he was an Austrian Christian instead. They believed him, and hired him.", letters: ["The Austrian Christian Ruse"] },
+    { num: 6, label: "The Panic, Outside", year: "1907", img: "images/scene-06-the-panic-outside.png", quote: "The crisis has thrown people out of work by the hundreds, and I am one of them.",
+      paragraph: "By 1907, Sam wasn't just broke — an entire continent was. A real financial panic had swept the U.S. and reached into Montreal's own economy.", letters: ["The Panic of 1907"] },
+    { num: 7, label: "Four Roads, One Man", year: "1907–1908", img: "images/scene-07-four-roads.png", quote: "A homestead. Minnesota. Winnipeg. Chicago. Considered and abandoned, one after another.",
+      paragraph: "In the space of about a year, Sam talked himself into — and back out of — half a continent's worth of alternatives, looking for anywhere that would finally let him come home to Dora.", letters: ["The Homestead Offer", "I Will Not Fail You"] },
+    { num: 8, label: "Three Pounds", year: "1908", img: "images/scene-08-three-pounds.png", quote: "She sent him the fare home.",
+      paragraph: "When Sam couldn't afford the fare home, Dora sent it to him herself. He remembered exactly what that cost him to accept for the rest of his life.", letters: ["Aug 1908 Montreal"] },
+    { num: 9, label: "Crossing in the Mail", year: "1908", img: "images/scene-09-crossing-in-the-mail.png", quote: "Two people, one conversation, three weeks behind itself the whole time.",
+      paragraph: "Letters between Sam in Montreal and Dora in London took two to three weeks each way. What looks like Sam changing his mind overnight was probably just two letters, mailed days apart, arriving out of order.", letters: ["July 1908", "The Decision"] },
+    { num: 10, label: "The Wedding", year: "1911", img: "images/scene-10-the-wedding.png", quote: "",
+      paragraph: "Sometime around February 1911, Sam and Dora married — cousins who'd courted almost entirely by letter across an ocean for a decade. The marriage came with real money attached: Reuven's own signed tenaim obligated him to a fifty-pound dowry.", letters: [] },
+    { num: 11, label: "The Shop Sign", year: "1916", img: "images/scene-10-the-shop-sign.png", quote: "By September 1916, married, with children, running a business of his own.",
+      paragraph: "By 1916, the young man who'd once posed as an Austrian Christian just to get hired had his own name over a shop door in Brick Lane.", letters: ["Three Pounds Enclosed"] },
+    { num: 12, label: "The Zeppelin", year: "1916", img: "images/scene-11-the-zeppelin.png", quote: "No doubt you have heard we brought down a Zeppelin. It was a fine sight.",
+      paragraph: "Sam watched a German airship burn out of the London sky with his friend John — then went straight back to asking Dora about the weather, in the very same letter.", letters: ["The Zeppelin, Again"] },
+    { num: 13, label: "The Coast", year: "1919–1926", img: "images/scene-12-the-coast.png", quote: "Margate. Ramsgate. Westcliff. Bournemouth. Weeks at a time, summer after summer.",
+      paragraph: "Every summer, Dora and the girls went to the coast for weeks at a time. Every summer, Sam stayed behind in London and wrote.", letters: ["Yiddish Letter Fragment A"] },
+    { num: 14, label: "The Weekly Cheque", year: "1919–1926", img: "images/scene-13-weekly-cheque.png", quote: "The same handful of questions, asked and answered, for years.",
+      paragraph: "Through the Travelling Years, Sam's letters to Dora settle into a steady rhythm: a cheque folded into an envelope, then the same handful of questions.", letters: ["Eight Pounds"] },
+    { num: 15, label: "Furs by the Thousand", year: "c. 1920s", img: "images/scene-14-furs-by-the-thousand.png", quote: "Ninety stone martens. Three thousand dyed moles.",
+      paragraph: "The boy who once earned twenty-five cents a day in Montreal was, twenty years on, buying three thousand fur skins in a single afternoon in Paris.", letters: ["Undated Hotel Montreal Paris Notes"] },
+    { num: 16, label: "The House That Got Away", year: "1924", img: "images/scene-15-house-that-got-away.png", quote: "Better luck next time.",
+      paragraph: "Dora backed out of buying a house in 1924. Sam took it in stride — and, in the very same letter, swore the family to secrecy about his own goods purchases.", letters: ["The House That Got Away"] },
+    { num: 17, label: "Pontoon, Bournemouth", year: "1923", img: "images/scene-16-pontoon-bournemouth.png", quote: "But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each.",
+      paragraph: "From a Bournemouth boarding house in December 1923, one of Sam and Dora's daughters writes home about a card game — one of the only letters in this whole archive written in a child's own voice.", letters: ["Pontoon at Bournemouth"] },
+    { num: 18, label: "The Phrase She Can't Spell", year: "1923", img: "images/scene-17-phrase-cant-spell.png", quote: "",
+      paragraph: "Buried mid-letter in fluent, confident English, one of Sam and Dora's daughters drops in a few words of Yiddish — awkwardly formed, clearly less practiced.", letters: ["Pontoon at Bournemouth"] },
+    { num: 19, label: "The Empty Chair", year: "1901–1942", img: "images/scene-18-empty-chair.png", quote: "",
+      paragraph: "Of 132 letters in this archive, Sam is the confirmed author of at least 82. Not one is written by Dora herself.", letters: [] },
+    { num: 20, label: "Through a Third Party", year: "c. 1908 & 1920", img: "images/scene-19-third-party.png", quote: "Father writes that you are very sad.",
+      paragraph: "Twice, a dozen years apart, Sam learns how Dora is really doing only through someone else. In the whole surviving archive, her own feelings never once reach him directly.", letters: ["An August Deadline", "Letter to Gladys and Beaty (Page 1)"] },
+    { num: 21, label: "“No Letter From You”", year: "1919", img: "images/scene-20-no-letter-from-you.png", quote: "A fifth of this entire archive is, in some part, about the act of correspondence itself.",
+      paragraph: "Nearly one letter in five that Sam wrote to Dora opens the same way: surprise, or hurt, that nothing arrived from her.", letters: ["Dancing at Maxine's"] },
+    { num: 22, label: "The Silence Over Germany", year: "1922–c. 1938", img: "images/scene-21-silence-over-germany.png", quote: "",
+      paragraph: "From 1922 into the late 1930s, sixteen of Sam's letters home to Dora are written from Leipzig, Berlin, and Hanover. Not one mentions politics at all.", letters: [] },
+    { num: 23, label: "A Cheque, Not a Voice", year: "1926–1942", img: "images/scene-22-cheque-not-a-voice.png", quote: "",
+      paragraph: "Every dated item in this archive after 1926 is a bank cheque or an official notice — never a letter in anyone's own hand.", letters: ["Barclays Cheque", "The Last Document", "Allison Pianos Invoice Mrs Diamond"] }
+  ];
+
+  const letters = {
+    "An August Deadline": { date: "Undated", img: null, translation: "Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa June-July 1908 — this letter's \"if I stay here in Montreal until August... good places closing up until the 10th of August\" framing treats the Montreal-vs-London decision as still pending, which is the same still-pending framing used to date scan-63 (also \"approx June-July 1908\"); by aug-1-1908-montreal that decision has already resolved (departure week named), so this letter predates it.\n\nHere in Montreal, still no luck — no better than before. So don't be surprised, and don't wonder at it. There's no living to be made here; if anything it's gotten worse. I want to put something aside, but by the time you save a little it's already spent. And traveling costs a good deal of money — plenty — and with all the other expenses on top of it, you come out behind in the end. In a word: there's no luck here at all, everything is bleak. You can't earn a living — it's the very same story as it was in London.\n\nAs for coming back — I don't feel any great pull to travel back right now. The reason is that once you set out, it all turns into a muddle, and the end of it is that you don't know what to do — whether to travel or not, whether to leave or stay. And it has to be decided quickly, right away, by the beginning of August, because it all depends on the season. And there's something else pulling me to come back: Father writes that you are very sad.\n\nSo I keep asking myself how things really stand with you. You can't just do the same thing every day — you go once or twice and no more. And right now the good places are closing up until the 10th of August. Maybe I'll still have something in a week's time. I believe so, though I'm not certain — perhaps even more. I'll write to you Sunday, and then I'll know more definitely.\n\nAs for the rest, it's the same news — no change in the immigration situation from before. About income, I honestly don't know myself; on the whole it's not for the best, and one can't tell what would be better. There's something here about the bank, but I can't make it out.\n\nBack to London — because I want so badly to see you. You can't even imagine how much I long for you. Nothing has been settled yet about your second matter; for now it has to stay as it is — you understand. Coming back, even just to live, doesn't hold out any better prospects than where we came from.\n\nI have nothing more to write you about here. I embrace you, your beloved." },
+    "Letter to Gladys and Beaty (Page 1)": { date: "25 Jul 1920", img: null, translation: "LONDON, E. 1.\n\nDear kiddies Gladys and Beaty,                    July 25, 1920\n\nI have seen Auntie Sarah, and she has given a full account of you, and it really surprised me. You promised me when you left for Ramsgate that you wouldn't give Mama any trouble, and as far as I understand from Auntie Sarah, you keep on upsetting Mama. Well, I don't think it is fair that you should not keep your promise, and besides, when you know I am sure about it, that would be better for everyone. Well, I hope you have improved already and there won't be any trouble about that.\n\nNow, how are you? Have you had fine weather, Gladys? Auntie Sarah told me you have not received a card from me. Well, I have written to you. You know Daddy would not" },
+    "Aug 1908 Montreal": { date: "c. Aug 1908", img: null, translation: "My dearest little one,\n\nI have just now received your few lines. Falk had told me that I would be getting a letter from Shayle, so I went straight from work over to Tsile's. It was so dark by then. Tsile called out to me that a letter had come and it truly is one.\n\nWe long for each other so, each of us for the other, one day after the next. \n\nYou write that you are sending me 3 pounds. That is a great kindness on your part — and truly, I am in need of it. For what I need it for I have to buy a ticket." },
+    "Barclays Cheque": { date: "5 Jul 1941", img: null, translation: "Cheque — Barclays Bank Limited, Eastern Branch, E.1.\n\nCheque No. 1481\nWestminster, 5th July 1941\n\nPay to the Society of [illegible payee] or order the sum of Sixteen Pounds, Seventeen Shillings and Sixpence — £16 17s 6d.\n\nSignature: illegible\n\nAccount: Commodities Insurance Ltd — Board of Trade War Risks.\nDrawn on: Barclays Bank Limited, Eastern Branch. Cleared via the Lloyds Building Branch, Leadenhall Street, E.C.3, and remitted through Lombard Street. Marked \"Not Negotiable.\"\n\nPrinted on the cheque: Blades, East & Blades. Head Office: 54 Lombard Street, E.C.3. This cheque requires endorsement." },
+    "The Last Document": { date: "15 Jun 1942", img: "images/1942-war-damage.jpeg", translation: "WAR DAMAGE CONTRIBUTION — Instalment Notice\n\nIssued by: Collector of Taxes, London 13 Collection\n310-312 Seven Sisters Road, Finsbury Park, N.4.\nStamped: 15 June 1942\n\nAddressed to:\nH. Diamondstein, Esq.\n42 Heathland Road\nN.16.\n\nNotice: Application is hereby made for payment of the instalment of War Damage Contribution, due and payable on 1 July 1942.\n\nAssessment reference: 24 / W.D. / 625 (London 13 Collection)\n\nAmounts:\nContributory value: £48 15s.\nInstalment payable: £4 17s. 6d.\nLess: (nil)\nTotal amount payable on 1 July 1942: £4 17s. 6d.\n\n(Form D.N.1 (W.D.C.) — see overleaf.)" },
+    "Allison Pianos Invoice Mrs Diamond": { date: "1942", img: null, translation: "Printed invoice from ALLISON PIANOS LTD. — Pianoforte Manufacturers since 1837 — 50 New Bond Street, London, W.1. Telephone: Mayfair 7600.\n\nDated July 1942.\n\nBilled to:\nMrs. Diamond\n42 Heathland Road\nN.16\n\nThe itemized charges and the remainder of the invoice form are cut off and obscured by a dark scanner artifact across the lower portion of the scan; no further content is legible." },
+    "Dancing at Maxine's": { date: "29 Jul 1919", img: "images/1919-mama.jpeg", translation: "Phone: Central 4432\nS. Diamondstein, Fur & Skin Dealer\n37 Fashion Street, Brick Lane, London, E. 1\n\nJuly 29, 1919\n\nDear Mama and Kiddies,\n\nYou surprise me — no letter this morning. What, have you forgotten you have left a husband all alone? You must have been having a fine time getting your dressmaking done.\n\nI wonder if you have received the parcel. I enclosed some cards, and I forgot to put the name of the Roll on them, and thought of it afterward.\n\nI went to take my dancing lesson yesterday, then had supper at Pezio's, and after that went round to Leon's and danced at Maxine's with Dora. I am doing it very well. I have also arranged to take three more lessons." },
+    "Eight Pounds": { date: "11 Aug 1926", img: "images/1926-eight-pounds.jpeg", translation: "Telephone No. CLERKENWELL 5281.\nS. DIAMONDSTEIN, Furs and Skins.\nAnd at 3, Sandy's Row, Bishopsgate, E.1.\n23, Australian Avenue, Barbican, E.C.1.\nTelegraphic Address: Diamofurz, Barb, London.\n\nLondon, Aug 11 1926\n\nDear Dora & Children,\n\nEnclosed please find eight pounds. I hope it will cover your expenses; if not, write by return. I feel quite well. I hope you are keeping — fine weather, otherwise there is no news.\n\nYour devoted husband, Dad\nSam" },
+    "July 1908": { date: "c. Jul 1908", img: null, translation: "My beloved Dorele,\n\nForgive me. I had gotten held up and fallen behind — and not because I was lazy. In the meantime I've been feeling better, because I wrote to you a day earlier about going into town to settle a matter.\n\nBy the time I received your letter, it may be that I would long since have gotten a job, if not for the misfortune that— I had no chance to write to you sooner.\n\nNow you'll ask what the news is. It isn't the worst; one has to have something in hand when things get pressing. Really there isn't much — you take what little you can get.\n\nAs I wrote you in my last letter: here most of the jobs are French." },
+    "The Decision": { date: "1 Aug 1908", img: "images/1908-aug-montreal.jpeg", translation: "My beloved Dorele,\n\nI received your letter yesterday, Saturday, and it hurt me a little, to my sorrow.\n\nAbout your feelings on my traveling: in your last letter — before this one — you urged me to come sooner, and now you write the opposite. My dear, I don't understand this sudden change of heart. If there's a reason, you should have written it to me. In any case, I'm telling you that next week, or perhaps the week after, I'll set out for London. I already have work lined up there, and my wages are as follows: for the first stretch I earn about a dollar for four days' work, and this week I've made around three (or three and a half) dollars. That's in English money, and there's a little more besides.\n\nIt suits me better to work through the London season, since work in London is worth more. Lately business here has been poor, and above all life here is dull and hard. If a man can make a go of the trade and something comes of it, then his future is secure — but as things stand, life here is very dry, and it isn't worth tormenting yourself over it, because I think I'll do far better in London than here." },
+    "Pontoon at Bournemouth": { date: "29 Dec 1923", img: "images/1923-bournemouth.jpeg", translation: "[Letterhead — 'BERACHAH,' a high-class boarding establishment. Proprietors: Mr. & Mrs. Grossman. Full sea views, south aspect. Phone 2890. 7 Kerley Road, West Cliff, Bournemouth. Book to West Station.]\n\nDecember 29th, 1923\n\nDear Daddy,\n\nWe received your letter and the money this morning, and Mummy is quite satisfied with the new place, because we don't have to walk far before we come to the seafront. At Bress's we used to play \"pontoon,\" and at first Gladys and I won a shilling each; and on the third night I was banker three times and won three shillings and threepence. For a Christmas present, Mummy bought us a silver thimble each for a shilling, and a bracelet costing 2s. 11½d. But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each. I hope you have not forgotten what you promised us for a Christmas present; in case you have, I'll just remind you: it was a five-pound note each.\n\nDear Daddy, a Yiddish phrase here, unreadable — because we have not written to you, as the posts are very odd Christmas week. Today it was simply scorching, and I would have gone in to bathe if I had had a costume, and Mummy would have let me. This afternoon we went into the Winter Gardens and saw our pennyworth — it was simply lovely (in its dreams!). Will you write and say whether you are going to your weekly boxing match regularly? Please excuse the writing, as I have got a rotten pen. Gladys is getting on splendidly, and we are having a ripping time [...]" },
+    "The Austrian Christian Ruse": { date: "11 Jun 1901", img: "images/1901-montreal.jpeg", translation: "Montreal, 11 June 1901\n\nDear Darling Dora,\n\nI'm very surprised that I didn't get a letter from you today. I don't know — maybe I'll get one from you tomorrow. I'd half expected to have it today. Anyway, dear Dora, let me write you a little news.\n\nYou know how it is in a new country — you're a bit of a greenhorn, and it's hard to find work. But what can you do. Well, walking down the street yesterday, I saw that they needed workers to be sent off to some job away from the city. When I asked, they told me they don't take any Englishmen. So I said I was an Austrian Christian — and they took me. Seeing how glad everyone who got hired was to have work, I thought to myself that I'm a little uneasy because they don't take any Jews either. You had to pay a small amount right there in the office when you took the contract. Reading it over, it looked fine at first — it reads well — but going over it again, I saw that I'd have to work for nothing for two months to cover the cost of the passage, plus food.\n\nBut since I'd already bought my ticket, I wanted to leave. So today I went into the office and took back the things they had snatched from me." },
+    "The Homestead Offer": { date: "Undated", img: null, translation: "Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — the letter describes a Canadian government homestead/farm-grant scheme ($1,000, hold the land 3 years, 10 acres and a house before it can be sold) and is addressed to \"Dear Dora\"; the established romantic correspondence with Dora (vs. a more distant 1901 solo trip) and the deliberative, still-undecided tone (\"I myself don't know... at the very worst I'd come back to the country\") fit the 1907-1909 window when Sam was weighing multiple survival options in Montreal before securing London work in Aug 1908.\nHistorical note: these terms ($1,000, 10 acres, a house, hold 3 years then sell) don't match the famous free Dominion Lands Act homestead (160 acres for a $10 fee) at all -- they're structurally much closer to the lesser-known, paid \"Ready-Made Farm\" schemes (mainly CPR-run, Alberta/Saskatchewan, requiring real capital -- commonly cited around $1,500 -- in exchange for a pre-built house and pre-ploughed land), though the specific numbers don't match either program exactly. Full comparison: docs/research/incoming/2026-07-06-canadian-homestead-vs-ready-made-farm.md.\n\n … to write … I can't quite make it out.  I'll say it again: when you  finish , I'll come back.  … and write to you? \n\nAbout the farm — here's how it is. The government gives grants here in Canada. You need  a thousand  dollars for it, but  you have to put up the rest yourself.  You have to be willing to farm it, and you have to hold it for 3 years,  with 10 acres  and a house. After that you can sell the farm, once the 3 years are up. They say it's a good plan. I myself don't know what you'll make of it — write to me.\n\n They've taken up the land for now, since there are three partners in it, and that way they can support each other; two more are coming out to the farm.  And after all, a person has to work at it and make a go of it.  … would pay … twenty pounds … I've already taken on more for a partner …  But how does one live  … from a loving one who … about you … \n\nSo really, one just doesn't know what's better. In any case, I'll see.  At the very worst, [I'd come] back to the country. \n\nDear Dora —  …  has gone off with  his friends  to the  prairie , since they've bought [it].  People are here …  enjoying themselves thoroughly, and I'm telling you that too.  I never expected such a thing.  Their friendship makes no exceptions — they're fine, refined people.\n\nThe whole time I go around town with Abram  [surname unclear] , and you can see that they need workers —  only … what good is …  But winter is coming on now, and the roads are turning to mud. Hundreds of sleighs go by with three  fine  horses.\n\n … mine, not … Write today to … the … quickly, since you asked, and you should write." },
+    "I Will Not Fail You": { date: "Undated", img: null, translation: "Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1909 (Montreal courtship era). The letter debates whether \"there is now no way [to go] to Winnipeg\" and that \"people still have to travel now,\" alongside devoted-partner language about providing for \"the one to whom he binds his happiness\" — consistent with Sam weighing onward travel/work options within Canada during the same money-dependent \"plan\" documented in the dated scan-9/june-1908/july-1908/aug-1-1908-montreal letters, where staying in Montreal versus moving on was a live, unresolved question until Sam secured London work in Aug 1908.\n\n...when someone becomes a better person, it will grieve me that I went away so far and could not . In Kenitser (place name uncertain). With everything that has happened, I have carried this around inside me the whole time, unable to bring myself to confide it to you.\n\nBut now I have come to a decision. If there is now no way [to go] to Winnipeg — this is not [what I want] — people still have to travel now. And know this: you will not be separated from me. Do not worry / turn back.\n\nI want to try something for our future. Whether it is a crime or not, I am positive that you will not regret it. I will never neglect [our future]. I am already  — so why should I not try? I will not fail. Now, and for certain.\n\nA person still has one joy in life: the one to whom he binds his happiness. It is his duty to try. For the person he loves, he should see to it that she is provided for and lives sparingly — and it should be the same for both of us, equally.\n\nI do not need to spell out my feelings for the old father. I am completely [convinced], but show me that you do not [doubt] it — and so believe in us with all your heart." },
+    "The House That Got Away": { date: "30 Dec 1924", img: "images/1924-house.jpeg", translation: "Dec 30th, 1924\n\nDear Dora and kiddies,\n\nI received your two letters today and am very sorry that you did not see your way clear to buy the house. Of course, it is no good buying a house and then being sorry for it afterward. Anyhow, better luck next time. You cannot imagine what a fuss I am made of.\n\nI am feeling quite well. The weather is fine and cold, with no snow. I have seen [dear?] all [people?] Brothers, and expect him to come from Kimoora today. I have bought a few furs. I have also wired to Fred Hutt Co. about prices and have a good reply. In here it is a bit high. Anyhow, I shall be going to Leipzig next week.\n\nDon't say anything to anybody about me buying goods, as it is not advisable. How are you all keeping? Mother is very happy about it. She looks quite well. There is no more news.\n\nI remain your loving husband and dad,\n\nSam" },
+    "The Panic of 1907": { date: "c. 1907–1908", img: "images/1907-panic.jpeg", translation: "Dear friends — the Falkovs, and you, Elis,\n\nDear friends, I am well and strong enough to do anything, but you should know that things are truly in a great panic here. The crisis has thrown people out of work by the hundreds, and I am one of them. Still, I haven't lost heart; I'll see what the times bring.\n\nWrite to me about work — whatever you hear in your circles.\n\nElis, give my regards to everyone in the family — to [name] and her family, to Yuel and his people; likewise to the father and mother, to Lion, to Betsye and the children, to Menish, to Brayne and the children, to Wolf, to Roze, to Dore, to Shori, and to all of yours. And a special hello to you all.\n\nAnd so — be well. Yours, [signature]" },
+    "The Zeppelin, Again": { date: "3 Sep 1916", img: "images/1916-zeppelin-again.jpeg", translation: "[Letterhead:] S. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam" },
+    "Three Pounds Enclosed": { date: "1 Sep 1916", img: "images/1916-business.jpeg", translation: "Diamondstein & Co.\nFur Dealers and Job Buyers — Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 1, 1916\n\nDear Dora and darling kiddies,\n\nSorry I did not write to you on Sunday, as I could not get stamps. I am glad to know that you and the children are improving. Alice tells me that you are growing fat and in height, and I am glad to hear that Gladys has become straight, and that the baby is improving well.\n\nI will write to you when I will be coming down. Tell Sarah that I spoke to Father and he will send her £1 tomorrow. He is busy down the West End every evening.\n\nEnclosed you will find three pounds.\n\nYour loving husband,\nDad" },
+    "Undated Hotel Montreal Paris Notes": { date: "Undated", img: null, translation: "Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: 1920s, exact year not determinable — this is the same Hôtel Montréal, 37 Rue d'Hauteville, Paris (same telegraphic address style) as the `1920-08-05-hotel-montreal-invoice.md` artifact, whose own year is only inferred from the archive filename and not confirmed by its content (which shows September dates, not August), so it doesn't pin an exact year either. The fur-buying content (moles, stone martens, francs pricing) and the telegraphic-address format (\"X-PARIS\") match the general pattern of Sam's dated 1921-1926 Paris/Leipzig/Berlin fur-buying trips (e.g. the stone martens in `1926-02-25-hotel-astra-paris-letter.md`), so this letter almost certainly belongs to that circuit, but no anchor here narrows it further than the decade.\n\nHôtel Montréal\n37, Rue d'Hauteville\nParis\nTelegraphic Address: MONTREALOM-PARIS\n\nDear Dora and grown-ups,\n\nI am feeling fine and the weather is splendid. I have done a bit of business today. Things are going slowly. I don't know how long I will remain here. I have been promised a parcel of 10,000 moles for Monday. I bought today about 90 cheap stone martens and 3,000 dyed moles; they are much better than the last lot I had. They cost me 42 francs; I will not sell for less than 53/6. If you get them before I arrive, flesh 50 francs, silver poled for the moles — it is impossible to get them otherwise.\n\nThere is no news. I am eating well and sleeping fine. My stomach is in good order.\n\nYour loving husband, Dad Sam" },
+    "Yiddish Letter Fragment A": { date: "1920", img: null, translation: "[handwritten English letter, single leaf, lined paper]\n\n26 March 1920\n\nDear Dora and kiddies,\n\nI am staying down at Margate. The weather is splendid, and I am having a fine time. I have been down to Broadstairs and Ramsgate. I am coming home on Friday morning, so I will be home in the evening. I am staying in a very nice place, with good food and plenty of it. I am sending you all one million kisses.\n\nYour loving husband and daddy,\nSam" },
+  };
 
   let idx = 0;
   const imgWrap = document.getElementById('img-wrap');
@@ -191,10 +188,29 @@
   const progressBar = document.getElementById('progress-bar');
   const positionCrumb = document.getElementById('position-crumb');
 
-  // The thumbs are already server-rendered (engine-thumbs) -- move each one into the visible
-  // filmstrip and wire its click handler, rather than re-creating DOM from a data array.
-  thumbEls.forEach((t, i) => {
+  const letterOverlay = document.getElementById('letter-overlay');
+  function openLetterModal(title) {
+    const l = letters[title];
+    if (!l) return;
+    document.getElementById('lm-date').textContent = l.date;
+    document.getElementById('lm-title').textContent = title;
+    const scanEl = document.getElementById('lm-scan');
+    if (l.img) {
+      scanEl.innerHTML = `<img src="${l.img}" alt="${title}">`;
+    } else {
+      scanEl.innerHTML = `<div class="lm-scan-note">[scan on file, not included in this wireframe]</div>`;
+    }
+    document.getElementById('lm-translation').textContent = l.translation;
+    letterOverlay.classList.add('open');
+  }
+  document.getElementById('letter-modal-close').addEventListener('click', () => letterOverlay.classList.remove('open'));
+  letterOverlay.addEventListener('click', (e) => { if (e.target === letterOverlay) letterOverlay.classList.remove('open'); });
+
+  panels.forEach((p, i) => {
+    const t = document.createElement('div');
+    t.className = 'fn-thumb';
     t.dataset.idx = i;
+    t.innerHTML = `<img src="${p.img}" alt="${p.label}" loading="lazy"><span class="fn-year mono">${p.year}</span>`;
     t.addEventListener('click', () => go(i));
     filmstripNav.appendChild(t);
   });
@@ -233,7 +249,7 @@
       `<button class="cap-letter-tag" data-title="${t}">${t} &rarr;</button>`
     ).join('');
     document.getElementById('cap-letters').querySelectorAll('.cap-letter-tag').forEach(btn => {
-      btn.addEventListener('click', () => window.openLetterModal(btn.dataset.title));
+      btn.addEventListener('click', () => openLetterModal(btn.dataset.title));
     });
     positionCrumb.textContent = `${idx + 1} / ${panels.length}`;
     progressBar.style.width = `${((idx + 1) / panels.length) * 100}%`;
@@ -272,30 +288,6 @@
 
   render('init');
 })();
-</script>
-
-<footer class="site-footer">
-  <nav class="footer-nav" aria-label="Site navigation">
-    <a href="index.html">Home</a>
-    <a href="letters.html">Every Letter</a>
-    <a href="family.html">The Family</a>
-    <a href="story-excerpt.html">Read the Story</a>
-    <a href="long-read.html">Complete Version</a>
-    <a href="journey.html">Follow the Journey</a>
-    <a href="pictures.html">The Story in Pictures</a>
-    <a href="how-made.html">How This Was Made</a>
-  </nav>
-  <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="how-made.html">How This Was Made</a> for the full process.</p>
-  <p class="footer-contact">Questions or corrections? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
-</footer>
-
-<script>
-  // Obfuscated mailto (Paul's ask, 2026-07-16): the address never appears as plain text in
-  // the HTML source -- assembled at runtime, so a static-HTML scraper never sees it, while
-  // real visitors with JS get a normal working mailto: link.
-  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
-    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
-  });
 </script>
 
 </body>

@@ -3,68 +3,129 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>The Family — The Sam and Dora Letters (1900&ndash;1926)</title>
+<title>Meet the Family — The Diamondstein Correspondence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/tokens.css">
-<link rel="stylesheet" href="assets/components.css">
 <style>
-  .family-sections { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem 5rem; }
-  .family-section { margin-top: 2.5rem; }
-  .family-section:first-child { margin-top: 1rem; }
-  .family-section-heading { font-weight: 700; font-size: 1.3rem; margin-bottom: 1.2rem; text-align: center; }
-  .cast-grid { display: grid; grid-template-columns: repeat(auto-fit, 200px); justify-content: center; gap: 1.4rem; }
-  .family-section[data-section="featured"] .cast-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); max-width: 560px; margin: 0 auto; }
-  .cast-subgroup { margin-top: 2rem; }
-  .cast-subgroup:first-child { margin-top: 0; }
-  .cast-subgroup-heading { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(26,26,26,0.45); text-align: center; margin-bottom: 1rem; font-weight: 600; }
+  :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--cream); color: var(--ink); font-family: 'Inter', sans-serif; }
+  .display { font-family: 'Bricolage Grotesque', sans-serif; }
+  .mono { font-family: 'IBM Plex Mono', monospace; }
 
-  .person-modal { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; padding: 1.1rem 2rem; background: var(--ink); color: #fff; }
+  .topbar a.back { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem; font-weight: 600; text-decoration: none; color: #fff; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); padding: 0.45rem 0.95rem; border-radius: 999px; transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease; }
+  .topbar a.back:hover { background: var(--rust); border-color: var(--rust); transform: translateX(-2px); }
+  .topbar .crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
+
+  .head { max-width: 680px; margin: 0 auto; padding: 3.5rem 1.5rem 1rem; text-align: center; }
+  .head p.kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.8rem; }
+  .head h1 { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 1rem; }
+  .head p.sub { font-size: 1.02rem; line-height: 1.65; color: rgba(26,26,26,0.7); margin-bottom: 1rem; }
+
+  .featured-section { background: var(--cream-dim); border-radius: 24px; max-width: 980px; margin: 0 auto 4rem; padding: 3rem 2rem 2.75rem; }
+  .featured-kicker { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 2rem; }
+  .featured-row { display: flex; justify-content: center; align-items: center; gap: 2.5rem; flex-wrap: wrap; }
+  .featured-person { text-align: center; cursor: pointer; }
+  .featured-person img { width: 210px; height: 210px; border-radius: 16px; object-fit: cover; display: block; margin: 0 auto 1.1rem; box-shadow: 0 20px 44px rgba(0,0,0,0.18); border: 4px solid #fff; transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease; }
+  .featured-person:hover img { transform: translateY(-5px); box-shadow: 0 26px 54px rgba(0,0,0,0.24); border-color: var(--rust); }
+  .featured-person:hover .fp-name { color: var(--rust); }
+  .fp-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.6rem; transition: color 0.15s ease; }
+  .fp-role { font-size: 0.85rem; color: var(--rust); font-weight: 600; margin-top: 0.3rem; }
+  .fp-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.5); margin-top: 0.35rem; }
+  .featured-connector { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 0 0.5rem; }
+  .featured-connector .amp { font-family: 'Bricolage Grotesque', sans-serif; font-size: 2.75rem; color: var(--rust); line-height: 1; }
+  .featured-connector .married-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; color: rgba(26,26,26,0.45); text-align: center; white-space: nowrap; }
+
+  .daughters-section { max-width: 900px; margin: 0 auto 3.5rem; padding: 0 1.5rem; }
+  .daughters-kicker { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(26,26,26,0.4); margin-bottom: 1.25rem; }
+  .daughters-row { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+  .daughter-card { text-align: center; cursor: pointer; width: 150px; }
+  .daughter-card img { width: 150px; height: 150px; border-radius: 14px; object-fit: cover; display: block; margin: 0 auto 0.7rem; box-shadow: 0 10px 24px rgba(0,0,0,0.1); border: 3px solid transparent; transition: transform 0.15s ease, border-color 0.15s ease; }
+  .daughter-card:hover img { transform: translateY(-3px); border-color: var(--rust); }
+  .daughter-card:hover .dc-name { color: var(--rust); }
+  .dc-name { font-weight: 700; font-size: 1rem; transition: color 0.15s ease; }
+  .dc-role { font-size: 0.78rem; color: rgba(26,26,26,0.5); }
+
+  .cast-sections { display: flex; justify-content: center; gap: 3rem; max-width: 1100px; margin: 0 auto 5rem; padding: 0 1.5rem; flex-wrap: wrap; }
+  .cast-group { flex: 1 1 380px; max-width: 460px; }
+  .cast-group-kicker { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(26,26,26,0.4); margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .cast-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 1.5rem; }
+  .cast-card { text-align: center; cursor: pointer; }
+  .cast-card img { width: 100%; aspect-ratio: 1; border-radius: 12px; object-fit: cover; display: block; margin-bottom: 0.6rem; box-shadow: 0 6px 18px rgba(0,0,0,0.08); border: 3px solid transparent; transition: transform 0.15s ease, border-color 0.15s ease; }
+  .cast-card:hover img { transform: translateY(-3px); border-color: var(--rust); }
+  .cast-card:hover .cc-name { color: var(--rust); }
+  .cc-name { font-weight: 600; font-size: 0.92rem; transition: color 0.15s ease; }
+  .cc-role { font-size: 0.76rem; color: rgba(26,26,26,0.5); }
+
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(10,8,6,0.72); z-index: 100; align-items: center; justify-content: center; padding: 2rem 1rem; }
+  .overlay.open { display: flex; }
+  .person-modal { background: #fff; border-radius: 16px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .close-btn { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(26,26,26,0.5); line-height: 1; }
+  .close-btn:hover { color: var(--ink); }
   .pm-top { display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; }
-  .pm-photo { width: 128px; height: 128px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
-  .pm-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.25rem; }
-  .pm-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
-  .pm-role { font-size: 0.84rem; color: var(--rust); font-weight: 600; margin-top: 0.25rem; }
-  .pm-bio { font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.85); margin-bottom: 1.1rem; }
-  .pm-letters-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(26,26,26,0.45); margin-bottom: 0.5rem; }
-  .pm-letter-item { display: block; width: 100%; text-align: left; font-size: 0.85rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); color: var(--ink); text-decoration: none; background: none; border-left: none; border-right: none; border-top: none; cursor: pointer; font-family: 'Inter', sans-serif; }
+  .pm-photo { width: 90px; height: 90px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+  .pm-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem; }
+  .pm-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
+  .pm-role { font-size: 0.86rem; color: var(--rust); font-weight: 600; margin-top: 0.3rem; }
+  .pm-bio { font-size: 0.94rem; line-height: 1.65; color: rgba(26,26,26,0.85); margin-bottom: 1.2rem; }
+  .pm-bio a { color: var(--rust); }
+  .pm-letters-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(26,26,26,0.45); margin-bottom: 0.6rem; }
+  .pm-letter-item { display: block; width: 100%; text-align: left; font-size: 0.86rem; padding: 0.5rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); background: none; border-left: none; border-right: none; border-top: none; cursor: pointer; font-family: 'Inter', sans-serif; color: var(--ink); }
   .pm-letter-item:last-child { border-bottom: none; }
   .pm-letter-item:hover { color: var(--rust); }
-  .pm-letter-item.pm-more { color: var(--rust); font-weight: 600; }
-  .pm-no-letters { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: rgba(26,26,26,0.4); }
+  .pm-letter-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--navy); }
+
+  #letter-overlay { z-index: 110; }
+  .letter-modal { background: var(--cream); border-radius: 16px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .letter-modal .close-btn { position: absolute; top: 0.8rem; right: 1rem; }
+  .lm-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
+  .lm-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.4rem; margin-bottom: 1rem; }
+  .lm-scan-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: rgba(26,26,26,0.4); margin-bottom: 1rem; font-style: italic; }
+  .lm-scan img { width: 100%; border-radius: 8px; margin-bottom: 1.2rem; display: block; }
+  .lm-translation { font-size: 0.92rem; line-height: 1.7; white-space: pre-wrap; color: rgba(26,26,26,0.85); }
 </style>
 </head>
 <body>
+<div style="background:#c1481f;color:#fff;text-align:center;padding:0.55rem 1rem;font-family:'IBM Plex Mono',monospace;font-size:0.76rem;letter-spacing:0.03em;">Prototype — for review purposes, not the final site</div>
+
 
 <div class="topbar">
   <a class="back" href="index.html#doors">&larr; Back to start</a>
-  <span class="crumb">The Family</span>
+  <span class="crumb">Meet the Family</span>
 </div>
-<div class="demo-banner">The cast of the correspondence &mdash; 16 people documented so far.</div>
 
 <div class="head">
-  <p class="kicker">The Sam and Dora Letters &middot; 1900&ndash;1926</p>
-  <h1 class="display">The Family</h1>
-  <p class="sub">The cast of the correspondence &mdash; tap anyone's portrait for their dates, role, and the letters that mention them.</p>
+  <p class="kicker">The Cast</p>
+  <h1 class="display">Meet the Family</h1>
+  <p class="sub">Everyone who appears in these 141 letters and postcards. Click anyone for their story and the letters they appear in.</p>
 </div>
 
-<div class="family-sections">
-<section class="family-section" data-section="featured"><div class="cast-grid"><button class="cast-card featured" data-person="person:dad-sam-104f4d" data-item="person:dad-sam-104f4d"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-sam-diamondstein-young.png" alt="Sam Diamondstein" loading="lazy"></div><div class="pc-name display">Sam Diamondstein</div><div class="pc-dates mono">c.1880–1978</div><div class="pc-role">Husband, letter-writer</div></button><button class="cast-card featured" data-person="person:dear-dora-3e5ca1" data-item="person:dear-dora-3e5ca1"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-dora-diamondstein-young.png" alt="Dora Diamondstein" loading="lazy"></div><div class="pc-name display">Dora Diamondstein</div><div class="pc-dates mono">1889–1984</div><div class="pc-role">Wife, recipient</div></button></div></section>
-<section class="family-section" data-section="daughters"><h2 class="family-section-heading display">Daughters</h2><div class="cast-grid"><button class="cast-card" data-person="person:beatrice" data-item="person:beatrice"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-beatrice.png" alt="Beatrice Diamondstein" loading="lazy"></div><div class="pc-name display">Beatrice Diamondstein</div><div class="pc-dates mono">b. c.1915</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button><button class="cast-card" data-person="person:cynthia" data-item="person:cynthia"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-cynthia.png" alt="Cynthia Diamondstein" loading="lazy"></div><div class="pc-name display">Cynthia Diamondstein</div><div class="pc-dates mono">b. c.1920</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button><button class="cast-card" data-person="person:gladys" data-item="person:gladys"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-gladys.png" alt="Gladys Diamondstein" loading="lazy"></div><div class="pc-name display">Gladys Diamondstein</div><div class="pc-dates mono">c.1912–1951</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button></div></section>
-<section class="family-section" data-section="cast"><h2 class="family-section-heading display">The Wider Cast</h2><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Sam's Family</h3><div class="cast-grid"><button class="cast-card" data-person="person:deborah-tomshinsky" data-item="person:deborah-tomshinsky"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-deborah-tomshinsky.png" alt="Deborah Tomshinsky" loading="lazy"></div><div class="pc-name display">Deborah Tomshinsky</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Possibly Getzel&#x27;s wife</div></button><button class="cast-card" data-person="person:getzel" data-item="person:getzel"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-getzel.png" alt="Getzel Diamondstein" loading="lazy"></div><div class="pc-name display">Getzel Diamondstein</div><div class="pc-dates mono">c.1857–c.1890</div><div class="pc-role">Sam&#x27;s father</div></button><button class="cast-card" data-person="person:sonia" data-item="person:sonia"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-sonia.png" alt="Sonia Diamondstein" loading="lazy"></div><div class="pc-name display">Sonia Diamondstein</div><div class="pc-dates mono">c.1893–1986</div><div class="pc-role">Sam&#x27;s sister</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Dora's Family</h3><div class="cast-grid"><button class="cast-card" data-person="person:auntie-sarah-c4173d" data-item="person:auntie-sarah-c4173d"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-sarah-nygate.png" alt="Sarah Nygate" loading="lazy"></div><div class="pc-name display">Sarah Nygate</div><div class="pc-dates mono">c.1896–1968</div><div class="pc-role">Dora&#x27;s sister</div></button><button class="cast-card" data-person="person:dora-s-mother-hinde-41248e" data-item="person:dora-s-mother-hinde-41248e"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-hinde.png" alt="Hinde Diamondstein" loading="lazy"></div><div class="pc-name display">Hinde Diamondstein</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Dora&#x27;s mother</div></button><button class="cast-card" data-person="person:reuven" data-item="person:reuven"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-reuven.png" alt="Reuven Diamondstein" loading="lazy"></div><div class="pc-name display">Reuven Diamondstein</div><div class="pc-dates mono">c.1850–1934</div><div class="pc-role">Dora&#x27;s father</div></button><button class="cast-card" data-person="person:yehuda-leib" data-item="person:yehuda-leib"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-yehuda-leib.png" alt="Yehuda-Leib Diamondstein" loading="lazy"></div><div class="pc-name display">Yehuda-Leib Diamondstein</div><div class="pc-dates mono">d. 1929</div><div class="pc-role">Dora&#x27;s brother</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Grandparents</h3><div class="cast-grid"><button class="cast-card" data-person="person:david-dimantshtein" data-item="person:david-dimantshtein"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-david-dimantshtein.png" alt="David Dimantshtein" loading="lazy"></div><div class="pc-name display">David Dimantshtein</div><div class="pc-dates mono">c.1825–1906</div><div class="pc-role">Sam &amp; Dora&#x27;s grandfather</div></button><button class="cast-card" data-person="person:keila-tsirel" data-item="person:keila-tsirel"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-keila-tsirel.png" alt="Keila-Tsirel Dimantshtein" loading="lazy"></div><div class="pc-name display">Keila-Tsirel Dimantshtein</div><div class="pc-dates mono">c.1830–c.1900s</div><div class="pc-role">Sam &amp; Dora&#x27;s grandmother</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Extended & Friends</h3><div class="cast-grid"><button class="cast-card" data-person="person:alice-522b27" data-item="person:alice-522b27"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-cousin-alice.png" alt="Alice" loading="lazy"></div><div class="pc-name display">Alice</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">A cousin, named often in the letters</div></button><button class="cast-card" data-person="person:john-felkov" data-item="person:john-felkov"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-john-felkov.png" alt="John Felkov" loading="lazy"></div><div class="pc-name display">John Felkov</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Alice&#x27;s husband</div></button></div></div></section>
+<div class="featured-section">
+  <p class="featured-kicker">The Correspondence's Central Couple</p>
+  <div class="featured-row" id="featured-row"></div>
 </div>
 
-<!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
-     letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
-     + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
-     zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
-     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
-     rather than the partial forking into two shapes (single-honest-core principle applied to
-     markup, not just behavior). -->
+<div class="daughters-section">
+  <p class="daughters-kicker">Their Three Daughters</p>
+  <div class="daughters-row" id="daughters-row"></div>
+</div>
+
+<div class="cast-sections">
+  <div class="cast-group">
+    <p class="cast-group-kicker">Sam's Family</p>
+    <div class="cast-grid" id="sam-family-grid"></div>
+  </div>
+  <div class="cast-group">
+    <p class="cast-group-kicker">Dora's Family</p>
+    <div class="cast-grid" id="dora-family-grid"></div>
+  </div>
+</div>
+
 <div class="overlay" id="person-overlay">
   <div class="person-modal">
-    <button class="close-btn" id="person-modal-close">&times;</button>
+    <button class="close-btn" id="modal-close">&times;</button>
     <div class="pm-top">
       <img class="pm-photo" id="pm-photo" src="" alt="">
       <div>
@@ -80,566 +141,171 @@
 </div>
 
 <div class="overlay" id="letter-overlay">
-  <div class="letter-modal" id="lm-card">
-    <button class="close-btn" id="modal-close">&times;</button>
+  <div class="letter-modal">
+    <button class="close-btn" id="letter-modal-close">&times;</button>
     <div class="lm-date mono" id="lm-date"></div>
     <div class="lm-title" id="lm-title"></div>
     <div class="lm-scan" id="lm-scan"></div>
-    <div class="lm-capsule" id="lm-capsule">
-      <button class="lm-lang-btn on" data-lang="en" id="lm-lang-en">English</button>
-      <button class="lm-lang-btn" data-lang="yi" id="lm-lang-yi">ייִדיש</button>
-    </div>
-    <div class="lm-body" id="lm-body"></div>
-    <div class="modal-nav-row" id="modal-nav-row">
-      <button class="nav-btn" id="modal-prev" aria-label="Previous letter">&larr;</button>
-      <div class="modal-position mono" id="modal-position"></div>
-      <button class="nav-btn" id="modal-next" aria-label="Next letter">&rarr;</button>
-    </div>
+    <div class="lm-translation" id="lm-translation"></div>
   </div>
 </div>
 
-<button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
-<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""><figcaption id="zoom-overlay-cap" class="zoom-cap" style="display:none;"></figcaption></div>
-
-
-<script>
-  window.MODAL_CONFIG = { langToggle: true, prevNext: false, imgPathMatch: "root" };
-  window.MODAL_LETTERS = [ 
-  {
-    "date": "c. 1907–1908",
-    "img": "images/scan-41.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907–1908, Montreal — addressed to \"Dear friends, the Falkovs, and you, Elis/Alice,\" reporting that \"the crisis has thrown people out of work by the hundreds\" and that Sam himself is one of the unemployed. This matches the Panic of 1907, whose unemployment effects extended into 1908 in North America, and this letter groups with Sam's other outgoing Montreal letters from that same stretch (prior research places this letter alongside several others as Sam's own outgoing voice from the June–August 1908 Montreal window). Sourced historical background on the Panic itself: a U.S. banking crisis whose contraction ran May 1907-June 1908; Montreal's stock exchange volume fell 45% even though Canada's broader economy weathered it comparatively well.[/low-confidence]\n\nDear friends — the Falkovs, and you, Elis,\n\nDear friends, I am well and strong enough to do anything, but you should know that things are truly in a great panic here. The crisis has thrown people out of work by the hundreds, and I am one of them. Still, I haven't lost heart; I'll see what the times bring.\n\nWrite to me about work — whatever you hear in your circles.\n\nElis, give my regards to everyone in the family — [low-confidence]to [name] and her family, to Yuel and his people; likewise to the father and mother, to Lion, to Betsye and the children, to Menish, to Brayne and the children, to Wolf, to Roze, to Dore, to Shori, and to all of yours[/low-confidence]. And a special hello to [low-confidence]you all[/low-confidence].\n\n[low-confidence]And so — be well. Yours, [signature][/low-confidence]",
-    "title": "The Panic of 1907",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "14 Jul 1907",
-    "img": "images/1907-july-14.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "1907 — the 14th\n\nDear Dora\n\nI am very glad that you are spending time in the country getting rest. It will also do you good to stay there in the country, being away from me, because I am fine and nothing is amiss.\nWe walk around like two young people. We arrive early. Write every evening. We sit in the garden and we hear your reading (or what you write) that you record for us. There is no other news, just a little bit.\nAlso from cousin Alice's letter—she writes that you should come... Father often has no money... I received [something/a letter], but it was open. It surprises me very much...\n\nDear cousin Alice, I am not so angry as you think, and you are not a small child. His money has not run out. I greet you warmly.\n\nYour cousin Sam.\n\n[low-confidence]Give my regards … the same.[/low-confidence]",
-    "title": "“Yours Samala”",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "10 Jul 1907",
-    "img": "images/1907-london.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: Sam is writing from London — stated directly in the letter (\"There's no news here in London\"), not Montreal, though this falls in the same 1907-1909 courtship-era window as the Montreal correspondence. This letter itself does not name Dora's location. A companion letter from four days later (same era, also signed \"Your cousin, Sam,\" addressed \"Dear Dora\") opens \"I am very glad that you are spending time in the country getting rest... being away from me\" — confirming Dora was away \"in the country\" (unnamed specifically) that same week. Worth reading the two together, but that context comes from the sibling letter, not this one.[/low-confidence]\n\nJuly 10, 1907 [date supplied by Paul — not visible in the scan/evidence below]\n\nThere's no work to be found here.\n\nI've sent a letter to Mother, and to my sister as well. As for your own letter — I hadn't seen it before, but I've only just now received it, and it made me happy.I thought perhaps you simply hadn't written. Do write to me.\n\n[low-confidence]It troubles me that you all see[/low-confidence] that you want to go off to a wedding. Father asked me [low-confidence]to see it through[/low-confidence]. There's no news here in London.\n\nI was to be sent away to look into something, but things here are quiet. It seemed it might have been a bit of luck, if only it would work out for me. [low-confidence]I alone[/low-confidence] have [low-confidence]seen to it.[/low-confidence]\n\nCousin Alice sends her regards. [low-confidence]It's a wonder how things go along.[/low-confidence] In any case — [low-confidence]a few lines you'd asked me for.[/low-confidence]\n\n[low-confidence]John says that[/low-confidence] someone here who comes to me — the two of them — doesn't want to read this. [low-confidence]I'm telling you: I beg you, get it out of him[/low-confidence]. It's [low-confidence]urgent — do hurry for me; better a word[/low-confidence] than none.\n\nYour dear wife sends her regards. I send my own regards along with this.\n\nNow, about the important matter you asked about: [low-confidence]it concerns your father-in-law and all our good friends.[/low-confidence] I'm sending you Mother's letter [low-confidence]which…[/low-confidence]\n\nNo — what I'd say is that you should stay.\n\nYour cousin, Sam",
-    "title": "No News in London",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1910s",
-    "img": "images/scan-18.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: uncertain, likely 1910s. This letter addresses \"dear Dora, my wife\" (implying it postdates the marriage, itself only bracketed to 1910-1916 by other letter content) and mentions \"the Falkovs\" — a family already close to the Diamondsteins by the 1908 tenaim (two Falkauf/Felkauf witnesses) and still connected decades later through cousin Alice's 1930 marriage to John Felkov, so the Falkov mention alone doesn't narrow the date. No children, business letterhead, or seaside/kiddies details appear, which argues against both the 1916 business era and the 1919-1926 seaside cluster. Best guess: sometime in the 1910s, after the wedding and before those later, more datable clusters — but this is a wide, low-confidence range.[/low-confidence]\n\n[This letter survives only as a garbled fragment; large stretches could not be recovered and are marked below.]\n\n[low-confidence] ...I hear from your letter that you are going there, and about the Falkovs — and that everyone comes and goes [when...]; or perhaps they are staying. [/low-confidence] In a word, write me yourself what you are hearing. And about our \"golden country\" [America] — [low-confidence] the days are [...]; the ticket [...] still stands, and I [...]. [/low-confidence] Send a greeting, so that one might know everything at once. [low-confidence] What is to become of it [...]. [/low-confidence]\n\nAnd now, dear Dora, my wife —\n\nI am sending you here the address of a woman [young lady] who is traveling [low-confidence] [...] she will soon be [...]; [...] back to me [...] the first little letter [...] and [...] to say goodbye. [/low-confidence] I am sending you her address.\n\n116\n[low-confidence] [address fragment] [/low-confidence]\n...next [week?]",
-    "title": "The Emigration Ticket",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "1 Sep 1916",
-    "img": "images/1916-09-01-letter-from-diamondstein-and-co-to-dora-about-family-well-being-and-money-enclosed.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "Diamondstein & Co.\nFur Dealers and Job Buyers — Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 1, 1916\n\nDear Dora and darling kiddies,\n\nSorry I did not write to you on Sunday, as I could not get stamps. I am glad to know that you and the children are improving. Alice tells me that you are growing fat and in height, and I am glad to hear that Gladys has become straight, and that the baby is improving well.\n\nI will write to you when I will be coming down. Tell Sarah that I spoke to Father and he will send her £1 tomorrow. [low-confidence]The oak cannot be found, so he is busy[/low-confidence] down the West End every evening.\n\nEnclosed you will find three pounds.\n\nYour loving husband,\nDad\n\n[low-confidence][illegible closing note][/low-confidence]",
-    "title": "Three Pounds Enclosed",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1907-1909",
-    "img": "images/scan-17.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1909, Montreal courtship era — Sam reports \"three weeks already and still have no work,\" discusses a farm scheme (compare another letter's farm/homestead-grant discussion) and mentions Chicago, and signs as \"your loving husband.\" The itinerant job search, farm discussion, and anxious tone match the already-dated Montreal cluster of letters; note the addressee is read as \"Dora\" in one transcription pass and \"Sarah\" in the other, so the recipient itself is uncertain.[/low-confidence]\n\n[The opening line is lost.] … it wasn't so bad. And, my dear Dora, I don't know what more to write — only that I miss you terribly. You can't imagine it.\n\n[low-confidence]Some news of acquaintances: I believe they're going to travel — something about Chicago — and Keyle Blum is also [unclear]; the rest of this passage is too garbled to make out.[/low-confidence] I'm still waiting for an answer about what I wrote to you concerning the farm.\n\nNow, dear Dora, because I know you'll take it to heart — I've been here three weeks already and still have no work. Since I'm writing this letter anyway, and it's about to be sealed, I'll tell you the truth. I wouldn't have written it, except that I promised you I'd write everything as it is, and I mustn't break my word. I hope you won't take it too hard. And so I'll close — I have no more news. Your loving husband.\n\n[low-confidence]And there's no work — only some money that was taken from me. I couldn't manage to get passage back … a passage for every 400 … (this whole passage about the money and the fare is badly garbled in the original).[/low-confidence] Still, I'm content, because at least I'll know better for next time. The kind of work you can find here is enough to get by, but not enough to really live on.\n\nI'm writing all this, dear Dora, just to give you a little picture of how things are here. But one keeps hoping there will be work. Don't take it to heart — my own heart is heavy enough as it is. Eat, drink, and spend your time among our family. [low-confidence]Take care of yourself.[/low-confidence] Today I'm traveling on; a woman will deliver a greeting to you from me in person. Well — for now.\n\n[low-confidence][Opening word unclear]![/low-confidence] Our trade is very bad right now, but in the meantime one manages — you go out on the street and so on. We don't live badly. If only I had [the letter breaks off here].",
-    "title": "Three Weeks, No Work",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "1 Sep 1916",
-    "img": "images/1916-09-01-letter-from-s-diamondstein-and-co-to-dora-kiddie.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[Printed letterhead:]\nAll communications to be addressed to:\nS. Diamondstein & Co., Fur Dealers & Job Buyers, Importers & Exporters\n25 Fournier Street, Brick Lane, London, E.\n\nSeptember 1, 1916\n\nDear Dora and kiddies,\n\nI am very much surprised. I cannot really make out why I did not have a reply to my letter and the £3 I had sent you. Have you forgotten me as soon as you have had the last of me? Oh, you woman.\n\nNow dear, don't forget, and do as I tell you: stay there the next week. I believe Sarah is coming down for the week, so you will have company. Are you looking well? How are the kiddies? Do they have a good time? Kiss the kiddies for me.\n\nYour loving husband, Dad [low-confidence]Sam[/low-confidence].\n\nMy best love to [low-confidence]Ollie[/low-confidence] and Muriel.",
-    "title": "Letter from S Diamondstein and Co to Dora Kiddie",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1916-1920",
-    "img": "images/undated-letter-whitstable-trip.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1916–1920 — the closing names only two daughters, Beaty and Gladys (no Cynthia), which by established family research places it before Cynthia's estimated birth (~1920–1923) and after Beatrice's estimated birth (~1915–16); this also fits the broader 1916–1926 pattern of seaside/day-trip correspondence documented elsewhere in the archive.[/low-confidence]\n\nDear Dora and kiddies,\n\nI am staying on at Whitstable for the present. The weather is not good, but it is not a bad place. I have good food, a nice room, and so on. I went to Westgate today by charabanc. Don't write postcards, only letters, and I will let you know how long I am staying. I think I will go to Herne Bay tomorrow, so it is no use sending me any letters.\n\nYour loving husband and dad,\nSam\n\nTell Beaty and Gladys that if they are good, I will bring something very nice home.",
-    "title": "The Whitstable Trip",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 4 Jan 1919",
-    "img": "images/1919-01-04-diamondstein-letter-to-dora-p2.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[Page 2 of a letter. A printed letterhead shows through faintly from the front of the sheet (mirror-reversed), reading approximately: 'M. Diamondstein, Wholesale Manufacturing Furrier, ... Clerkenwell Road, ... London ... Telephone No. 4432 Central.' No printed text is on this side itself.]\n\n...otherwise things are as usual. Your loving husband,\nSam\n\nDear Gladys and Beaty,\nMama writes that you would like to see me, and to have me teach you to swim. Very well — I will, next weekend.\nYour loving Dad\nxxxxxxxxxxxxxxxxxx\n\n[In pencil, faint, lower on the page — an address jotting:]\nMr. S. Diamondstein\nStation [low-confidence]?[/low-confidence]\nFashion Street\n\n[A separate faint pencil word:] loving",
-    "title": "Diamondstein Letter to Dora (Page 2)",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "3 Aug 1919",
-    "img": "images/1919-08-03-diamondstein-letter-to-dora-kiddies.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "Phone Central 4432\nS. Diamondstein, Fur & Skin Dealer\n37 Fashion Street, Brick Lane, London, E. 1\n\nAugust 3, 1919\n\nDear Dora and kiddies,\n\nI have arrived in London at 2:45 p.m. It was an awful train — it stopped at every station. Everything is all right. I have seen Fanny; she came through on Monday. Went to bed at 10 o'clock and had a rest. There is no news. Tell Gladys and Betty to be good.\n\nYour loving Sam\n\nGive my love to Sarah, [low-confidence]Joseph,[/low-confidence] and the little [low-confidence]teser[/low-confidence].",
-    "title": "Diamondstein Letter to Dora Kiddies (Aug 1919)",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "25 Jul 1920",
-    "img": "images/1920-07-25-letter-to-gladys-and-beaty-p1.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "LONDON, E. 1.\n\nDear kiddies Gladys and Beaty,                    July 25, 1920\n\nI have seen Auntie Sarah, and she has given a full account of you, and it really surprised me. You promised me when you left for Ramsgate that you wouldn't give Mama any trouble, and as far as I understand from Auntie Sarah, you keep on upsetting Mama. Well, I don't think it is fair that you should not keep your promise, and besides, when you know I am sure about it, that would be better for everyone. Well, I hope you have improved already and there won't be any trouble about that.\n\nNow, how are you? Have you had fine weather, Gladys? Auntie Sarah told me you have not received a card from me. Well, I have written to you. You know Daddy would not",
-    "title": "Letter to Gladys and Beaty (Page 1)",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "8 Aug 1922",
-    "img": "images/1922-08-08-grand-hotel-du-pavillon-paris-letter.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "August 2nd, 1922\n\nDear Dora, Gladys, and Betty,\n\nI received your letters this morning, and I think it is very unfair of all of you not to write sooner. Don't you think I am fighting your battles in here to make money for you to spend? You must not consider me in this light. I am not feeling very well, but I will improve, I hope.\n\nHow do you find your lodgings? Do you make the best of it? I am expecting to leave London any day. I will write to you as soon as I hear from you again. Business is not very good, but we hope for the best. There is nothing new at present.\n\nAuntie Sorah wants to come to our place for a week. I have told her she can if she wants to.\n\nMy best respects to Auntie Jenny and the kiddies.\n\nYour loving Dolly XX",
-    "title": "Grand Hotel Du Pavillon Paris Letter (Aug 1922)",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1921-1930",
-    "img": "images/undated-letter-fragment-closing-gladys-bertie-cynthia.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1921–1930 — this fragment names all three daughters (Gladys, Beatie, and Cynthia) together in one closing, which by established family research places it after Cynthia's estimated birth (~1920–1923); no further internal content narrows the estimate within that decade.[/low-confidence]\n\n[...] when you next write to me, what the result is.\n\nAlso I have told—I hope Gladys, Beatie, and Cynthia are good little girls. I have no other news. I remain your loving husband. Dad\n\n[low-confidence][signature illegible][/low-confidence]",
-    "title": "Good Little Girls",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. Sep–Oct 1924",
-    "img": "images/undated-letter-berlin-leipzig-trip-1924.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "Dear Dora and kiddies,\n\nI arrived at Berlin on Thursday and stayed there one day. I saw a doctor, and he has put me on a diet for five days before he can examine me properly, so I have left for Leipzig. I will be here till Thursday and then go back to Berlin, and I hope to leave for home next Saturday. Meanwhile, I am feeling quite well.\n\nHow is everybody at home? Why don't you write? I have done some business in Riga, and I will try to do some at Leipzig if possible.\n\nSee Morry Sagon again, and this time, if he does not pay up, go up to my solicitor — Johny knows where — and you can look up the ledger. I think it is since Sept 10, 1924, that he owes me £17. Summon him, and don't let them humbug you about any more. It is one way or the other.\n\nHow are the children? How is Cynthia? Have I spelled her name Beaty?\n\nYour loving husband, Dad Sam",
-    "title": "How Is Cynthia?",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1900-1909",
-    "img": "images/scan-3.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1900-1909, pre-marriage courtship era — the letter is a farewell letter addressed to \"Dora / Tsirele\" (a pet name), describing a night-time farewell gathering of some twenty friends and acquaintances before a departure, mentions \"London,\" and is signed with what may be \"S.\" (Sam); this fits the pattern of Sam's early travels away from Dora during the courtship years documented elsewhere in the corpus (the earliest dated letter in the archive is from 11 June 1901, and the Montreal courtship cluster runs June-August 1908), though nothing in the surviving text pins it to a specific year within that span.[/low-confidence]\n\n[low-confidence]Note: speculation on WHERE this departure was to/from, separate from the dating note above. Leading theory: a farewell written in London, the night before one of Sam's known Montreal crossings — not before an original emigration out of Latvia. Solid textual anchors: the raw Yiddish contains \"לאנדן\" (London), independently caught by both Opus and Gemini's passes, though the surrounding context is unclear in both; a ~20-person farewell gathering the night before; a specific near-term date (\"Friday the 2nd\"); and messages relayed through an \"aunt\" and \"Grandfather\" rather than directly, suggesting Dora and the writer's family were reachable through a home community. Reading these together: if \"London\" is where the farewell itself takes place (friends and acquaintances being said goodbye to there) rather than the destination, this fits neatly with Sam shuttling between London and Montreal multiple times across 1901 and 1907-1909 (documented elsewhere in the corpus, e.g. another letter's \"Montreal, 11 June 1901\") rather than requiring a bigger, one-time emigration event. The line \"I certainly would not have traveled back... I could not have borne being alone so long without you\" supports this specifically: \"traveled back\" implies a repeat crossing, not a first departure — consistent with this being one of the later round trips rather than an original emigration. No direct evidence pins WHICH crossing. One reading to actively distrust: Gemini's pass alone renders a broken line as meeting again \"[in Gissen / soon]\" — Giessen is a real German town, but Opus's independent pass of the same spot reads only \"to meet again soon,\" no place name; per this project's standing caution that Gemini invents plausible specifics when a passage is too garbled to resolve, \"Gissen\" is likely a hallucinated fill-in, not evidence. Not resolved; the London/Montreal-crossing reading is the better-supported guess, not a finding.[/low-confidence]\n\n…having known her for years. I was standing out in the middle of it all, the moon shining down through the trees, and I thought to myself: what a good, true friend. But out there, far away, there is a whole shrine of life that not every person has the good fortune to possess. [low-confidence]And if one misses it, it will not leave us longing — for I am […] so quickly.[/low-confidence]\n\nAnd now I sit down to write you a letter, my dear, because I have been longing for you. [low-confidence]I am holding on, trying to show a brave face, because I have had to steady my own heart. For the moment I feel weak[/low-confidence] — and yet the one thought that carries me is the thought of seeing you again. So stay well and be patient; surely it will [low-confidence]soon come to pass[/low-confidence] that we meet again.\n\nYours, loving you forever, [low-confidence]S.[/low-confidence]\n\nGive my regards to everyone. [low-confidence]I don't know whether I should write […]; leave it with the aunt. […] soon […] through Grandfather from […].[/low-confidence]\n\n[low-confidence]I keep it all to myself. […] you are suffering — but what more do I need? Surely you believe me; and if you had been […], I certainly would not have traveled back. It would have hurt me so, […] I could not have borne being alone so long — without you![/low-confidence]\n\nSo then, my dear [low-confidence]Dora / Tsirele[/low-confidence] — [low-confidence]still ahead of us is Friday the 2nd. It will […] not take long now[/low-confidence] until we see each other again.\n\n[low-confidence]Dora / Tsirele[/low-confidence], I said my goodbyes yesterday to all our good friends and acquaintances. [low-confidence]I met them at […]; they gathered there together. We […].[/low-confidence] You would have loved to hear it. Goodbye, [low-confidence]Sam(?)[/low-confidence] darling — farewells from every side, right to the end. [low-confidence]In the end they called out […]; some twenty people […], with the young folk, and afterward the […]. One simply cannot imagine that in so short a time a person could live through so much […] — such serious […] — something, because I wanted to…[/low-confidence]",
-    "title": "A Farewell Gathering",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1907-1909",
-    "img": "images/scan-50.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1909 (Montreal courtship era), low confidence. Signed \"your mother,\" the letter describes earning almost nothing, sitting idle, asking the recipient to send money, and wishing she could come and see the recipient if she were rich — the same money-scarcity and work-scarcity themes that run through Sam's own outgoing Montreal letters, anchored to the June–August 1908 dated letters. Most plausibly a parent (Sam's mother, or Dora's mother Hinde) writing into that same stretch, though the addressee isn't named in the surviving text, so the exact year can't be pinned down.[/low-confidence]\n\n...I earn almost nothing here. All I do is sit and eat, and [low-confidence]if you could send me something, it would help.[/low-confidence] They say that [low-confidence]— the next few lines are too garbled in the transcription to read: something about what you have, a mention that something is nice, and someone who has gone away, and how he is doing, and his health —[/low-confidence] is.\n\nMy dear, business [low-confidence](unreadable)[/low-confidence] — and if I were rich, I would come over to you, to see you and be with you, and I would [low-confidence](greet? welcome?)[/low-confidence] you so very warmly.\n\nSo, warm greetings to all our friends. May you all be well and healthy. Nothing more from me, your mother. As always, wishing you much luck. [low-confidence](the letter breaks off here)[/low-confidence]",
-    "title": "If I Were Rich",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1907-1909",
-    "img": "images/scan-27.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1909, Montreal courtship era — the writer addresses \"dear Dora\"/\"Dorele,\" references leaving London, says \"I am in Canada,\" and reassures her they are \"both still young\" and he will find work; this is the same devoted, money-worried voice as Sam's other dated Montreal letters to Dora (e.g. other dated Montreal letters), and the page is numbered \"6,\" suggesting it is a continuation sheet from a longer letter in that same run.[/low-confidence]\n\n[This page continues from an earlier sheet.]\n\n...my heart. You know yourself that when I left London, [low-confidence]I never imagined things would turn out this way — I didn't picture for you the hard reality that was coming[/low-confidence]. And so I think to myself that [low-confidence]these will be difficult times[/low-confidence]. But for now it isn't the worst of it — everyone has to go through the same thing, to bear their own small share of hardship, and I'm certainly no exception in the world.\n\nYou can be absolutely sure that I hold nothing against you — no complaint, no grudge, and against you least of all, my dear Dora. You are not just some foolish girl. It surprises me that you'd make me spell this out. [low-confidence]Did you find something in my letters that made you doubt how hard I've tried to write to you kindly?[/low-confidence] You know very well what I think of you. It feels almost pointless to have to put it down again here on paper — but I do it because I can see it weighs on your heart.\n\nWhy should you make yourself so bitter and torment your heart? You know yourself that things in London are very bad, and if I were in London now it would be even sadder. But I'm here in Canada. In a word: don't lose heart. Your health must be more precious to you than anything — and above all, you are precious to me. So take care of yourself and be well.\n\nWhen I read your letters, your heart shows through in every word, and I have to say, it makes me very sad. But my darling, my dear Dora, don't lose hope. We are both still young [low-confidence]and strong[/low-confidence], and in time I will find work, together with you at my side.",
-    "title": "Still Young and Strong",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1907-1908",
-    "img": "images/scan-31.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — the letter describes a Canadian government homestead/farm-grant scheme ($1,000, hold the land 3 years, 10 acres and a house before it can be sold) and is addressed to \"Dear Dora\"; the established romantic correspondence with Dora (vs. a more distant 1901 solo trip) and the deliberative, still-undecided tone (\"I myself don't know... at the very worst I'd come back to the country\") fit the 1907-1909 window when Sam was weighing multiple survival options in Montreal before securing London work in Aug 1908.[/low-confidence]\n[low-confidence]Historical note: these terms ($1,000, 10 acres, a house, hold 3 years then sell) don't match the famous free Dominion Lands Act homestead (160 acres for a $10 fee) at all -- they're structurally much closer to the lesser-known, paid \"Ready-Made Farm\" schemes (mainly CPR-run, Alberta/Saskatchewan, requiring real capital -- commonly cited around $1,500 -- in exchange for a pre-built house and pre-ploughed land), though the specific numbers don't match either program exactly.[/low-confidence]\n\n[low-confidence] … to write … I can't quite make it out. [/low-confidence] I'll say it again: when you [low-confidence] finish [/low-confidence], I'll come back. [low-confidence] … and write to you? [/low-confidence]\n\nAbout the farm — here's how it is. The government gives grants here in Canada. You need [low-confidence] a thousand [/low-confidence] dollars for it, but [low-confidence] you have to put up the rest yourself. [/low-confidence] You have to be willing to farm it, and you have to hold it for 3 years, [low-confidence] with 10 acres [/low-confidence] and a house. After that you can sell the farm, once the 3 years are up. They say it's a good plan. I myself don't know what you'll make of it — write to me.\n\n[low-confidence] They've taken up the land for now, since there are three partners in it, and that way they can support each other; two more are coming out to the farm. [/low-confidence] And after all, a person has to work at it and make a go of it. [low-confidence] … would pay … twenty pounds … I've already taken on more for a partner … [/low-confidence] But how does one live [low-confidence] … from a loving one who … about you … [/low-confidence]\n\nSo really, one just doesn't know what's better. In any case, I'll see. [low-confidence] At the very worst, [I'd come] back to the country. [/low-confidence]\n\nDear Dora — [low-confidence] … [/low-confidence] has gone off with [low-confidence] his friends [/low-confidence] to the [low-confidence] prairie [/low-confidence], since they've bought [it]. [low-confidence] People are here … [/low-confidence] enjoying themselves thoroughly, and I'm telling you that too. [low-confidence] I never expected such a thing. [/low-confidence] Their friendship makes no exceptions — they're fine, refined people.\n\nThe whole time I go around town with Abram [low-confidence] [surname unclear] [/low-confidence], and you can see that they need workers — [low-confidence] only … what good is … [/low-confidence] But winter is coming on now, and the roads are turning to mud. Hundreds of sleighs go by with three [low-confidence] fine [/low-confidence] horses.\n\n[low-confidence] … mine, not … Write today to … the … quickly, since you asked, and you should write. [/low-confidence]",
-    "title": "The Homestead Grant",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1907-1908",
-    "img": "images/scan-33.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — addressed to a \"dear [Dora],\" remarks that her handwriting mixes Yiddish and English (consistent with Dora already living in a London-based, English-speaking household during the courtship, per Reuven/Hinde being in London), and mentions writing a separate letter to \"Uncle Ber\"; the intimate, chatty register matches Sam's other dated Montreal letters to Dora.[/low-confidence]\n\nWhat more can I write you? [low-confidence]I could have written you a whole world of things, but[/low-confidence] no new thought comes to me to put down, so I just have to sit and think of what to write. [low-confidence]And your [note?] is, after all, good....[/low-confidence]\n\nMy dear [low-confidence][Dora?][/low-confidence] — this I forgot to write. It makes me glad that you read and write whenever you have the time. Only I wonder greatly: your handwriting has gotten quite spoiled. You mix Yiddish and English a great deal in your writing. Still, I understand you [low-confidence]even when you hold back as you write — that much I can tell.[/low-confidence]\n\n[low-confidence]... no ... From me, if ... you will forgive [the remark?]. Say yes.[/low-confidence]\n\nI have [low-confidence]written[/low-confidence] Uncle [low-confidence][Ber?][/low-confidence] a letter. [low-confidence]Your ...! ... tell people ... about my writing, because I ... what the people want to know ...[/low-confidence]",
-    "title": "Mixed Yiddish and English",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa early 1900s-1910s",
-    "img": "images/scan-19.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: weak guess, early 1900s-1910s. This is a letter from a cousin \"Lieb\" to \"dear cousins Dora and Zishe\" (Zishe appears here as a separate addressee alongside Dora, not obviously a nickname for Sam), mentioning an uncle/aunt, a place read as \"Zolsteyn,\" and a busy trading season. None of these details echo any already-dated letter in the corpus strongly enough to anchor a specific year, so no confident estimate is offered beyond noting it reads as early Yiddish family correspondence of the same general kind and physical-scan neighborhood (Scan 15-24) as the dated Montreal-courtship letters — i.e. plausibly early 1900s-1910s, but this is a weak, low-confidence guess rather than a supported date.[/low-confidence]\n\n[low-confidence]...where uncle and aunt live[/low-confidence]\n\nI'm well, and I'm passing my time not badly at all. As for what you wrote about business — I can tell you that right now [low-confidence]it's the busy season here[/low-confidence], and it should hold on for a good while yet, which is good. Things are going well for now; I'll write you more later.\n\nWrite and tell me how things are with you, and anything new [low-confidence]...[/low-confidence].\n\nDear cousins Dora and Zishe — thank you so much for your greeting. It made me so happy to hear from you, and I hope you'll write to me more often.\n\nGive my regards to everyone at home and in [low-confidence]Zolsteyn[/low-confidence]. Zishe, warm greetings to you too.\n\nFrom your cousin, [low-confidence]Lieb[/low-confidence].",
-    "title": "A Letter From Cousin Lieb",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "11 Jun 1901",
-    "img": "images/1900.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note (corrected 2026-07-06): the salutation reads \"Dear Darling Dora\" -- this is a direct, pixel-verified reading of the scan's own English-script heading (see the \"Transcription (source)\" / opus-vision entry below: \"Montreal. 11 of June 190[word?]\" / \"Dear Darling Dora\"), independently confirmed by two separate review passes that looked at the actual image rather than the OCR output. The Yiddish-OCR pipeline (Dybbuk) misread this same Latin-script heading as Yiddish-looking gibberish (see the Dybbuk entry below); the Opus and Gemini passages below are themselves translations of THAT gibberish, not readings of the real heading -- so their \"Dear Dora\" / \"Dear Sore\" salutations are hallucinated guesses from garbled input, not independent evidence against \"Darling.\" An earlier pass in this project removed \"Darling\" for exactly that mistaken reason (treating the Opus/Gemini guesses as if they were honest readings of the salutation); that removal was itself the error, and \"Darling\" is restored here. Also walks back a since-corrected claim that this letter's \"Sore\" reading was evidence for a second nickname for Dora -- it wasn't a real reading of anything Yiddish at all, just noise. Worth flagging honestly rather than resolving away: Dora was about 12 years old at this date, which makes \"Darling\" an unusually warm address for a letter to a young cousin -- surprising, but it is what the page says.[/low-confidence]\nMontreal, 11 June 1901\n\nDear Darling Dora,\n\nI'm very surprised that I didn't get a letter from you today. I don't know — maybe I'll get one from you tomorrow. I'd half expected to have it today. Anyway, dear Dora, let me write you a little news.\n\nYou know how it is in a new country — you're a bit of a greenhorn, and it's hard to find work. But what can you do. Well, walking down the street yesterday, I saw that they needed workers to be sent off to some job away from the city. When I asked, they told me they don't take any Englishmen. So I said I was an Austrian Christian — and they took me. Seeing how glad everyone who got hired was to have work, I thought to myself that I'm a little uneasy because they don't take any Jews either. You had to pay a small amount right there in the office when you took the contract. Reading it over, it looked fine at first — it reads well — but going over it again, I saw that I'd have to work for nothing for two months to cover the cost of the passage, plus food. \n\nBut since I'd already bought my ticket, I wanted to leave. So today I went into the office and took back the things they had snatched from me.",
-    "title": "The Austrian Christian Ruse",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1907-1908",
-    "img": "images/scan-48.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1908 (Montreal) — addressed to \"uncle Ruven\" and \"Hinde\" with talk of work and a promise to write more, and regards to \"Uncle Max/Marks\" and \"Aunt Ribe\"; prior research groups this with several other letters as Sam's own outgoing voice from the Montreal money-panic stretch of 1907-1909, addressed to uncle Reuven/aunt Hinde.[/low-confidence]\n\n[low-confidence] To my dear [uncle Ruven?] and [worthy?] uncle, [/low-confidence] and to Hinde — may you all live and have much good fortune.\n\n[low-confidence] I want to let you know [/low-confidence] that I am completely well, thank God.\n\n[low-confidence] (Several lines here are too garbled to read — they seem to touch on work and how things stand, but the wording is lost.) [/low-confidence]\n\nI hope to get [low-confidence] some news [/low-confidence] soon.\n\n[low-confidence] (A passage about writing — apparently asking someone to write, and mentioning a relative — is unreadable. One reading has \"about Bessie's\"; the models disagree, so the name is uncertain.) [/low-confidence]\n\n[low-confidence] Be sure to write to me at my address [/low-confidence], and [low-confidence] don't pass along any more news [that way?]. [/low-confidence]\n\nGive my regards to [low-confidence] Uncle Max (or Marks) [/low-confidence] and [low-confidence] Aunt Ribe [/low-confidence], and greet them all for me. Tell them that I will write to them!\n\n[low-confidence] (The closing lines — mentioning \"all friends\" and sending further regards — are too corrupted to render faithfully.) [/low-confidence]",
-    "title": "A Promise to Write More",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. early-to-mid 1920s",
-    "img": "images/undated-letter-fragment-re-gladys.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. early-to-mid 1920s (tentative, low confidence) — the letter addresses Gladys (b. ~1911–13) directly as capable of grown-up joking correspondence and mentions a \"Baby\" in the household; this fits best if \"Baby\" is Cynthia (est. birth ~1920–1923) and Gladys is in her early teens, but the content alone is too thin to rule out an earlier date (c. 1917–1920) if \"Baby\" instead refers to Beatrice.[/low-confidence]\n\n[low-confidence]... is busy writing ...[/low-confidence]\n[low-confidence]... received your ...[/low-confidence]\n\nNow, you, Gladys — why don't you remind Mama that she is not single and should behave herself a bit more? Why, it is disgraceful — if what I hear is true. It took my breath away. And Baby is well. Surely you ought to know better.\n\nHow are you keeping? Does Mama give you plenty to eat? She is usually mean; I think she will be making a nice knipel while you are away. Business is very quiet.\n\nSo don't pull my leg, you [low-confidence]hen[/low-confidence].\n\nEverybody is well. I went early to bed Sunday and yesterday, like a good boy — but not to worry.\n\nAlways, your loving husband and dad,\nSam",
-    "title": "It Took My Breath Away",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "3 Sep 1916",
-    "img": "images/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[Letterhead:]\nS. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam",
-    "title": "The Zeppelin, Again",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1907–1908",
-    "img": "images/mr-dean-montreal-1.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — this letter is addressed to \"uncle Reuven\" (Sam's uncle and Dora's father) about a stalled \"plan\" that \"is, sadly, a hard one\" for lack of money, the same money-dependent plan described across the already-dated June-August 1908 Montreal cluster of letters; the fur trade being \"not the best here in this place\" matches Sam's known Montreal stint doing casual labor outside the fur trade.[/low-confidence]\n\n[low-confidence]Note: who is where — Sam is writing FROM Montreal, TO uncle Reuven, who is in the UK (London), not both in the same place. Not stated as a dateline/location in the letter itself (no \"written from Montreal\" line survives), but supported by: \"the fur trade is not the best here in this place\" matching Sam's documented Montreal casual-labor stint (no capital/local network there); grouping with the dated June-August 1908 Montreal cluster (same \"our plan... when you have no money\" thread); and Reuven being separately documented as dying in London in 1934, consistent with his household being UK-based well before this letter. Reuven is simultaneously Sam's paternal uncle (Getzel and Reuven were brothers) and, at this point, his future father-in-law.[/low-confidence]\n\nMy dear uncle Reuven,\n\nI hope this finds you living well, in good health, and thriving in everything, from the bottom of my heart.\n\nDear uncle, the fur trade is not the best here. As for our plan, it is, sadly, a hard one. When you have no money, there is nothing at all you can do. As I wrote in the first letter — once things change for me, I'll write you more plainly.\n\nStay well. From me, your nephew\n\nWarm regards to everyone — to him and his wife, and to the others with their wives, and to the Applestein family — to you all, our love, in one word: to every last one of you.",
-    "title": "A Hard Plan",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "8 Jan 1923",
-    "img": "images/1923-01-08-hotel-der-kaiserhof-leipzig-letter.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "Hotel der Kaiserhof, Leipzig\nLeipzig, 8 January 1923\n\nMy dear Dora and kiddies,\n\nI have been detained here for two reasons. First, Sonia has gone into the hospital, and second, I could not do anything until this week. I have bought some goods, and I hope I have done the right thing; I have laid out a lot of money. I am feeling quite well. We leave Germany on Saturday or Sunday, so I hope everything will be all right. You need not write any more, as your letters won't reach me — unless you have something very important to write. I hope you and the children are in good health.\n\nI remain your loving husband and dad,\nSam",
-    "title": "Hotel Der Kaiserhof Leipzig Letter (8 Jan 1923)",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "1923",
-    "img": "images/1923-yiddish-letter-fragment-b.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[Hotel der Kaiserhof, Robert Börner — Leipzig]\nLeipzig, 3 January 1923\n\nMy dear Dora Kiddies,\n\nJust a line to tell you I am quite well, in the best of health. I arrived in Leipzig on Tuesday morning. Business is very hard to do. I will stay here until Saturday morning, then I will go to Berlin, as my sister has to undergo an operation, so I will wait for a few days to see how she comes through it. I do expect to be home for next Saturday week, about the 12th or 14th of January. Sonia is with me in Leipzig for the few days I am here, as Marie also went home last week. There is no more news.\n\nI remain your loving husband and dad,\nSam",
-    "title": "1923 · Yiddish Letter Fragment B",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  }
- ];
-  window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
-  window.MODAL_PEOPLE = { 
-  "person:alice-522b27": {
-    "img": "media/portrait-cousin-alice.png",
-    "dates": "",
-    "role": "A cousin, named often in the letters",
-    "bio": "",
-    "node_id": "person:alice-522b27",
-    "canonical": "Alice",
-    "letters": [
-      "The Panic of 1907",
-      "“Yours Samala”",
-      "No News in London",
-      "The Emigration Ticket",
-      "Three Pounds Enclosed"
-    ],
-    "letters_total": 7,
-    "letters_page": "letters/by-person/alice-522b27.html"
-  },
-  "person:auntie-sarah-c4173d": {
-    "img": "media/portrait-sarah-nygate.png",
-    "dates": "c.1896–1968",
-    "role": "Dora&#x27;s sister",
-    "bio": "A trusted go-between for news of the girls — “Auntie Sarah” in several letters.",
-    "node_id": "person:auntie-sarah-c4173d",
-    "canonical": "Sarah Nygate",
-    "letters": [
-      "The Panic of 1907",
-      "Three Weeks, No Work",
-      "“Yours Samala”",
-      "Three Pounds Enclosed",
-      "Letter from S Diamondstein and Co to Dora Kiddie"
-    ],
-    "letters_total": 8,
-    "letters_page": "letters/by-person/auntie-sarah-c4173d.html"
-  },
-  "person:beatrice": {
-    "img": "media/portrait-beatrice.png",
-    "dates": "b. c.1915",
-    "role": "Sam &amp; Dora&#x27;s daughter",
-    "bio": "Sam &amp; Dora&#x27;s second daughter; born around 1915-1916 (estimate only -- no document gives an exact year). Her own daughter Hilary later became a source of family testimony for this project.",
-    "node_id": "person:beatrice",
-    "canonical": "Beatrice Diamondstein",
-    "letters": [
-      "The Whitstable Trip",
-      "Diamondstein Letter to Dora (Page 2)",
-      "Diamondstein Letter to Dora Kiddies (Aug 1919)",
-      "Letter to Gladys and Beaty (Page 1)",
-      "Grand Hotel Du Pavillon Paris Letter (Aug 1922)"
-    ],
-    "letters_total": 10,
-    "letters_page": "letters/by-person/beatrice.html"
-  },
-  "person:cynthia": {
-    "img": "media/portrait-cynthia.png",
-    "dates": "b. c.1920",
-    "role": "Sam &amp; Dora&#x27;s daughter",
-    "bio": "Sam &amp; Dora&#x27;s third daughter; born around 1920-1923 (estimate only -- no document gives an exact year). Named alongside her sisters in Sam&#x27;s letters home from his fur-buying trips.",
-    "node_id": "person:cynthia",
-    "canonical": "Cynthia Diamondstein",
-    "letters": [
-      "Good Little Girls",
-      "How Is Cynthia?"
-    ],
-    "letters_total": 2,
-    "letters_page": "letters/by-person/cynthia.html"
-  },
-  "person:dad-sam-104f4d": {
-    "img": "media/portrait-sam-diamondstein-young.png",
-    "dates": "c.1880–1978",
-    "role": "Husband, letter-writer",
-    "bio": "Born c.1880 in Korsovka (some sources say 1882), son of Getzel. Left for Montreal in 1901, settled in London by 1908, and built S. Diamondstein &amp; Co., a fur trading business. Retired early for his health; died in London in 1978, in his nineties.",
-    "node_id": "person:dad-sam-104f4d",
-    "canonical": "Sam Diamondstein",
-    "letters": [
-      "A Farewell Gathering",
-      "If I Were Rich",
-      "Still Young and Strong",
-      "The Homestead Grant",
-      "Mixed Yiddish and English"
-    ],
-    "letters_total": 47,
-    "letters_page": "letters/by-person/dad-sam-104f4d.html"
-  },
-  "person:david-dimantshtein": {
-    "img": "media/portrait-david-dimantshtein.png",
-    "dates": "c.1825–1906",
-    "role": "Sam &amp; Dora&#x27;s grandfather",
-    "bio": "Born around 1825 in Dvinsk; died in London in 1906. Father of ten children — including Getzel (Sam&#x27;s father) and Reuven (Dora&#x27;s father), who were brothers, which is why Sam and Dora were cousins. His children scattered out of the Pale to Montreal, London, South Africa, and Palestine.",
-    "node_id": "person:david-dimantshtein",
-    "canonical": "David Dimantshtein",
-    "letters": [],
-    "letters_total": 0,
-    "letters_page": "letters/by-person/david-dimantshtein.html"
-  },
-  "person:dear-dora-3e5ca1": {
-    "img": "media/portrait-dora-diamondstein-young.png",
-    "dates": "1889–1984",
-    "role": "Wife, recipient",
-    "bio": "Born 1889; emigrated from Korsovka to England around 1903-04, aged about 14. Married Sam around February 1911. Almost none of her own letters survive. Died in 1984, in her nineties.",
-    "node_id": "person:dear-dora-3e5ca1",
-    "canonical": "Dora Diamondstein",
-    "letters": [
-      "A Letter From Cousin Lieb",
-      "A Farewell Gathering",
-      "The Austrian Christian Ruse",
-      "The Homestead Grant",
-      "Mixed Yiddish and English"
-    ],
-    "letters_total": 78,
-    "letters_page": "letters/by-person/dear-dora-3e5ca1.html"
-  },
-  "person:deborah-tomshinsky": {
-    "img": "media/portrait-deborah-tomshinsky.png",
-    "dates": "",
-    "role": "Possibly Getzel&#x27;s wife",
-    "bio": "Named as Getzel&#x27;s possible wife based on physical adjacency in the family tree chart (detailed-tree.jpeg), not an explicitly labeled marriage link. If accurate, she would be Sam&#x27;s mother. Not confirmed by any other source.",
-    "node_id": "person:deborah-tomshinsky",
-    "canonical": "Deborah Tomshinsky",
-    "letters": [
-      "If I Were Rich"
-    ],
-    "letters_total": 1,
-    "letters_page": "letters/by-person/deborah-tomshinsky.html"
-  },
-  "person:dora-s-mother-hinde-41248e": {
-    "img": "media/portrait-hinde.png",
-    "dates": "",
-    "role": "Dora&#x27;s mother",
-    "bio": "Married to Reuven. No further biographical detail survives in this project&#x27;s sources.",
-    "node_id": "person:dora-s-mother-hinde-41248e",
-    "canonical": "Hinde Diamondstein",
-    "letters": [
-      "If I Were Rich",
-      "A Promise to Write More",
-      "Mixed Yiddish and English"
-    ],
-    "letters_total": 3,
-    "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html"
-  },
-  "person:getzel": {
-    "img": "media/portrait-getzel.png",
-    "dates": "c.1857–c.1890",
-    "role": "Sam&#x27;s father",
-    "bio": "Died in Korsovka around 1890, when Sam was a boy of eight to ten.",
-    "node_id": "person:getzel",
-    "canonical": "Getzel Diamondstein",
-    "letters": [],
-    "letters_total": 0,
-    "letters_page": "letters/by-person/getzel.html"
-  },
-  "person:gladys": {
-    "img": "media/portrait-gladys.png",
-    "dates": "c.1912–1951",
-    "role": "Sam &amp; Dora&#x27;s daughter",
-    "bio": "Passed a piano exam at 12, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 38 (1951).",
-    "node_id": "person:gladys",
-    "canonical": "Gladys Diamondstein",
-    "letters": [
-      "The Whitstable Trip",
-      "Three Pounds Enclosed",
-      "Diamondstein Letter to Dora (Page 2)",
-      "Diamondstein Letter to Dora Kiddies (Aug 1919)",
-      "It Took My Breath Away"
-    ],
-    "letters_total": 14,
-    "letters_page": "letters/by-person/gladys.html"
-  },
-  "person:john-felkov": {
-    "img": "media/portrait-john-felkov.png",
-    "dates": "",
-    "role": "Alice&#x27;s husband",
-    "bio": "Sam&#x27;s close companion in the 1916 letters — watched the Cuffley Zeppelin fall together.",
-    "node_id": "person:john-felkov",
-    "canonical": "John Felkov",
-    "letters": [
-      "The Zeppelin, Again"
-    ],
-    "letters_total": 1,
-    "letters_page": "letters/by-person/john-felkov.html"
-  },
-  "person:keila-tsirel": {
-    "img": "media/portrait-keila-tsirel.png",
-    "dates": "c.1830–c.1900s",
-    "role": "Sam &amp; Dora&#x27;s grandmother",
-    "bio": "Born around 1830; died in London some time in the 1900s (exact year unrecorded). Wife of David Dimantshtein and grandmother to both Sam and Dora. The family record gives her the nickname &quot;Cynthia.&quot;",
-    "node_id": "person:keila-tsirel",
-    "canonical": "Keila-Tsirel Dimantshtein",
-    "letters": [],
-    "letters_total": 0,
-    "letters_page": "letters/by-person/keila-tsirel.html"
-  },
-  "person:reuven": {
-    "img": "media/portrait-reuven.png",
-    "dates": "c.1850–1934",
-    "role": "Dora&#x27;s father",
-    "bio": "Simultaneously Sam&#x27;s own paternal uncle — making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam&#x27;s marriage.",
-    "node_id": "person:reuven",
-    "canonical": "Reuven Diamondstein",
-    "letters": [
-      "A Hard Plan",
-      "Mixed Yiddish and English"
-    ],
-    "letters_total": 2,
-    "letters_page": "letters/by-person/reuven.html"
-  },
-  "person:sonia": {
-    "img": "media/portrait-sonia.png",
-    "dates": "c.1893–1986",
-    "role": "Sam&#x27;s sister",
-    "bio": "Hospitalized for an operation in Leipzig/Berlin, January 1923, while Sam was there on a fur-buying trip.",
-    "node_id": "person:sonia",
-    "canonical": "Sonia Diamondstein",
-    "letters": [
-      "Hotel Der Kaiserhof Leipzig Letter (8 Jan 1923)",
-      "1923 · Yiddish Letter Fragment B"
-    ],
-    "letters_total": 2,
-    "letters_page": "letters/by-person/sonia.html"
-  },
-  "person:yehuda-leib": {
-    "img": "media/portrait-yehuda-leib.png",
-    "dates": "d. 1929",
-    "role": "Dora&#x27;s brother",
-    "bio": "Dora&#x27;s brother. Emigrated to Jerusalem. Died during the 1929 Palestine Riots — severely wounded in the Arab attack on the Diskin Orphanage, Givat Shaul, and died four days later. His son Avraham later adopted the surname “Yahalomi” — Hebrew for “diamond.” Not known from any letter — from the family&#x27;s own biographical account of him.",
-    "node_id": "person:yehuda-leib",
-    "canonical": "Yehuda-Leib Diamondstein",
-    "letters": [],
-    "letters_total": 0,
-    "letters_page": "letters/by-person/yehuda-leib.html"
-  }
- };
-</script>
-<script src="assets/modal.js"></script>
 <script>
 (function() {
-  document.querySelectorAll('[data-person]').forEach(el => {
-    el.addEventListener('click', () => window.openPersonModal(el.dataset.person));
+  const people = {
+    "Sam": { img: "sam.png", dates: "b. c.1880/1882 &ndash; d. 1978", role: "Husband, letter-writer, our primary source",
+      bio: "Emigrated Korsovka &rarr; Montreal (1901), then London for good after 1908; ran a fur business and wrote home constantly from business trips. Sam is the confirmed author of at least 82 of the 141 items in this archive &mdash; by far its dominant voice.",
+      letters: ["The Austrian Christian Ruse", "The Panic of 1907", "The Decision", "Three Pounds Enclosed", "The Zeppelin, Again", "Dancing at Maxine's", "The House That Got Away", "Eight Pounds"] },
+    "Dora": { img: "dora.png", dates: "b. 1889 &ndash; d. 1984", role: "Wife, first cousin, recipient",
+      bio: "Held down the London household and three daughters through Sam's long absences; summered at the seaside with the girls most years. Not one letter in the surviving archive is confirmed as written in Dora's own hand.",
+      letters: [] },
+    "Gladys": { img: "gladys.png", dates: "b. 1913 &ndash; d. 1951", role: "Eldest daughter",
+      bio: "Passed a piano exam at 12, left school in 1925 with a glowing reference &mdash; &ldquo;keen, intelligent, and well-behaved.&rdquo; Married 1934; died at about 38.",
+      letters: ["Get Well Soon, Mummy", "Pontoon at Bournemouth"] },
+    "Beatrice": { img: "beatrice.png", dates: "b. unknown &ndash; d. unknown", role: "Middle daughter (&ldquo;Beaty&rdquo;)",
+      bio: "The liveliest voice in the corpus &mdash; wins at pontoon, bargains over a Christmas thimble, signs one letter &ldquo;Burglar Bill.&rdquo; Hilary's mother.",
+      letters: ["A Camera for Beatrice"] },
+    "Cynthia": { img: "cynthia.png", dates: "b. unknown &ndash; d. unknown", role: "Youngest daughter",
+      bio: "Only appears from 1924 on &mdash; once mixed up with Beatrice mid-letter by her own father, writing from abroad.",
+      letters: ["How Is Cynthia?"] },
+    "Getzel": { img: "getzel.png", dates: "b. c.1857 &ndash; d. 1890", role: "Sam's father",
+      bio: "Died in Korsovka at about 33, when Sam was 8&ndash;10 years old. Never appears in the letters himself.",
+      letters: [] },
+    "Deborah Tomshinsky (unconfirmed)": { img: "deborah-tomshinsky.png", dates: "b. unknown &ndash; d. unknown", role: "Sam's mother",
+      bio: "Likely died in Latvia before Sam emigrated. &ldquo;Deborah Tomshinsky&rdquo; is an unverified name from one family-tree chart &mdash; not confirmed elsewhere.",
+      letters: [] },
+    "Sonia": { img: "sonia.png", dates: "b. c.1893 &ndash; d. 1986", role: "Sam's sister",
+      bio: "Hospitalized for an operation in Leipzig/Berlin, January 1923, while Sam was there on a fur-buying trip.",
+      letters: ["My Sister's Operation"] },
+    "Reuven": { img: "reuven.png", dates: "b. c.1850 &ndash; d. 1934", role: "Dora's father",
+      bio: "Simultaneously Sam's own paternal uncle &mdash; making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam's marriage.",
+      letters: ["A Hard Plan"] },
+    "Hinde": { img: "hinde.png", dates: "b. unknown &ndash; d. unknown", role: "Dora's mother",
+      bio: "Named once in the whole corpus &mdash; &ldquo;to my dear uncle Reuben&hellip; and to Hinde.&rdquo;",
+      letters: [] },
+    "Yehuda-Leib": { img: "yehuda-leib.png", dates: "b. unknown &ndash; d. 27 Aug 1929", role: "Dora's brother",
+      bio: "Emigrated to Jerusalem. Died during the 1929 Palestine Riots &mdash; severely wounded in the Arab attack on the Diskin Orphanage, Givat Shaul, and died four days later. His son Avraham later adopted the surname &ldquo;Yahalomi&rdquo; &mdash; Hebrew for &ldquo;diamond.&rdquo; Not known from any letter &mdash; from the family's own biographical account of him.",
+      letters: [] },
+    "Cousin Alice": { img: "alice.png", dates: "b. c.1889 &ndash; d. 1972", role: "Dora's first cousin",
+      bio: "A recurring, affectionate presence across the letters &mdash; married John Felkov in London, 1930.",
+      letters: ["The Panic of 1907", "Three Pounds Enclosed"] },
+    "John Felkov": { img: "john-felkov.png", dates: "b. unknown &ndash; d. unknown", role: "Alice's husband",
+      bio: "Sam's close companion in the 1916 letters &mdash; watched the Cuffley Zeppelin fall together.",
+      letters: ["The Zeppelin, Again"] },
+    "Sarah Nygate": { img: "sarah-nygate.png", dates: "b. c.1896 &ndash; d. 1968", role: "Dora's sister",
+      bio: "A trusted go-between for news of the girls &mdash; &ldquo;Auntie Sarah&rdquo; in several letters.",
+      letters: ["Three Pounds Enclosed"] }
+  };
+
+  const letters = {
+    "The Austrian Christian Ruse": { date: "11 Jun 1901", img: "images/1901-montreal.jpeg", translation: "Montreal, 11 June 1901\n\nDear Darling Dora,\n\nI'm very surprised that I didn't get a letter from you today. I don't know — maybe I'll get one from you tomorrow. I'd half expected to have it today. Anyway, dear Dora, let me write you a little news.\n\nYou know how it is in a new country — you're a bit of a greenhorn, and it's hard to find work. But what can you do. Well, walking down the street yesterday, I saw that they needed workers to be sent off to some job away from the city. When I asked, they told me they don't take any Englishmen. So I said I was an Austrian Christian — and they took me. Seeing how glad everyone who got hired was to have work, I thought to myself that I'm a little uneasy because they don't take any Jews either. You had to pay a small amount right there in the office when you took the contract. Reading it over, it looked fine at first — it reads well — but going over it again, I saw that I'd have to work for nothing for two months to cover the cost of the passage, plus food.\n\nBut since I'd already bought my ticket, I wanted to leave. So today I went into the office and took back the things they had snatched from me." },
+    "The Panic of 1907": { date: "c. 1907–1908", img: "images/1907-panic.jpeg", translation: "Dear friends — the Falkovs, and you, Elis,\n\nDear friends, I am well and strong enough to do anything, but you should know that things are truly in a great panic here. The crisis has thrown people out of work by the hundreds, and I am one of them. Still, I haven't lost heart; I'll see what the times bring.\n\nWrite to me about work — whatever you hear in your circles.\n\nElis, give my regards to everyone in the family — to [name] and her family, to Yuel and his people; likewise to the father and mother, to Lion, to Betsye and the children, to Menish, to Brayne and the children, to Wolf, to Roze, to Dore, to Shori, and to all of yours. And a special hello to you all.\n\nAnd so — be well. Yours, [signature]" },
+    "The Decision": { date: "1 Aug 1908", img: "images/1908-aug-montreal.jpeg", translation: "My beloved Dorele,\n\nI received your letter yesterday, Saturday, and it hurt me a little, to my sorrow.\n\nAbout your feelings on my traveling: in your last letter — before this one — you urged me to come sooner, and now you write the opposite. My dear, I don't understand this sudden change of heart. If there's a reason, you should have written it to me. In any case, I'm telling you that next week, or perhaps the week after, I'll set out for London. I already have work lined up there, and my wages are as follows: for the first stretch I earn about a dollar for four days' work, and this week I've made around three (or three and a half) dollars. That's in English money, and there's a little more besides.\n\nIt suits me better to work through the London season, since work in London is worth more. Lately business here has been poor, and above all life here is dull and hard. If a man can make a go of the trade and something comes of it, then his future is secure — but as things stand, life here is very dry, and it isn't worth tormenting yourself over it, because I think I'll do far better in London than here." },
+    "Three Pounds Enclosed": { date: "1 Sep 1916", img: "images/1916-business.jpeg", translation: "Diamondstein & Co.\nFur Dealers and Job Buyers — Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 1, 1916\n\nDear Dora and darling kiddies,\n\nSorry I did not write to you on Sunday, as I could not get stamps. I am glad to know that you and the children are improving. Alice tells me that you are growing fat and in height, and I am glad to hear that Gladys has become straight, and that the baby is improving well.\n\nI will write to you when I will be coming down. Tell Sarah that I spoke to Father and he will send her £1 tomorrow. He is busy down the West End every evening.\n\nEnclosed you will find three pounds.\n\nYour loving husband,\nDad" },
+    "The Zeppelin, Again": { date: "3 Sep 1916", img: "images/1916-zeppelin-again.jpeg", translation: "[Letterhead:] S. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam" },
+    "Dancing at Maxine's": { date: "29 Jul 1919", img: "images/1919-mama.jpeg", translation: "Phone: Central 4432\nS. Diamondstein, Fur & Skin Dealer\n37 Fashion Street, Brick Lane, London, E. 1\n\nJuly 29, 1919\n\nDear Mama and Kiddies,\n\nYou surprise me — no letter this morning. What, have you forgotten you have left a husband all alone? You must have been having a fine time getting your dressmaking done.\n\nI wonder if you have received the parcel. I enclosed some cards, and I forgot to put the name of the Roll on them, and thought of it afterward.\n\nI went to take my dancing lesson yesterday, then had supper at Pezio's, and after that went round to Leon's and danced at Maxine's with Dora. I am doing it very well. I have also arranged to take three more lessons." },
+    "The House That Got Away": { date: "30 Dec 1924", img: "images/1924-house.jpeg", translation: "Dec 30th, 1924\n\nDear Dora and kiddies,\n\nI received your two letters today and am very sorry that you did not see your way clear to buy the house. Of course, it is no good buying a house and then being sorry for it afterward. Anyhow, better luck next time. You cannot imagine what a fuss I am made of.\n\nI am feeling quite well. The weather is fine and cold, with no snow. I have seen [dear?] all [people?] Brothers, and expect him to come from Kimoora today. I have bought a few furs. I have also wired to Fred Hutt Co. about prices and have a good reply. In here it is a bit high. Anyhow, I shall be going to Leipzig next week.\n\nDon't say anything to anybody about me buying goods, as it is not advisable. How are you all keeping? Mother is very happy about it. She looks quite well. There is no more news.\n\nI remain your loving husband and dad,\n\nSam" },
+    "Eight Pounds": { date: "11 Aug 1926", img: "images/1926-eight-pounds.jpeg", translation: "Telephone No. CLERKENWELL 5281.\nS. DIAMONDSTEIN, Furs and Skins.\nAnd at 3, Sandy's Row, Bishopsgate, E.1.\n23, Australian Avenue, Barbican, E.C.1.\nTelegraphic Address: Diamofurz, Barb, London.\n\nLondon, Aug 11 1926\n\nDear Dora & Children,\n\nEnclosed please find eight pounds. I hope it will cover your expenses; if not, write by return. I feel quite well. I hope you are keeping — fine weather, otherwise there is no news.\n\nYour devoted husband, Dad\nSam" },
+    "Get Well Soon, Mummy": { date: "13 Aug 1920", img: "images/1920-gladys-mum.jpeg", translation: "208 Amhurst Road\nHackney\nAugust 13th, 1920\n\nMy darling Mummy,\n\nI hope my letter will reach you in the best of health, and when we come to see you I hope we will be able to take you home. Dear Daddy has bought Beaty and myself a painting box, one writing pad, one bottle of ink, two pens, and two copy books. Dear Mummy, I hope you will be better soon. Don't worry, dear Mummy. Love to all, from your loving Daddy, Beaty, and Gladys.\nxxxxxxxxxxxxxxxxxxxxxxxxx" },
+    "Pontoon at Bournemouth": { date: "29 Dec 1923", img: "images/1923-bournemouth.jpeg", translation: "[Letterhead — 'BERACHAH,' a high-class boarding establishment. Proprietors: Mr. & Mrs. Grossman. Full sea views, south aspect. Phone 2890. 7 Kerley Road, West Cliff, Bournemouth. Book to West Station.]\n\nDecember 29th, 1923\n\nDear Daddy,\n\nWe received your letter and the money this morning, and Mummy is quite satisfied with the new place, because we don't have to walk far before we come to the seafront. At Bress's we used to play \"pontoon,\" and at first Gladys and I won a shilling each; and on the third night I was banker three times and won three shillings and threepence. For a Christmas present, Mummy bought us a silver thimble each for a shilling, and a bracelet costing 2s. 11½d. But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each. I hope you have not forgotten what you promised us for a Christmas present; in case you have, I'll just remind you: it was a five-pound note each.\n\nDear Daddy, a Yiddish phrase here, unreadable — because we have not written to you, as the posts are very odd Christmas week. Today it was simply scorching, and I would have gone in to bathe if I had had a costume, and Mummy would have let me. This afternoon we went into the Winter Gardens and saw our pennyworth — it was simply lovely (in its dreams!). Will you write and say whether you are going to your weekly boxing match regularly? Please excuse the writing, as I have got a rotten pen. Gladys is getting on splendidly, and we are having a ripping time [...]" },
+    "A Camera for Beatrice": { date: "15 Aug 1924", img: "images/1924-camera.jpeg", translation: "[Letterhead] S. Diamondstein — Furs & Skins\nTelephone: Clerkenwell 5281\n23 Australian Avenue, Barbican, London, E.C.1\n[stamped no.] 446\n\nAugust 15, 1924\n\nMy dear Dora and daughters,\n\nI am sending you a ten-pound cheque for Mr. Weinberg, and two pounds cash for yourself, and for Beatrice her camera to snap the fisher she is catching in bed.\n\nThere is no news of any interest to you. I have done a bit of business this week, so I am feeling better. I hope you are enjoying yourself — of course, I can leave all that to you.\n\nI am going to the theatre tonight.\n\nYour loving Dad\nx x x x + x x + x x x [kisses]" },
+    "How Is Cynthia?": { date: "c. Sep–Oct 1924", img: "images/1924-cynthia.jpeg", translation: "Dear Dora and kiddies,\n\nI arrived at Berlin on Thursday and stayed there one day. I saw a doctor, and he has put me on a diet for five days before he can examine me properly, so I have left for Leipzig. I will be here till Thursday and then go back to Berlin, and I hope to leave for home next Saturday. Meanwhile, I am feeling quite well.\n\nHow is everybody at home? Why don't you write? I have done some business in Riga, and I will try to do some at Leipzig if possible.\n\nSee Morry Sagon again, and this time, if he does not pay up, go up to my solicitor — Johnny knows where — and you can look up the ledger. I think it is since Sept 10, 1924, that he owes me £17. Summon him, and don't let them humbug you about any more.\n\nHow are the children? How is Cynthia? Have I spelled her name Beaty?\n\nYour loving husband, Dad Sam" },
+    "My Sister's Operation": { date: "3 Jan 1923", img: "images/1923-leipzig.jpeg", translation: "Hotel der Kaiserhof, Robert Börner — Leipzig\nLeipzig, 3 January 1923\n\nMy dear Dora Kiddies,\n\nJust a line to tell you I am quite well, in the best of health. I arrived in Leipzig on Tuesday morning. Business is very hard to do. I will stay here until Saturday morning, then I will go to Berlin, as my sister has to undergo an operation, so I will wait for a few days to see how she comes through it. I do expect to be home for next Saturday week, about the 12th or 14th of January. Sonia is with me in Leipzig for the few days I am here, as Marie also went home last week. There is no more news.\n\nI remain your loving husband and dad,\nSam" },
+    "A Hard Plan": { date: "c. 1907–1908", img: "images/1907-mr-dean-montreal.jpeg", translation: "My dear uncle Reuben,\n\nI hope this finds you living well, in good health, and thriving in everything, from the bottom of my heart.\n\nDear uncle, the fur trade is not the best here. As for our plan, it is, sadly, a hard one. When you have no money, there is nothing at all you can do. As I wrote in the first letter — once things change for me, I'll write you more plainly.\n\nStay well. From me, your nephew.\n\nWarm regards to everyone — to him and his wife, and to the others with their wives, and to the Applestein family — to you all, our love, in one word: to every last one of you." },
+  };
+
+  const featuredKeys = ["Sam", "Dora"];
+  const daughterKeys = ["Gladys", "Beatrice", "Cynthia"];
+  const samFamilyKeys = ["Getzel", "Deborah Tomshinsky (unconfirmed)", "Sonia"];
+  const doraFamilyKeys = ["Reuven", "Hinde", "Yehuda-Leib", "Sarah Nygate", "Cousin Alice", "John Felkov"];
+  const featuredRow = document.getElementById('featured-row');
+  const daughtersRow = document.getElementById('daughters-row');
+  const samFamilyGrid = document.getElementById('sam-family-grid');
+  const doraFamilyGrid = document.getElementById('dora-family-grid');
+
+  featuredKeys.forEach((name, i) => {
+    const p = people[name];
+    const el = document.createElement('div');
+    el.className = 'featured-person';
+    el.dataset.person = name;
+    el.innerHTML = `<img src="images/${p.img}" alt="${name}"><div class="fp-name">${name}</div><div class="fp-role">${p.role}</div><div class="fp-dates mono">${p.dates}</div>`;
+    featuredRow.appendChild(el);
+    if (i === 0) {
+      const connector = document.createElement('div');
+      connector.className = 'featured-connector';
+      connector.innerHTML = `<div class="amp">&amp;</div><div class="married-label">married 1911<br>first cousins</div>`;
+      featuredRow.appendChild(connector);
+    }
   });
+
+  daughterKeys.forEach(name => {
+    const p = people[name];
+    const el = document.createElement('div');
+    el.className = 'daughter-card';
+    el.dataset.person = name;
+    el.innerHTML = `<img src="images/${p.img}" alt="${name}"><div class="dc-name">${name}</div><div class="dc-role">${p.role}</div>`;
+    daughtersRow.appendChild(el);
+  });
+
+  function buildCastCard(name, grid) {
+    const p = people[name];
+    const el = document.createElement('div');
+    el.className = 'cast-card';
+    el.dataset.person = name;
+    const displayName = name.replace(' (unconfirmed)', '');
+    el.innerHTML = `<img src="images/${p.img}" alt="${displayName}"><div class="cc-name">${displayName}</div><div class="cc-role">${p.role}</div>`;
+    grid.appendChild(el);
+  }
+  samFamilyKeys.forEach(name => buildCastCard(name, samFamilyGrid));
+  doraFamilyKeys.forEach(name => buildCastCard(name, doraFamilyGrid));
+
+  const overlay = document.getElementById('person-overlay');
+  const letterOverlay = document.getElementById('letter-overlay');
+
+  function openLetterModal(title) {
+    const l = letters[title];
+    if (!l) return;
+    document.getElementById('lm-date').textContent = l.date;
+    document.getElementById('lm-title').textContent = title;
+    const scanEl = document.getElementById('lm-scan');
+    if (l.img) {
+      scanEl.innerHTML = `<img src="${l.img}" alt="${title}">`;
+    } else {
+      scanEl.innerHTML = `<div class="lm-scan-note">[scan on file, not included in this wireframe]</div>`;
+    }
+    document.getElementById('lm-translation').textContent = l.translation;
+    letterOverlay.classList.add('open');
+  }
+
+  function openPersonModal(name) {
+    const p = people[name];
+    document.getElementById('pm-photo').src = `images/${p.img}`;
+    document.getElementById('pm-name').textContent = name;
+    document.getElementById('pm-dates').innerHTML = p.dates;
+    document.getElementById('pm-role').textContent = p.role;
+    document.getElementById('pm-bio').innerHTML = p.bio;
+    const labelEl = document.getElementById('pm-letters-label');
+    const listEl = document.getElementById('pm-letters-list');
+    if (p.letters.length === 0) {
+      labelEl.textContent = '';
+      listEl.innerHTML = `<div class="mono" style="font-size:0.8rem; color:rgba(26,26,26,0.4);">No letters in this sample &mdash; see the <a href="letters.html" style="color:var(--rust);">full archive</a></div>`;
+    } else {
+      labelEl.textContent = `Appears in (${p.letters.length})`;
+      listEl.innerHTML = p.letters.map(t => `<button class="pm-letter-item" data-title="${t}">${t} &rarr;</button>`).join('');
+      listEl.querySelectorAll('.pm-letter-item').forEach(btn => {
+        btn.addEventListener('click', () => openLetterModal(btn.dataset.title));
+      });
+    }
+    overlay.classList.add('open');
+  }
+  document.querySelectorAll('.featured-person, .daughter-card, .cast-card').forEach(el => {
+    el.addEventListener('click', () => openPersonModal(el.dataset.person));
+  });
+  document.getElementById('modal-close').addEventListener('click', () => overlay.classList.remove('open'));
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('open'); });
+  document.getElementById('letter-modal-close').addEventListener('click', () => letterOverlay.classList.remove('open'));
+  letterOverlay.addEventListener('click', (e) => { if (e.target === letterOverlay) letterOverlay.classList.remove('open'); });
 })();
-</script>
-
-<footer class="site-footer">
-  <nav class="footer-nav" aria-label="Site navigation">
-    <a href="index.html">Home</a>
-    <a href="letters.html">Every Letter</a>
-    <a href="family.html">The Family</a>
-    <a href="story-excerpt.html">Read the Story</a>
-    <a href="long-read.html">Complete Version</a>
-    <a href="journey.html">Follow the Journey</a>
-    <a href="pictures.html">The Story in Pictures</a>
-    <a href="how-made.html">How This Was Made</a>
-  </nav>
-  <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="how-made.html">How This Was Made</a> for the full process.</p>
-  <p class="footer-contact">Questions or corrections? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
-</footer>
-
-<script>
-  // Obfuscated mailto (Paul's ask, 2026-07-16): the address never appears as plain text in
-  // the HTML source -- assembled at runtime, so a static-HTML scraper never sees it, while
-  // real visitors with JS get a normal working mailto: link.
-  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
-    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
-  });
 </script>
 
 </body>
