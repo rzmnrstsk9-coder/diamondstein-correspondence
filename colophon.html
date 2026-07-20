@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Colophon &mdash; The Sam and Dora Letters</title>
+<link rel="stylesheet" href="assets/tokens.css">
+<link rel="stylesheet" href="assets/components.css">
+<style>
+  .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
+    --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  .editorial-section { margin-bottom: var(--page-density); }
+  .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
+    color: var(--page-accent); margin-bottom: 0.5rem; }
+  .editorial-section-body { font-size: 0.95rem; line-height: 1.6; color: var(--ink-body); }
+  .editorial-section-img { max-width: 100%; border-radius: var(--radius-img); margin: 0.6rem 0; }
+  .editorial-page {
+  --page-accent: var(--navy);
+  --page-density: var(--space-5);
+  --page-heading-scale: var(--text-xl);
+}
+</style>
+</head>
+<body>
+<main class="editorial-page">
+  <h1>Colophon</h1>
+  <section class="editorial-section" data-item="editorial-page:colophon"><h2 class="editorial-section-heading">Typography</h2><div class="editorial-section-body" data-field="sections[id=typography].body">Headings and display text are set in Bricolage Grotesque; running text is set in Inter; annotations, dates, and machinery-facing labels use IBM Plex Mono. All three are open-source typefaces, chosen for a clear distinction between voice — a heading announces, body text narrates, mono text records — and reused everywhere on the site rather than styled per page.</div></section><section class="editorial-section" data-item="editorial-page:colophon"><h2 class="editorial-section-heading">How This Page Was Built</h2><div class="editorial-section-body" data-field="sections[id=how-this-page-was-built].body">This page is not hand-written HTML. It is a small JSON payload — a title and a few named sections — that a generic build step turns into a page: no bespoke template, no per-page registration. The same machinery builds every page like it. Colors, spacing, and heading size are chosen from a fixed set of named tokens shared by the whole site, never a one-off hex value or pixel size, so a new page can never drift from the site&#x27;s visual language by accident.</div></section><section class="editorial-section" data-item="editorial-page:colophon"><h2 class="editorial-section-heading">Acknowledgements</h2><div class="editorial-section-body" data-field="sections[id=acknowledgements].body">This project exists because a family kept its letters instead of discarding them, and because a family member sat with every one of them — checking readings, supplying context no archive could, and deciding what was ready to publish. The tools did the first pass; the judgment was never automated.</div></section>
+</main>
+</body>
+</html>
