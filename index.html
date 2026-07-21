@@ -168,7 +168,7 @@
 
   .overlay { position: fixed; inset: 0; background: rgba(15,13,10,0.75); display: flex; align-items: center; justify-content: center; padding: 2rem; opacity: 0; pointer-events: none; transition: opacity 0.2s ease; z-index: 100; }
   .overlay.open { opacity: 1; pointer-events: auto; }
-  .letter-modal { background: #fff; border-radius: 16px; max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; color: var(--ink); text-align: left; }
+  .letter-modal { background: #fff; border-radius: 16px; max-width: 640px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem 0; position: relative; color: var(--ink); text-align: left; }
   .letter-modal .close-btn { position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,0.06); font-size: 1.2rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
   .letter-modal .close-btn:hover { background: rgba(0,0,0,0.12); }
   .lm-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: var(--navy); font-weight: 600; margin-bottom: 0.3rem; }
@@ -180,6 +180,12 @@
   .lm-scan img { width: 100%; border-radius: 8px; margin-bottom: 1.2rem; cursor: zoom-in; display: block; }
   .lm-body { font-size: 0.92rem; line-height: 1.7; color: rgba(26,26,26,0.82); white-space: pre-line; }
   .lm-scan-note { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; color: rgba(26,26,26,0.4); padding: 1rem; text-align: center; }
+  .modal-nav-row { display: flex; align-items: center; justify-content: space-between; margin-top: 1.5rem; padding: 1.2rem 0 2rem; border-top: 1px solid rgba(0,0,0,0.08); position: sticky; bottom: 0; background: #fff; box-shadow: 0 -6px 10px -6px rgba(0,0,0,0.18); }
+  .modal-nav-row::before { content: ""; position: absolute; left: 0; right: 0; top: -1.6rem; height: 1.6rem; background: linear-gradient(to bottom, transparent, #fff); pointer-events: none; }
+  .modal-position { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: rgba(26,26,26,0.4); }
+  .nav-btn { width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); background: #fff; cursor: pointer; font-size: 1rem; }
+  .nav-btn:hover { border-color: var(--rust); }
+  .nav-btn:disabled { opacity: 0.3; cursor: default; }
   .conf-low { color: rgba(26,26,26,0.5); border-radius: 3px; cursor: help; transition: background .12s, color .12s; }
   .conf-low:hover { background: rgba(193,72,31,0.14); color: var(--ink); }
   .conf-gap { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--navy); background: rgba(42,74,106,0.08); border: 1px dashed rgba(42,74,106,0.4); border-radius: 4px; padding: 0.02rem 0.38rem; white-space: nowrap; cursor: help; transition: background .12s; }
@@ -193,7 +199,7 @@
   .zoom-overlay img { max-width: 100%; max-height: 100%; object-fit: contain; }
   .zoom-close { position: fixed; top: 1.2rem; right: 1.5rem; z-index: 201; width: 40px; height: 40px; border-radius: 50%; border: none; background: rgba(255,255,255,0.15); color: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer; }
 
-  .person-modal { background: #fff; border-radius: 16px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; color: var(--ink); text-align: left; }
+  .person-modal { background: #fff; border-radius: 16px; max-width: 480px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem 0; position: relative; color: var(--ink); text-align: left; }
   .person-modal .close-btn { position: absolute; top: 1rem; right: 1rem; width: 32px; height: 32px; border-radius: 50%; border: none; background: rgba(0,0,0,0.06); font-size: 1.2rem; line-height: 1; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink); }
   .person-modal .close-btn:hover { background: rgba(0,0,0,0.12); }
   .pm-top { display: flex; gap: 1.1rem; align-items: center; margin-bottom: 1.1rem; }
@@ -262,14 +268,11 @@
 
 <section class="reveal" data-step="5">
   <div class="reveal-inner">
-    <p class="reveal-text">This web site is what resulted.</p>
+    <p class="reveal-text">This web site is what resulted &mdash; a real experiment in using AI to do genealogical research honestly.</p>
     <a href="#doors" class="reveal-arrow" aria-label="Scroll down to the site content">&darr;</a>
   </div>
 </section>
 
-<div class="closing">
-  <p class="hero-experiment mono">Also: a real experiment in using AI to do genealogical research honestly.<br>See <a href="how-made.html">How This Was Made</a></p>
-</div>
 
 <div class="doors" id="doors">
   <div class="doors-intro">
@@ -342,7 +345,7 @@
       <div class="door-content">
         <div class="door-eyebrow">Read it as a story</div>
         <div class="door-title">Read the Story</div>
-        <div class="door-body">The same events, three ways &mdash; pick the pace and format that suits you. All three are woven from the real letters, with real photographs throughout &mdash; see <a href="how-made.html" class="inline-link">How This Was Made</a>.</div>
+        <div class="door-body">The same events, three ways &mdash; pick the pace and format that suits you. All three are woven from the real letters, with real photographs throughout.</div>
       </div>
       <div class="story-row">
         <a class="story-tile" href="long-read.html">
@@ -385,9 +388,9 @@
     <a class="door" href="how-made.html">
       <div class="door-img"><img src="media/how-made-teaser.jpg" alt="Postal workers sorting mail at a New York post office, 1914"></div>
       <div class="door-content">
-        <div class="door-eyebrow">See how it was built</div>
+        <div class="door-eyebrow">See how this site was built</div>
         <div class="door-title">How This Was Made</div>
-        <div class="door-body">The process behind the archive &mdash; what's verified, what's uncertain, and what the tools did versus what a person decided.</div>
+        <div class="door-body">The process behind the archive &mdash; a real experiment in using AI to do genealogical research honestly.</div>
       </div>
     </a>
   </div>
@@ -412,9 +415,9 @@
      letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
      + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
      zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
-     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
-     rather than the partial forking into two shapes (single-honest-core principle applied to
-     markup, not just behavior). -->
+     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false
+     (same for #person-modal-nav-row + personPrevNext, added 2026-07-21), rather than the partial
+     forking into two shapes (single-honest-core principle applied to markup, not just behavior). -->
 <div class="overlay" id="person-overlay">
   <div class="person-modal">
     <button class="close-btn" id="person-modal-close">&times;</button>
@@ -430,6 +433,11 @@
     <div class="pm-bio" id="pm-bio"></div>
     <div class="pm-letters-label" id="pm-letters-label"></div>
     <div id="pm-letters-list"></div>
+    <div class="modal-nav-row" id="person-modal-nav-row">
+      <button class="nav-btn" id="person-modal-prev" aria-label="Previous person">&larr;</button>
+      <div class="modal-position mono" id="person-modal-position"></div>
+      <button class="nav-btn" id="person-modal-next" aria-label="Next person">&rarr;</button>
+    </div>
   </div>
 </div>
 
@@ -457,7 +465,7 @@
 
 
 <script>
-  window.MODAL_CONFIG = { langToggle: true, prevNext: false, imgPathMatch: "root" };
+  window.MODAL_CONFIG = { langToggle: true, prevNext: true, personPrevNext: true, imgPathMatch: "root" };
   window.MODAL_LETTERS = [ 
   {
     "date": "11 Jun 1901",
@@ -832,7 +840,7 @@
     "img": "media/portrait-gladys-real.jpg",
     "dates": "c.1912–1951",
     "role": "Sam &amp; Dora&#x27;s daughter",
-    "bio": "Passed a piano exam at 12, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 38 (1951).",
+    "bio": "Passed a piano exam at about 8, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 39 (1951).",
     "node_id": "person:gladys",
     "canonical": "Gladys Diamondstein",
     "letters": [

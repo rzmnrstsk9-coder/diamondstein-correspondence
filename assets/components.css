@@ -32,7 +32,7 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
   align-items:center; justify-content:center; padding:var(--space-6) 1rem; }
 .overlay.open { display:flex; }
 .letter-modal { background:var(--cream); border-radius:var(--radius-panel); max-width:560px;
-  width:100%; max-height:85vh; overflow-y:auto; padding:var(--space-6) 2.2rem; position:relative; }
+  width:100%; max-height:85vh; overflow-y:auto; padding:var(--space-6) 2.2rem 0; position:relative; }
 .close-btn { position:absolute; top:0.8rem; right:1rem; background:none; border:none;
   font-size:var(--text-xl); cursor:pointer; color:var(--ink-soft); line-height:1; }
 .close-btn:hover { color:var(--ink); }
@@ -58,7 +58,8 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
 .tip { position:relative; }
 .tip::after { content:attr(data-tip); position:absolute; left:50%; bottom:100%; transform:translate(-50%,-6px); background:var(--ink); color:var(--cream); font-family:var(--font-mono); font-size:var(--text-xs); white-space:nowrap; padding:0.3rem 0.55rem; border-radius:6px; opacity:0; pointer-events:none; transition:opacity .12s; z-index:5; box-shadow:0 4px 14px rgba(0,0,0,0.25); }
 .tip:hover::after { opacity:1; }
-.modal-nav-row { display:flex; align-items:center; justify-content:space-between; margin-top:var(--space-5); padding-top:var(--space-4); border-top:1px solid var(--line); }
+.modal-nav-row { display:flex; align-items:center; justify-content:space-between; margin-top:var(--space-5); padding:var(--space-4) 0 var(--space-6); border-top:1px solid var(--line); position:sticky; bottom:0; background:var(--cream); box-shadow:0 -6px 10px -6px rgba(0,0,0,0.18); }
+.modal-nav-row::before { content:""; position:absolute; left:0; right:0; top:-1.6rem; height:1.6rem; background:linear-gradient(to bottom, transparent, var(--cream)); pointer-events:none; }
 .modal-position { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--ink-faint); }
 .nav-btn { width:40px; height:40px; border-radius:var(--radius-circle); border:1px solid var(--line-strong); background:var(--surface); cursor:pointer; font-size:var(--text-md); }
 .nav-btn:hover { border-color:var(--rust); }

@@ -20,7 +20,9 @@
   .cast-subgroup:first-child { margin-top: 0; }
   .cast-subgroup-heading { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(26,26,26,0.45); text-align: center; margin-bottom: 1rem; font-weight: 600; }
 
-  .person-modal { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
+  .person-modal { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem 0; position: relative; }
+  .person-modal .modal-nav-row { background: #fff; }
+  .person-modal .modal-nav-row::before { background: linear-gradient(to bottom, transparent, #fff); }
   .pm-top { display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; }
   .pm-photo { width: 128px; height: 128px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
   .pm-photo-placeholder { width: 128px; height: 128px; border-radius: 12px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; background-image: repeating-linear-gradient(135deg, var(--fill-sunken) 0 10px, transparent 10px 20px); }
@@ -62,9 +64,9 @@
      letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
      + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
      zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
-     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
-     rather than the partial forking into two shapes (single-honest-core principle applied to
-     markup, not just behavior). -->
+     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false
+     (same for #person-modal-nav-row + personPrevNext, added 2026-07-21), rather than the partial
+     forking into two shapes (single-honest-core principle applied to markup, not just behavior). -->
 <div class="overlay" id="person-overlay">
   <div class="person-modal">
     <button class="close-btn" id="person-modal-close">&times;</button>
@@ -80,6 +82,11 @@
     <div class="pm-bio" id="pm-bio"></div>
     <div class="pm-letters-label" id="pm-letters-label"></div>
     <div id="pm-letters-list"></div>
+    <div class="modal-nav-row" id="person-modal-nav-row">
+      <button class="nav-btn" id="person-modal-prev" aria-label="Previous person">&larr;</button>
+      <div class="modal-position mono" id="person-modal-position"></div>
+      <button class="nav-btn" id="person-modal-next" aria-label="Next person">&rarr;</button>
+    </div>
   </div>
 </div>
 
@@ -107,74 +114,74 @@
 
 
 <script>
-  window.MODAL_CONFIG = { langToggle: true, prevNext: false, imgPathMatch: "root" };
+  window.MODAL_CONFIG = { langToggle: true, prevNext: false, personPrevNext: true, imgPathMatch: "root" };
   window.MODAL_LETTERS = [ 
   {
-    "date": "c. 1907–1908",
-    "img": "images/scan-41.jpeg",
+    "date": "circa 1900-1909",
+    "img": "images/scan-3.jpeg",
     "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907–1908, Montreal — addressed to \"Dear friends, the Falkovs, and you, Elis/Alice,\" reporting that \"the crisis has thrown people out of work by the hundreds\" and that Sam himself is one of the unemployed. This matches the Panic of 1907, whose unemployment effects extended into 1908 in North America, and this letter groups with Sam's other outgoing Montreal letters from that same stretch (prior research places this letter alongside several others as Sam's own outgoing voice from the June–August 1908 Montreal window). Sourced historical background on the Panic itself: a U.S. banking crisis whose contraction ran May 1907-June 1908; Montreal's stock exchange volume fell 45% even though Canada's broader economy weathered it comparatively well.[/low-confidence]\n\nDear friends — the Falkovs, and you, Elis,\n\nDear friends, I am well and strong enough to do anything, but you should know that things are truly in a great panic here. The crisis has thrown people out of work by the hundreds, and I am one of them. Still, I haven't lost heart; I'll see what the times bring.\n\nWrite to me about work — whatever you hear in your circles.\n\nElis, give my regards to everyone in the family — [low-confidence]to [name] and her family, to Yuel and his people; likewise to the father and mother, to Lion, to Betsye and the children, to Menish, to Brayne and the children, to Wolf, to Roze, to Dore, to Shori, and to all of yours[/low-confidence]. And a special hello to [low-confidence]you all[/low-confidence].\n\n[low-confidence]And so — be well. Yours, [signature][/low-confidence]",
-    "title": "The Panic of 1907",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1900-1909, pre-marriage courtship era — the letter is a farewell letter addressed to \"Dora / Tsirele\" (a pet name), describing a night-time farewell gathering of some twenty friends and acquaintances before a departure, mentions \"London,\" and is signed with what may be \"S.\" (Sam); this fits the pattern of Sam's early travels away from Dora during the courtship years documented elsewhere in the corpus (the earliest dated letter in the archive is from 11 June 1901, and the Montreal courtship cluster runs June-August 1908), though nothing in the surviving text pins it to a specific year within that span.[/low-confidence]\n\n[low-confidence]Note: speculation on WHERE this departure was to/from, separate from the dating note above. Leading theory: a farewell written in London, the night before one of Sam's known Montreal crossings — not before an original emigration out of Latvia. Solid textual anchors: the raw Yiddish contains \"לאנדן\" (London), independently caught by both Opus and Gemini's passes, though the surrounding context is unclear in both; a ~20-person farewell gathering the night before; a specific near-term date (\"Friday the 2nd\"); and messages relayed through an \"aunt\" and \"Grandfather\" rather than directly, suggesting Dora and the writer's family were reachable through a home community. Reading these together: if \"London\" is where the farewell itself takes place (friends and acquaintances being said goodbye to there) rather than the destination, this fits neatly with Sam shuttling between London and Montreal multiple times across 1901 and 1907-1909 (documented elsewhere in the corpus, e.g. another letter's \"Montreal, 11 June 1901\") rather than requiring a bigger, one-time emigration event. The line \"I certainly would not have traveled back... I could not have borne being alone so long without you\" supports this specifically: \"traveled back\" implies a repeat crossing, not a first departure — consistent with this being one of the later round trips rather than an original emigration. No direct evidence pins WHICH crossing. One reading to actively distrust: Gemini's pass alone renders a broken line as meeting again \"[in Gissen / soon]\" — Giessen is a real German town, but Opus's independent pass of the same spot reads only \"to meet again soon,\" no place name; per this project's standing caution that Gemini invents plausible specifics when a passage is too garbled to resolve, \"Gissen\" is likely a hallucinated fill-in, not evidence. Not resolved; the London/Montreal-crossing reading is the better-supported guess, not a finding.[/low-confidence]\n\n…having known her for years. I was standing out in the middle of it all, the moon shining down through the trees, and I thought to myself: what a good, true friend. But out there, far away, there is a whole shrine of life that not every person has the good fortune to possess. [low-confidence]And if one misses it, it will not leave us longing — for I am […] so quickly.[/low-confidence]\n\nAnd now I sit down to write you a letter, my dear, because I have been longing for you. [low-confidence]I am holding on, trying to show a brave face, because I have had to steady my own heart. For the moment I feel weak[/low-confidence] — and yet the one thought that carries me is the thought of seeing you again. So stay well and be patient; surely it will [low-confidence]soon come to pass[/low-confidence] that we meet again.\n\nYours, loving you forever, [low-confidence]S.[/low-confidence]\n\nGive my regards to everyone. [low-confidence]I don't know whether I should write […]; leave it with the aunt. […] soon […] through Grandfather from […].[/low-confidence]\n\n[low-confidence]I keep it all to myself. […] you are suffering — but what more do I need? Surely you believe me; and if you had been […], I certainly would not have traveled back. It would have hurt me so, […] I could not have borne being alone so long — without you![/low-confidence]\n\nSo then, my dear [low-confidence]Dora / Tsirele[/low-confidence] — [low-confidence]still ahead of us is Friday the 2nd. It will […] not take long now[/low-confidence] until we see each other again.\n\n[low-confidence]Dora / Tsirele[/low-confidence], I said my goodbyes yesterday to all our good friends and acquaintances. [low-confidence]I met them at […]; they gathered there together. We […].[/low-confidence] You would have loved to hear it. Goodbye, [low-confidence]Sam(?)[/low-confidence] darling — farewells from every side, right to the end. [low-confidence]In the end they called out […]; some twenty people […], with the young folk, and afterward the […]. One simply cannot imagine that in so short a time a person could live through so much […] — such serious […] — something, because I wanted to…[/low-confidence]",
+    "title": "A Farewell Gathering",
     "item_id": "",
     "artifact": null,
     "yiddish": ""
   },
   {
-    "date": "14 Jul 1907",
-    "img": "images/1907-july-14.jpeg",
+    "date": "c. 1907-1909",
+    "img": "images/scan-50.jpeg",
     "img_provenance": "archival-scan",
-    "translation": "1907 — the 14th\n\nDear Dora\n\nI am very glad that you are spending time in the country getting rest. It will also do you good to stay there in the country, being away from me, because I am fine and nothing is amiss.\nWe walk around like two young people. We arrive early. Write every evening. We sit in the garden and we hear your reading (or what you write) that you record for us. There is no other news, just a little bit.\nAlso from cousin Alice's letter—she writes that you should come... Father often has no money... I received [something/a letter], but it was open. It surprises me very much...\n\nDear cousin Alice, I am not so angry as you think, and you are not a small child. His money has not run out. I greet you warmly.\n\nYour cousin Sam.\n\n[low-confidence]Give my regards … the same.[/low-confidence]",
-    "title": "“Yours Samala”",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "10 Jul 1907",
-    "img": "images/1907-london.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: Sam is writing from London — stated directly in the letter (\"There's no news here in London\"), not Montreal, though this falls in the same 1907-1909 courtship-era window as the Montreal correspondence. This letter itself does not name Dora's location. A companion letter from four days later (same era, also signed \"Your cousin, Sam,\" addressed \"Dear Dora\") opens \"I am very glad that you are spending time in the country getting rest... being away from me\" — confirming Dora was away \"in the country\" (unnamed specifically) that same week. Worth reading the two together, but that context comes from the sibling letter, not this one.[/low-confidence]\n\nJuly 10, 1907 [date supplied by Paul — not visible in the scan/evidence below]\n\nThere's no work to be found here.\n\nI've sent a letter to Mother, and to my sister as well. As for your own letter — I hadn't seen it before, but I've only just now received it, and it made me happy.I thought perhaps you simply hadn't written. Do write to me.\n\n[low-confidence]It troubles me that you all see[/low-confidence] that you want to go off to a wedding. Father asked me [low-confidence]to see it through[/low-confidence]. There's no news here in London.\n\nI was to be sent away to look into something, but things here are quiet. It seemed it might have been a bit of luck, if only it would work out for me. [low-confidence]I alone[/low-confidence] have [low-confidence]seen to it.[/low-confidence]\n\nCousin Alice sends her regards. [low-confidence]It's a wonder how things go along.[/low-confidence] In any case — [low-confidence]a few lines you'd asked me for.[/low-confidence]\n\n[low-confidence]John says that[/low-confidence] someone here who comes to me — the two of them — doesn't want to read this. [low-confidence]I'm telling you: I beg you, get it out of him[/low-confidence]. It's [low-confidence]urgent — do hurry for me; better a word[/low-confidence] than none.\n\nYour dear wife sends her regards. I send my own regards along with this.\n\nNow, about the important matter you asked about: [low-confidence]it concerns your father-in-law and all our good friends.[/low-confidence] I'm sending you Mother's letter [low-confidence]which…[/low-confidence]\n\nNo — what I'd say is that you should stay.\n\nYour cousin, Sam",
-    "title": "No News in London",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1910s",
-    "img": "images/scan-18.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: uncertain, likely 1910s. This letter addresses \"dear Dora, my wife\" (implying it postdates the marriage, itself only bracketed to 1910-1916 by other letter content) and mentions \"the Falkovs\" — a family already close to the Diamondsteins by the 1908 tenaim (two Falkauf/Felkauf witnesses) and still connected decades later through cousin Alice's 1930 marriage to John Felkov, so the Falkov mention alone doesn't narrow the date. No children, business letterhead, or seaside/kiddies details appear, which argues against both the 1916 business era and the 1919-1926 seaside cluster. Best guess: sometime in the 1910s, after the wedding and before those later, more datable clusters — but this is a wide, low-confidence range.[/low-confidence]\n\n[This letter survives only as a garbled fragment; large stretches could not be recovered and are marked below.]\n\n[low-confidence] ...I hear from your letter that you are going there, and about the Falkovs — and that everyone comes and goes [when...]; or perhaps they are staying. [/low-confidence] In a word, write me yourself what you are hearing. And about our \"golden country\" [America] — [low-confidence] the days are [...]; the ticket [...] still stands, and I [...]. [/low-confidence] Send a greeting, so that one might know everything at once. [low-confidence] What is to become of it [...]. [/low-confidence]\n\nAnd now, dear Dora, my wife —\n\nI am sending you here the address of a woman [young lady] who is traveling [low-confidence] [...] she will soon be [...]; [...] back to me [...] the first little letter [...] and [...] to say goodbye. [/low-confidence] I am sending you her address.\n\n116\n[low-confidence] [address fragment] [/low-confidence]\n...next [week?]",
-    "title": "The Emigration Ticket",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "1 Sep 1916",
-    "img": "images/1916-09-01-letter-from-diamondstein-and-co-to-dora-about-family-well-being-and-money-enclosed.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "Diamondstein & Co.\nFur Dealers and Job Buyers — Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 1, 1916\n\nDear Dora and darling kiddies,\n\nSorry I did not write to you on Sunday, as I could not get stamps. I am glad to know that you and the children are improving. Alice tells me that you are growing fat and in height, and I am glad to hear that Gladys has become straight, and that the baby is improving well.\n\nI will write to you when I will be coming down. Tell Sarah that I spoke to Father and he will send her £1 tomorrow. [low-confidence]The oak cannot be found, so he is busy[/low-confidence] down the West End every evening.\n\nEnclosed you will find three pounds.\n\nYour loving husband,\nDad\n\n[low-confidence][illegible closing note][/low-confidence]",
-    "title": "Three Pounds Enclosed",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1909 (Montreal courtship era), low confidence. Signed \"your mother,\" the letter describes earning almost nothing, sitting idle, asking the recipient to send money, and wishing she could come and see the recipient if she were rich — the same money-scarcity and work-scarcity themes that run through Sam's own outgoing Montreal letters, anchored to the June–August 1908 dated letters. Most plausibly a parent (Sam's mother, or Dora's mother Hinde) writing into that same stretch, though the addressee isn't named in the surviving text, so the exact year can't be pinned down.[/low-confidence]\n\n...I earn almost nothing here. All I do is sit and eat, and [low-confidence]if you could send me something, it would help.[/low-confidence] They say that [low-confidence]— the next few lines are too garbled in the transcription to read: something about what you have, a mention that something is nice, and someone who has gone away, and how he is doing, and his health —[/low-confidence] is.\n\nMy dear, business [low-confidence](unreadable)[/low-confidence] — and if I were rich, I would come over to you, to see you and be with you, and I would [low-confidence](greet? welcome?)[/low-confidence] you so very warmly.\n\nSo, warm greetings to all our friends. May you all be well and healthy. Nothing more from me, your mother. As always, wishing you much luck. [low-confidence](the letter breaks off here)[/low-confidence]",
+    "title": "If I Were Rich",
     "item_id": "",
     "artifact": null,
     "yiddish": ""
   },
   {
     "date": "circa 1907-1909",
-    "img": "images/scan-17.jpeg",
+    "img": "images/scan-27.jpeg",
     "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1909, Montreal courtship era — Sam reports \"three weeks already and still have no work,\" discusses a farm scheme (compare another letter's farm/homestead-grant discussion) and mentions Chicago, and signs as \"your loving husband.\" The itinerant job search, farm discussion, and anxious tone match the already-dated Montreal cluster of letters; note the addressee is read as \"Dora\" in one transcription pass and \"Sarah\" in the other, so the recipient itself is uncertain.[/low-confidence]\n\n[The opening line is lost.] … it wasn't so bad. And, my dear Dora, I don't know what more to write — only that I miss you terribly. You can't imagine it.\n\n[low-confidence]Some news of acquaintances: I believe they're going to travel — something about Chicago — and Keyle Blum is also [unclear]; the rest of this passage is too garbled to make out.[/low-confidence] I'm still waiting for an answer about what I wrote to you concerning the farm.\n\nNow, dear Dora, because I know you'll take it to heart — I've been here three weeks already and still have no work. Since I'm writing this letter anyway, and it's about to be sealed, I'll tell you the truth. I wouldn't have written it, except that I promised you I'd write everything as it is, and I mustn't break my word. I hope you won't take it too hard. And so I'll close — I have no more news. Your loving husband.\n\n[low-confidence]And there's no work — only some money that was taken from me. I couldn't manage to get passage back … a passage for every 400 … (this whole passage about the money and the fare is badly garbled in the original).[/low-confidence] Still, I'm content, because at least I'll know better for next time. The kind of work you can find here is enough to get by, but not enough to really live on.\n\nI'm writing all this, dear Dora, just to give you a little picture of how things are here. But one keeps hoping there will be work. Don't take it to heart — my own heart is heavy enough as it is. Eat, drink, and spend your time among our family. [low-confidence]Take care of yourself.[/low-confidence] Today I'm traveling on; a woman will deliver a greeting to you from me in person. Well — for now.\n\n[low-confidence][Opening word unclear]![/low-confidence] Our trade is very bad right now, but in the meantime one manages — you go out on the street and so on. We don't live badly. If only I had [the letter breaks off here].",
-    "title": "Three Weeks, No Work",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1909, Montreal courtship era — the writer addresses \"dear Dora\"/\"Dorele,\" references leaving London, says \"I am in Canada,\" and reassures her they are \"both still young\" and he will find work; this is the same devoted, money-worried voice as Sam's other dated Montreal letters to Dora (e.g. other dated Montreal letters), and the page is numbered \"6,\" suggesting it is a continuation sheet from a longer letter in that same run.[/low-confidence]\n\n[This page continues from an earlier sheet.]\n\n...my heart. You know yourself that when I left London, [low-confidence]I never imagined things would turn out this way — I didn't picture for you the hard reality that was coming[/low-confidence]. And so I think to myself that [low-confidence]these will be difficult times[/low-confidence]. But for now it isn't the worst of it — everyone has to go through the same thing, to bear their own small share of hardship, and I'm certainly no exception in the world.\n\nYou can be absolutely sure that I hold nothing against you — no complaint, no grudge, and against you least of all, my dear Dora. You are not just some foolish girl. It surprises me that you'd make me spell this out. [low-confidence]Did you find something in my letters that made you doubt how hard I've tried to write to you kindly?[/low-confidence] You know very well what I think of you. It feels almost pointless to have to put it down again here on paper — but I do it because I can see it weighs on your heart.\n\nWhy should you make yourself so bitter and torment your heart? You know yourself that things in London are very bad, and if I were in London now it would be even sadder. But I'm here in Canada. In a word: don't lose heart. Your health must be more precious to you than anything — and above all, you are precious to me. So take care of yourself and be well.\n\nWhen I read your letters, your heart shows through in every word, and I have to say, it makes me very sad. But my darling, my dear Dora, don't lose hope. We are both still young [low-confidence]and strong[/low-confidence], and in time I will find work, together with you at my side.",
+    "title": "Still Young and Strong",
     "item_id": "",
     "artifact": null,
     "yiddish": ""
   },
   {
-    "date": "1 Sep 1916",
-    "img": "images/1916-09-01-letter-from-s-diamondstein-and-co-to-dora-kiddie.jpeg",
+    "date": "circa 1907-1908",
+    "img": "images/scan-31.jpeg",
     "img_provenance": "archival-scan",
-    "translation": "[Printed letterhead:]\nAll communications to be addressed to:\nS. Diamondstein & Co., Fur Dealers & Job Buyers, Importers & Exporters\n25 Fournier Street, Brick Lane, London, E.\n\nSeptember 1, 1916\n\nDear Dora and kiddies,\n\nI am very much surprised. I cannot really make out why I did not have a reply to my letter and the £3 I had sent you. Have you forgotten me as soon as you have had the last of me? Oh, you woman.\n\nNow dear, don't forget, and do as I tell you: stay there the next week. I believe Sarah is coming down for the week, so you will have company. Are you looking well? How are the kiddies? Do they have a good time? Kiss the kiddies for me.\n\nYour loving husband, Dad [low-confidence]Sam[/low-confidence].\n\nMy best love to [low-confidence]Ollie[/low-confidence] and Muriel.",
-    "title": "Letter from S Diamondstein and Co to Dora Kiddie",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — the letter describes a Canadian government homestead/farm-grant scheme ($1,000, hold the land 3 years, 10 acres and a house before it can be sold) and is addressed to \"Dear Dora\"; the established romantic correspondence with Dora (vs. a more distant 1901 solo trip) and the deliberative, still-undecided tone (\"I myself don't know... at the very worst I'd come back to the country\") fit the 1907-1909 window when Sam was weighing multiple survival options in Montreal before securing London work in Aug 1908.[/low-confidence]\n[low-confidence]Historical note: these terms ($1,000, 10 acres, a house, hold 3 years then sell) don't match the famous free Dominion Lands Act homestead (160 acres for a $10 fee) at all -- they're structurally much closer to the lesser-known, paid \"Ready-Made Farm\" schemes (mainly CPR-run, Alberta/Saskatchewan, requiring real capital -- commonly cited around $1,500 -- in exchange for a pre-built house and pre-ploughed land), though the specific numbers don't match either program exactly.[/low-confidence]\n\n[low-confidence] … to write … I can't quite make it out. [/low-confidence] I'll say it again: when you [low-confidence] finish [/low-confidence], I'll come back. [low-confidence] … and write to you? [/low-confidence]\n\nAbout the farm — here's how it is. The government gives grants here in Canada. You need [low-confidence] a thousand [/low-confidence] dollars for it, but [low-confidence] you have to put up the rest yourself. [/low-confidence] You have to be willing to farm it, and you have to hold it for 3 years, [low-confidence] with 10 acres [/low-confidence] and a house. After that you can sell the farm, once the 3 years are up. They say it's a good plan. I myself don't know what you'll make of it — write to me.\n\n[low-confidence] They've taken up the land for now, since there are three partners in it, and that way they can support each other; two more are coming out to the farm. [/low-confidence] And after all, a person has to work at it and make a go of it. [low-confidence] … would pay … twenty pounds … I've already taken on more for a partner … [/low-confidence] But how does one live [low-confidence] … from a loving one who … about you … [/low-confidence]\n\nSo really, one just doesn't know what's better. In any case, I'll see. [low-confidence] At the very worst, [I'd come] back to the country. [/low-confidence]\n\nDear Dora — [low-confidence] … [/low-confidence] has gone off with [low-confidence] his friends [/low-confidence] to the [low-confidence] prairie [/low-confidence], since they've bought [it]. [low-confidence] People are here … [/low-confidence] enjoying themselves thoroughly, and I'm telling you that too. [low-confidence] I never expected such a thing. [/low-confidence] Their friendship makes no exceptions — they're fine, refined people.\n\nThe whole time I go around town with Abram [low-confidence] [surname unclear] [/low-confidence], and you can see that they need workers — [low-confidence] only … what good is … [/low-confidence] But winter is coming on now, and the roads are turning to mud. Hundreds of sleighs go by with three [low-confidence] fine [/low-confidence] horses.\n\n[low-confidence] … mine, not … Write today to … the … quickly, since you asked, and you should write. [/low-confidence]",
+    "title": "The Homestead Grant",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "circa 1907-1908",
+    "img": "images/scan-33.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — addressed to a \"dear [Dora],\" remarks that her handwriting mixes Yiddish and English (consistent with Dora already living in a London-based, English-speaking household during the courtship, per Reuven/Hinde being in London), and mentions writing a separate letter to \"Uncle Ber\"; the intimate, chatty register matches Sam's other dated Montreal letters to Dora.[/low-confidence]\n\nWhat more can I write you? [low-confidence]I could have written you a whole world of things, but[/low-confidence] no new thought comes to me to put down, so I just have to sit and think of what to write. [low-confidence]And your [note?] is, after all, good....[/low-confidence]\n\nMy dear [low-confidence][Dora?][/low-confidence] — this I forgot to write. It makes me glad that you read and write whenever you have the time. Only I wonder greatly: your handwriting has gotten quite spoiled. You mix Yiddish and English a great deal in your writing. Still, I understand you [low-confidence]even when you hold back as you write — that much I can tell.[/low-confidence]\n\n[low-confidence]... no ... From me, if ... you will forgive [the remark?]. Say yes.[/low-confidence]\n\nI have [low-confidence]written[/low-confidence] Uncle [low-confidence][Ber?][/low-confidence] a letter. [low-confidence]Your ...! ... tell people ... about my writing, because I ... what the people want to know ...[/low-confidence]",
+    "title": "Mixed Yiddish and English",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "circa early 1900s-1910s",
+    "img": "images/scan-19.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: weak guess, early 1900s-1910s. This is a letter from a cousin \"Lieb\" to \"dear cousins Dora and Zishe\" (Zishe appears here as a separate addressee alongside Dora, not obviously a nickname for Sam), mentioning an uncle/aunt, a place read as \"Zolsteyn,\" and a busy trading season. None of these details echo any already-dated letter in the corpus strongly enough to anchor a specific year, so no confident estimate is offered beyond noting it reads as early Yiddish family correspondence of the same general kind and physical-scan neighborhood (Scan 15-24) as the dated Montreal-courtship letters — i.e. plausibly early 1900s-1910s, but this is a weak, low-confidence guess rather than a supported date.[/low-confidence]\n\n[low-confidence]...where uncle and aunt live[/low-confidence]\n\nI'm well, and I'm passing my time not badly at all. As for what you wrote about business — I can tell you that right now [low-confidence]it's the busy season here[/low-confidence], and it should hold on for a good while yet, which is good. Things are going well for now; I'll write you more later.\n\nWrite and tell me how things are with you, and anything new [low-confidence]...[/low-confidence].\n\nDear cousins Dora and Zishe — thank you so much for your greeting. It made me so happy to hear from you, and I hope you'll write to me more often.\n\nGive my regards to everyone at home and in [low-confidence]Zolsteyn[/low-confidence]. Zishe, warm greetings to you too.\n\nFrom your cousin, [low-confidence]Lieb[/low-confidence].",
+    "title": "A Letter From Cousin Lieb",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "11 Jun 1901",
+    "img": "images/1900.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note (corrected 2026-07-06): the salutation reads \"Dear Darling Dora\" -- this is a direct, pixel-verified reading of the scan's own English-script heading (see the \"Transcription (source)\" / opus-vision entry below: \"Montreal. 11 of June 190[word?]\" / \"Dear Darling Dora\"), independently confirmed by two separate review passes that looked at the actual image rather than the OCR output. The Yiddish-OCR pipeline (Dybbuk) misread this same Latin-script heading as Yiddish-looking gibberish (see the Dybbuk entry below); the Opus and Gemini passages below are themselves translations of THAT gibberish, not readings of the real heading -- so their \"Dear Dora\" / \"Dear Sore\" salutations are hallucinated guesses from garbled input, not independent evidence against \"Darling.\" An earlier pass in this project removed \"Darling\" for exactly that mistaken reason (treating the Opus/Gemini guesses as if they were honest readings of the salutation); that removal was itself the error, and \"Darling\" is restored here. Also walks back a since-corrected claim that this letter's \"Sore\" reading was evidence for a second nickname for Dora -- it wasn't a real reading of anything Yiddish at all, just noise. Worth flagging honestly rather than resolving away: Dora was about 12 years old at this date, which makes \"Darling\" an unusually warm address for a letter to a young cousin -- surprising, but it is what the page says.[/low-confidence]\nMontreal, 11 June 1901\n\nDear Darling Dora,\n\nI'm very surprised that I didn't get a letter from you today. I don't know — maybe I'll get one from you tomorrow. I'd half expected to have it today. Anyway, dear Dora, let me write you a little news.\n\nYou know how it is in a new country — you're a bit of a greenhorn, and it's hard to find work. But what can you do. Well, walking down the street yesterday, I saw that they needed workers to be sent off to some job away from the city. When I asked, they told me they don't take any Englishmen. So I said I was an Austrian Christian — and they took me. Seeing how glad everyone who got hired was to have work, I thought to myself that I'm a little uneasy because they don't take any Jews either. You had to pay a small amount right there in the office when you took the contract. Reading it over, it looked fine at first — it reads well — but going over it again, I saw that I'd have to work for nothing for two months to cover the cost of the passage, plus food. \n\nBut since I'd already bought my ticket, I wanted to leave. So today I went into the office and took back the things they had snatched from me.",
+    "title": "The Austrian Christian Ruse",
     "item_id": "",
     "artifact": null,
     "yiddish": ""
@@ -250,81 +257,11 @@
     "yiddish": ""
   },
   {
-    "date": "circa 1900-1909",
-    "img": "images/scan-3.jpeg",
+    "date": "1 Sep 1916",
+    "img": "images/1916-09-01-letter-from-diamondstein-and-co-to-dora-about-family-well-being-and-money-enclosed.jpeg",
     "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1900-1909, pre-marriage courtship era — the letter is a farewell letter addressed to \"Dora / Tsirele\" (a pet name), describing a night-time farewell gathering of some twenty friends and acquaintances before a departure, mentions \"London,\" and is signed with what may be \"S.\" (Sam); this fits the pattern of Sam's early travels away from Dora during the courtship years documented elsewhere in the corpus (the earliest dated letter in the archive is from 11 June 1901, and the Montreal courtship cluster runs June-August 1908), though nothing in the surviving text pins it to a specific year within that span.[/low-confidence]\n\n[low-confidence]Note: speculation on WHERE this departure was to/from, separate from the dating note above. Leading theory: a farewell written in London, the night before one of Sam's known Montreal crossings — not before an original emigration out of Latvia. Solid textual anchors: the raw Yiddish contains \"לאנדן\" (London), independently caught by both Opus and Gemini's passes, though the surrounding context is unclear in both; a ~20-person farewell gathering the night before; a specific near-term date (\"Friday the 2nd\"); and messages relayed through an \"aunt\" and \"Grandfather\" rather than directly, suggesting Dora and the writer's family were reachable through a home community. Reading these together: if \"London\" is where the farewell itself takes place (friends and acquaintances being said goodbye to there) rather than the destination, this fits neatly with Sam shuttling between London and Montreal multiple times across 1901 and 1907-1909 (documented elsewhere in the corpus, e.g. another letter's \"Montreal, 11 June 1901\") rather than requiring a bigger, one-time emigration event. The line \"I certainly would not have traveled back... I could not have borne being alone so long without you\" supports this specifically: \"traveled back\" implies a repeat crossing, not a first departure — consistent with this being one of the later round trips rather than an original emigration. No direct evidence pins WHICH crossing. One reading to actively distrust: Gemini's pass alone renders a broken line as meeting again \"[in Gissen / soon]\" — Giessen is a real German town, but Opus's independent pass of the same spot reads only \"to meet again soon,\" no place name; per this project's standing caution that Gemini invents plausible specifics when a passage is too garbled to resolve, \"Gissen\" is likely a hallucinated fill-in, not evidence. Not resolved; the London/Montreal-crossing reading is the better-supported guess, not a finding.[/low-confidence]\n\n…having known her for years. I was standing out in the middle of it all, the moon shining down through the trees, and I thought to myself: what a good, true friend. But out there, far away, there is a whole shrine of life that not every person has the good fortune to possess. [low-confidence]And if one misses it, it will not leave us longing — for I am […] so quickly.[/low-confidence]\n\nAnd now I sit down to write you a letter, my dear, because I have been longing for you. [low-confidence]I am holding on, trying to show a brave face, because I have had to steady my own heart. For the moment I feel weak[/low-confidence] — and yet the one thought that carries me is the thought of seeing you again. So stay well and be patient; surely it will [low-confidence]soon come to pass[/low-confidence] that we meet again.\n\nYours, loving you forever, [low-confidence]S.[/low-confidence]\n\nGive my regards to everyone. [low-confidence]I don't know whether I should write […]; leave it with the aunt. […] soon […] through Grandfather from […].[/low-confidence]\n\n[low-confidence]I keep it all to myself. […] you are suffering — but what more do I need? Surely you believe me; and if you had been […], I certainly would not have traveled back. It would have hurt me so, […] I could not have borne being alone so long — without you![/low-confidence]\n\nSo then, my dear [low-confidence]Dora / Tsirele[/low-confidence] — [low-confidence]still ahead of us is Friday the 2nd. It will […] not take long now[/low-confidence] until we see each other again.\n\n[low-confidence]Dora / Tsirele[/low-confidence], I said my goodbyes yesterday to all our good friends and acquaintances. [low-confidence]I met them at […]; they gathered there together. We […].[/low-confidence] You would have loved to hear it. Goodbye, [low-confidence]Sam(?)[/low-confidence] darling — farewells from every side, right to the end. [low-confidence]In the end they called out […]; some twenty people […], with the young folk, and afterward the […]. One simply cannot imagine that in so short a time a person could live through so much […] — such serious […] — something, because I wanted to…[/low-confidence]",
-    "title": "A Farewell Gathering",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1907-1909",
-    "img": "images/scan-50.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1909 (Montreal courtship era), low confidence. Signed \"your mother,\" the letter describes earning almost nothing, sitting idle, asking the recipient to send money, and wishing she could come and see the recipient if she were rich — the same money-scarcity and work-scarcity themes that run through Sam's own outgoing Montreal letters, anchored to the June–August 1908 dated letters. Most plausibly a parent (Sam's mother, or Dora's mother Hinde) writing into that same stretch, though the addressee isn't named in the surviving text, so the exact year can't be pinned down.[/low-confidence]\n\n...I earn almost nothing here. All I do is sit and eat, and [low-confidence]if you could send me something, it would help.[/low-confidence] They say that [low-confidence]— the next few lines are too garbled in the transcription to read: something about what you have, a mention that something is nice, and someone who has gone away, and how he is doing, and his health —[/low-confidence] is.\n\nMy dear, business [low-confidence](unreadable)[/low-confidence] — and if I were rich, I would come over to you, to see you and be with you, and I would [low-confidence](greet? welcome?)[/low-confidence] you so very warmly.\n\nSo, warm greetings to all our friends. May you all be well and healthy. Nothing more from me, your mother. As always, wishing you much luck. [low-confidence](the letter breaks off here)[/low-confidence]",
-    "title": "If I Were Rich",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1907-1909",
-    "img": "images/scan-27.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1909, Montreal courtship era — the writer addresses \"dear Dora\"/\"Dorele,\" references leaving London, says \"I am in Canada,\" and reassures her they are \"both still young\" and he will find work; this is the same devoted, money-worried voice as Sam's other dated Montreal letters to Dora (e.g. other dated Montreal letters), and the page is numbered \"6,\" suggesting it is a continuation sheet from a longer letter in that same run.[/low-confidence]\n\n[This page continues from an earlier sheet.]\n\n...my heart. You know yourself that when I left London, [low-confidence]I never imagined things would turn out this way — I didn't picture for you the hard reality that was coming[/low-confidence]. And so I think to myself that [low-confidence]these will be difficult times[/low-confidence]. But for now it isn't the worst of it — everyone has to go through the same thing, to bear their own small share of hardship, and I'm certainly no exception in the world.\n\nYou can be absolutely sure that I hold nothing against you — no complaint, no grudge, and against you least of all, my dear Dora. You are not just some foolish girl. It surprises me that you'd make me spell this out. [low-confidence]Did you find something in my letters that made you doubt how hard I've tried to write to you kindly?[/low-confidence] You know very well what I think of you. It feels almost pointless to have to put it down again here on paper — but I do it because I can see it weighs on your heart.\n\nWhy should you make yourself so bitter and torment your heart? You know yourself that things in London are very bad, and if I were in London now it would be even sadder. But I'm here in Canada. In a word: don't lose heart. Your health must be more precious to you than anything — and above all, you are precious to me. So take care of yourself and be well.\n\nWhen I read your letters, your heart shows through in every word, and I have to say, it makes me very sad. But my darling, my dear Dora, don't lose hope. We are both still young [low-confidence]and strong[/low-confidence], and in time I will find work, together with you at my side.",
-    "title": "Still Young and Strong",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1907-1908",
-    "img": "images/scan-31.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — the letter describes a Canadian government homestead/farm-grant scheme ($1,000, hold the land 3 years, 10 acres and a house before it can be sold) and is addressed to \"Dear Dora\"; the established romantic correspondence with Dora (vs. a more distant 1901 solo trip) and the deliberative, still-undecided tone (\"I myself don't know... at the very worst I'd come back to the country\") fit the 1907-1909 window when Sam was weighing multiple survival options in Montreal before securing London work in Aug 1908.[/low-confidence]\n[low-confidence]Historical note: these terms ($1,000, 10 acres, a house, hold 3 years then sell) don't match the famous free Dominion Lands Act homestead (160 acres for a $10 fee) at all -- they're structurally much closer to the lesser-known, paid \"Ready-Made Farm\" schemes (mainly CPR-run, Alberta/Saskatchewan, requiring real capital -- commonly cited around $1,500 -- in exchange for a pre-built house and pre-ploughed land), though the specific numbers don't match either program exactly.[/low-confidence]\n\n[low-confidence] … to write … I can't quite make it out. [/low-confidence] I'll say it again: when you [low-confidence] finish [/low-confidence], I'll come back. [low-confidence] … and write to you? [/low-confidence]\n\nAbout the farm — here's how it is. The government gives grants here in Canada. You need [low-confidence] a thousand [/low-confidence] dollars for it, but [low-confidence] you have to put up the rest yourself. [/low-confidence] You have to be willing to farm it, and you have to hold it for 3 years, [low-confidence] with 10 acres [/low-confidence] and a house. After that you can sell the farm, once the 3 years are up. They say it's a good plan. I myself don't know what you'll make of it — write to me.\n\n[low-confidence] They've taken up the land for now, since there are three partners in it, and that way they can support each other; two more are coming out to the farm. [/low-confidence] And after all, a person has to work at it and make a go of it. [low-confidence] … would pay … twenty pounds … I've already taken on more for a partner … [/low-confidence] But how does one live [low-confidence] … from a loving one who … about you … [/low-confidence]\n\nSo really, one just doesn't know what's better. In any case, I'll see. [low-confidence] At the very worst, [I'd come] back to the country. [/low-confidence]\n\nDear Dora — [low-confidence] … [/low-confidence] has gone off with [low-confidence] his friends [/low-confidence] to the [low-confidence] prairie [/low-confidence], since they've bought [it]. [low-confidence] People are here … [/low-confidence] enjoying themselves thoroughly, and I'm telling you that too. [low-confidence] I never expected such a thing. [/low-confidence] Their friendship makes no exceptions — they're fine, refined people.\n\nThe whole time I go around town with Abram [low-confidence] [surname unclear] [/low-confidence], and you can see that they need workers — [low-confidence] only … what good is … [/low-confidence] But winter is coming on now, and the roads are turning to mud. Hundreds of sleighs go by with three [low-confidence] fine [/low-confidence] horses.\n\n[low-confidence] … mine, not … Write today to … the … quickly, since you asked, and you should write. [/low-confidence]",
-    "title": "The Homestead Grant",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa 1907-1908",
-    "img": "images/scan-33.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — addressed to a \"dear [Dora],\" remarks that her handwriting mixes Yiddish and English (consistent with Dora already living in a London-based, English-speaking household during the courtship, per Reuven/Hinde being in London), and mentions writing a separate letter to \"Uncle Ber\"; the intimate, chatty register matches Sam's other dated Montreal letters to Dora.[/low-confidence]\n\nWhat more can I write you? [low-confidence]I could have written you a whole world of things, but[/low-confidence] no new thought comes to me to put down, so I just have to sit and think of what to write. [low-confidence]And your [note?] is, after all, good....[/low-confidence]\n\nMy dear [low-confidence][Dora?][/low-confidence] — this I forgot to write. It makes me glad that you read and write whenever you have the time. Only I wonder greatly: your handwriting has gotten quite spoiled. You mix Yiddish and English a great deal in your writing. Still, I understand you [low-confidence]even when you hold back as you write — that much I can tell.[/low-confidence]\n\n[low-confidence]... no ... From me, if ... you will forgive [the remark?]. Say yes.[/low-confidence]\n\nI have [low-confidence]written[/low-confidence] Uncle [low-confidence][Ber?][/low-confidence] a letter. [low-confidence]Your ...! ... tell people ... about my writing, because I ... what the people want to know ...[/low-confidence]",
-    "title": "Mixed Yiddish and English",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "circa early 1900s-1910s",
-    "img": "images/scan-19.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: weak guess, early 1900s-1910s. This is a letter from a cousin \"Lieb\" to \"dear cousins Dora and Zishe\" (Zishe appears here as a separate addressee alongside Dora, not obviously a nickname for Sam), mentioning an uncle/aunt, a place read as \"Zolsteyn,\" and a busy trading season. None of these details echo any already-dated letter in the corpus strongly enough to anchor a specific year, so no confident estimate is offered beyond noting it reads as early Yiddish family correspondence of the same general kind and physical-scan neighborhood (Scan 15-24) as the dated Montreal-courtship letters — i.e. plausibly early 1900s-1910s, but this is a weak, low-confidence guess rather than a supported date.[/low-confidence]\n\n[low-confidence]...where uncle and aunt live[/low-confidence]\n\nI'm well, and I'm passing my time not badly at all. As for what you wrote about business — I can tell you that right now [low-confidence]it's the busy season here[/low-confidence], and it should hold on for a good while yet, which is good. Things are going well for now; I'll write you more later.\n\nWrite and tell me how things are with you, and anything new [low-confidence]...[/low-confidence].\n\nDear cousins Dora and Zishe — thank you so much for your greeting. It made me so happy to hear from you, and I hope you'll write to me more often.\n\nGive my regards to everyone at home and in [low-confidence]Zolsteyn[/low-confidence]. Zishe, warm greetings to you too.\n\nFrom your cousin, [low-confidence]Lieb[/low-confidence].",
-    "title": "A Letter From Cousin Lieb",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "11 Jun 1901",
-    "img": "images/1900.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note (corrected 2026-07-06): the salutation reads \"Dear Darling Dora\" -- this is a direct, pixel-verified reading of the scan's own English-script heading (see the \"Transcription (source)\" / opus-vision entry below: \"Montreal. 11 of June 190[word?]\" / \"Dear Darling Dora\"), independently confirmed by two separate review passes that looked at the actual image rather than the OCR output. The Yiddish-OCR pipeline (Dybbuk) misread this same Latin-script heading as Yiddish-looking gibberish (see the Dybbuk entry below); the Opus and Gemini passages below are themselves translations of THAT gibberish, not readings of the real heading -- so their \"Dear Dora\" / \"Dear Sore\" salutations are hallucinated guesses from garbled input, not independent evidence against \"Darling.\" An earlier pass in this project removed \"Darling\" for exactly that mistaken reason (treating the Opus/Gemini guesses as if they were honest readings of the salutation); that removal was itself the error, and \"Darling\" is restored here. Also walks back a since-corrected claim that this letter's \"Sore\" reading was evidence for a second nickname for Dora -- it wasn't a real reading of anything Yiddish at all, just noise. Worth flagging honestly rather than resolving away: Dora was about 12 years old at this date, which makes \"Darling\" an unusually warm address for a letter to a young cousin -- surprising, but it is what the page says.[/low-confidence]\nMontreal, 11 June 1901\n\nDear Darling Dora,\n\nI'm very surprised that I didn't get a letter from you today. I don't know — maybe I'll get one from you tomorrow. I'd half expected to have it today. Anyway, dear Dora, let me write you a little news.\n\nYou know how it is in a new country — you're a bit of a greenhorn, and it's hard to find work. But what can you do. Well, walking down the street yesterday, I saw that they needed workers to be sent off to some job away from the city. When I asked, they told me they don't take any Englishmen. So I said I was an Austrian Christian — and they took me. Seeing how glad everyone who got hired was to have work, I thought to myself that I'm a little uneasy because they don't take any Jews either. You had to pay a small amount right there in the office when you took the contract. Reading it over, it looked fine at first — it reads well — but going over it again, I saw that I'd have to work for nothing for two months to cover the cost of the passage, plus food. \n\nBut since I'd already bought my ticket, I wanted to leave. So today I went into the office and took back the things they had snatched from me.",
-    "title": "The Austrian Christian Ruse",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1907-1908",
-    "img": "images/scan-48.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1908 (Montreal) — addressed to \"uncle Ruven\" and \"Hinde\" with talk of work and a promise to write more, and regards to \"Uncle Max/Marks\" and \"Aunt Ribe\"; prior research groups this with several other letters as Sam's own outgoing voice from the Montreal money-panic stretch of 1907-1909, addressed to uncle Reuven/aunt Hinde.[/low-confidence]\n\n[low-confidence] To my dear [uncle Ruven?] and [worthy?] uncle, [/low-confidence] and to Hinde — may you all live and have much good fortune.\n\n[low-confidence] I want to let you know [/low-confidence] that I am completely well, thank God.\n\n[low-confidence] (Several lines here are too garbled to read — they seem to touch on work and how things stand, but the wording is lost.) [/low-confidence]\n\nI hope to get [low-confidence] some news [/low-confidence] soon.\n\n[low-confidence] (A passage about writing — apparently asking someone to write, and mentioning a relative — is unreadable. One reading has \"about Bessie's\"; the models disagree, so the name is uncertain.) [/low-confidence]\n\n[low-confidence] Be sure to write to me at my address [/low-confidence], and [low-confidence] don't pass along any more news [that way?]. [/low-confidence]\n\nGive my regards to [low-confidence] Uncle Max (or Marks) [/low-confidence] and [low-confidence] Aunt Ribe [/low-confidence], and greet them all for me. Tell them that I will write to them!\n\n[low-confidence] (The closing lines — mentioning \"all friends\" and sending further regards — are too corrupted to render faithfully.) [/low-confidence]",
-    "title": "A Promise to Write More",
+    "translation": "Diamondstein & Co.\nFur Dealers and Job Buyers — Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 1, 1916\n\nDear Dora and darling kiddies,\n\nSorry I did not write to you on Sunday, as I could not get stamps. I am glad to know that you and the children are improving. Alice tells me that you are growing fat and in height, and I am glad to hear that Gladys has become straight, and that the baby is improving well.\n\nI will write to you when I will be coming down. Tell Sarah that I spoke to Father and he will send her £1 tomorrow. [low-confidence]The oak cannot be found, so he is busy[/low-confidence] down the West End every evening.\n\nEnclosed you will find three pounds.\n\nYour loving husband,\nDad\n\n[low-confidence][illegible closing note][/low-confidence]",
+    "title": "Three Pounds Enclosed",
     "item_id": "",
     "artifact": null,
     "yiddish": ""
@@ -335,26 +272,6 @@
     "img_provenance": "archival-scan",
     "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. early-to-mid 1920s (tentative, low confidence) — the letter addresses Gladys (b. ~1911–13) directly as capable of grown-up joking correspondence and mentions a \"Baby\" in the household; this fits best if \"Baby\" is Cynthia (est. birth ~1920–1923) and Gladys is in her early teens, but the content alone is too thin to rule out an earlier date (c. 1917–1920) if \"Baby\" instead refers to Beatrice.[/low-confidence]\n\n[low-confidence]... is busy writing ...[/low-confidence]\n[low-confidence]... received your ...[/low-confidence]\n\nNow, you, Gladys — why don't you remind Mama that she is not single and should behave herself a bit more? Why, it is disgraceful — if what I hear is true. It took my breath away. And Baby is well. Surely you ought to know better.\n\nHow are you keeping? Does Mama give you plenty to eat? She is usually mean; I think she will be making a nice knipel while you are away. Business is very quiet.\n\nSo don't pull my leg, you [low-confidence]hen[/low-confidence].\n\nEverybody is well. I went early to bed Sunday and yesterday, like a good boy — but not to worry.\n\nAlways, your loving husband and dad,\nSam",
     "title": "It Took My Breath Away",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "3 Sep 1916",
-    "img": "images/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[Letterhead:]\nS. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam",
-    "title": "The Zeppelin, Again",
-    "item_id": "",
-    "artifact": null,
-    "yiddish": ""
-  },
-  {
-    "date": "c. 1907–1908",
-    "img": "images/mr-dean-montreal-1.jpeg",
-    "img_provenance": "archival-scan",
-    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — this letter is addressed to \"uncle Reuven\" (Sam's uncle and Dora's father) about a stalled \"plan\" that \"is, sadly, a hard one\" for lack of money, the same money-dependent plan described across the already-dated June-August 1908 Montreal cluster of letters; the fur trade being \"not the best here in this place\" matches Sam's known Montreal stint doing casual labor outside the fur trade.[/low-confidence]\n\n[low-confidence]Note: who is where — Sam is writing FROM Montreal, TO uncle Reuven, who is in the UK (London), not both in the same place. Not stated as a dateline/location in the letter itself (no \"written from Montreal\" line survives), but supported by: \"the fur trade is not the best here in this place\" matching Sam's documented Montreal casual-labor stint (no capital/local network there); grouping with the dated June-August 1908 Montreal cluster (same \"our plan... when you have no money\" thread); and Reuven being separately documented as dying in London in 1934, consistent with his household being UK-based well before this letter. Reuven is simultaneously Sam's paternal uncle (Getzel and Reuven were brothers) and, at this point, his future father-in-law.[/low-confidence]\n\nMy dear uncle Reuven,\n\nI hope this finds you living well, in good health, and thriving in everything, from the bottom of my heart.\n\nDear uncle, the fur trade is not the best here. As for our plan, it is, sadly, a hard one. When you have no money, there is nothing at all you can do. As I wrote in the first letter — once things change for me, I'll write you more plainly.\n\nStay well. From me, your nephew\n\nWarm regards to everyone — to him and his wife, and to the others with their wives, and to the Applestein family — to you all, our love, in one word: to every last one of you.",
-    "title": "A Hard Plan",
     "item_id": "",
     "artifact": null,
     "yiddish": ""
@@ -378,44 +295,134 @@
     "item_id": "",
     "artifact": null,
     "yiddish": ""
+  },
+  {
+    "date": "c. 1907–1908",
+    "img": "images/scan-41.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907–1908, Montreal — addressed to \"Dear friends, the Falkovs, and you, Elis/Alice,\" reporting that \"the crisis has thrown people out of work by the hundreds\" and that Sam himself is one of the unemployed. This matches the Panic of 1907, whose unemployment effects extended into 1908 in North America, and this letter groups with Sam's other outgoing Montreal letters from that same stretch (prior research places this letter alongside several others as Sam's own outgoing voice from the June–August 1908 Montreal window). Sourced historical background on the Panic itself: a U.S. banking crisis whose contraction ran May 1907-June 1908; Montreal's stock exchange volume fell 45% even though Canada's broader economy weathered it comparatively well.[/low-confidence]\n\nDear friends — the Falkovs, and you, Elis,\n\nDear friends, I am well and strong enough to do anything, but you should know that things are truly in a great panic here. The crisis has thrown people out of work by the hundreds, and I am one of them. Still, I haven't lost heart; I'll see what the times bring.\n\nWrite to me about work — whatever you hear in your circles.\n\nElis, give my regards to everyone in the family — [low-confidence]to [name] and her family, to Yuel and his people; likewise to the father and mother, to Lion, to Betsye and the children, to Menish, to Brayne and the children, to Wolf, to Roze, to Dore, to Shori, and to all of yours[/low-confidence]. And a special hello to [low-confidence]you all[/low-confidence].\n\n[low-confidence]And so — be well. Yours, [signature][/low-confidence]",
+    "title": "The Panic of 1907",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "circa 1907-1909",
+    "img": "images/scan-17.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1909, Montreal courtship era — Sam reports \"three weeks already and still have no work,\" discusses a farm scheme (compare another letter's farm/homestead-grant discussion) and mentions Chicago, and signs as \"your loving husband.\" The itinerant job search, farm discussion, and anxious tone match the already-dated Montreal cluster of letters; note the addressee is read as \"Dora\" in one transcription pass and \"Sarah\" in the other, so the recipient itself is uncertain.[/low-confidence]\n\n[The opening line is lost.] … it wasn't so bad. And, my dear Dora, I don't know what more to write — only that I miss you terribly. You can't imagine it.\n\n[low-confidence]Some news of acquaintances: I believe they're going to travel — something about Chicago — and Keyle Blum is also [unclear]; the rest of this passage is too garbled to make out.[/low-confidence] I'm still waiting for an answer about what I wrote to you concerning the farm.\n\nNow, dear Dora, because I know you'll take it to heart — I've been here three weeks already and still have no work. Since I'm writing this letter anyway, and it's about to be sealed, I'll tell you the truth. I wouldn't have written it, except that I promised you I'd write everything as it is, and I mustn't break my word. I hope you won't take it too hard. And so I'll close — I have no more news. Your loving husband.\n\n[low-confidence]And there's no work — only some money that was taken from me. I couldn't manage to get passage back … a passage for every 400 … (this whole passage about the money and the fare is badly garbled in the original).[/low-confidence] Still, I'm content, because at least I'll know better for next time. The kind of work you can find here is enough to get by, but not enough to really live on.\n\nI'm writing all this, dear Dora, just to give you a little picture of how things are here. But one keeps hoping there will be work. Don't take it to heart — my own heart is heavy enough as it is. Eat, drink, and spend your time among our family. [low-confidence]Take care of yourself.[/low-confidence] Today I'm traveling on; a woman will deliver a greeting to you from me in person. Well — for now.\n\n[low-confidence][Opening word unclear]![/low-confidence] Our trade is very bad right now, but in the meantime one manages — you go out on the street and so on. We don't live badly. If only I had [the letter breaks off here].",
+    "title": "Three Weeks, No Work",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "14 Jul 1907",
+    "img": "images/1907-july-14.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "1907 — the 14th\n\nDear Dora\n\nI am very glad that you are spending time in the country getting rest. It will also do you good to stay there in the country, being away from me, because I am fine and nothing is amiss.\nWe walk around like two young people. We arrive early. Write every evening. We sit in the garden and we hear your reading (or what you write) that you record for us. There is no other news, just a little bit.\nAlso from cousin Alice's letter—she writes that you should come... Father often has no money... I received [something/a letter], but it was open. It surprises me very much...\n\nDear cousin Alice, I am not so angry as you think, and you are not a small child. His money has not run out. I greet you warmly.\n\nYour cousin Sam.\n\n[low-confidence]Give my regards … the same.[/low-confidence]",
+    "title": "“Yours Samala”",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "1 Sep 1916",
+    "img": "images/1916-09-01-letter-from-s-diamondstein-and-co-to-dora-kiddie.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[Printed letterhead:]\nAll communications to be addressed to:\nS. Diamondstein & Co., Fur Dealers & Job Buyers, Importers & Exporters\n25 Fournier Street, Brick Lane, London, E.\n\nSeptember 1, 1916\n\nDear Dora and kiddies,\n\nI am very much surprised. I cannot really make out why I did not have a reply to my letter and the £3 I had sent you. Have you forgotten me as soon as you have had the last of me? Oh, you woman.\n\nNow dear, don't forget, and do as I tell you: stay there the next week. I believe Sarah is coming down for the week, so you will have company. Are you looking well? How are the kiddies? Do they have a good time? Kiss the kiddies for me.\n\nYour loving husband, Dad [low-confidence]Sam[/low-confidence].\n\nMy best love to [low-confidence]Ollie[/low-confidence] and Muriel.",
+    "title": "Letter from S Diamondstein and Co to Dora Kiddie",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "c. 1907-1908",
+    "img": "images/scan-48.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1908 (Montreal) — addressed to \"uncle Ruven\" and \"Hinde\" with talk of work and a promise to write more, and regards to \"Uncle Max/Marks\" and \"Aunt Ribe\"; prior research groups this with several other letters as Sam's own outgoing voice from the Montreal money-panic stretch of 1907-1909, addressed to uncle Reuven/aunt Hinde.[/low-confidence]\n\n[low-confidence] To my dear [uncle Ruven?] and [worthy?] uncle, [/low-confidence] and to Hinde — may you all live and have much good fortune.\n\n[low-confidence] I want to let you know [/low-confidence] that I am completely well, thank God.\n\n[low-confidence] (Several lines here are too garbled to read — they seem to touch on work and how things stand, but the wording is lost.) [/low-confidence]\n\nI hope to get [low-confidence] some news [/low-confidence] soon.\n\n[low-confidence] (A passage about writing — apparently asking someone to write, and mentioning a relative — is unreadable. One reading has \"about Bessie's\"; the models disagree, so the name is uncertain.) [/low-confidence]\n\n[low-confidence] Be sure to write to me at my address [/low-confidence], and [low-confidence] don't pass along any more news [that way?]. [/low-confidence]\n\nGive my regards to [low-confidence] Uncle Max (or Marks) [/low-confidence] and [low-confidence] Aunt Ribe [/low-confidence], and greet them all for me. Tell them that I will write to them!\n\n[low-confidence] (The closing lines — mentioning \"all friends\" and sending further regards — are too corrupted to render faithfully.) [/low-confidence]",
+    "title": "A Promise to Write More",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "c. 1907–1908",
+    "img": "images/mr-dean-montreal-1.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: circa 1907-1908, Montreal courtship era — this letter is addressed to \"uncle Reuven\" (Sam's uncle and Dora's father) about a stalled \"plan\" that \"is, sadly, a hard one\" for lack of money, the same money-dependent plan described across the already-dated June-August 1908 Montreal cluster of letters; the fur trade being \"not the best here in this place\" matches Sam's known Montreal stint doing casual labor outside the fur trade.[/low-confidence]\n\n[low-confidence]Note: who is where — Sam is writing FROM Montreal, TO uncle Reuven, who is in the UK (London), not both in the same place. Not stated as a dateline/location in the letter itself (no \"written from Montreal\" line survives), but supported by: \"the fur trade is not the best here in this place\" matching Sam's documented Montreal casual-labor stint (no capital/local network there); grouping with the dated June-August 1908 Montreal cluster (same \"our plan... when you have no money\" thread); and Reuven being separately documented as dying in London in 1934, consistent with his household being UK-based well before this letter. Reuven is simultaneously Sam's paternal uncle (Getzel and Reuven were brothers) and, at this point, his future father-in-law.[/low-confidence]\n\nMy dear uncle Reuven,\n\nI hope this finds you living well, in good health, and thriving in everything, from the bottom of my heart.\n\nDear uncle, the fur trade is not the best here. As for our plan, it is, sadly, a hard one. When you have no money, there is nothing at all you can do. As I wrote in the first letter — once things change for me, I'll write you more plainly.\n\nStay well. From me, your nephew\n\nWarm regards to everyone — to him and his wife, and to the others with their wives, and to the Applestein family — to you all, our love, in one word: to every last one of you.",
+    "title": "A Hard Plan",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "10 Jul 1907",
+    "img": "images/1907-london.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: Sam is writing from London — stated directly in the letter (\"There's no news here in London\"), not Montreal, though this falls in the same 1907-1909 courtship-era window as the Montreal correspondence. This letter itself does not name Dora's location. A companion letter from four days later (same era, also signed \"Your cousin, Sam,\" addressed \"Dear Dora\") opens \"I am very glad that you are spending time in the country getting rest... being away from me\" — confirming Dora was away \"in the country\" (unnamed specifically) that same week. Worth reading the two together, but that context comes from the sibling letter, not this one.[/low-confidence]\n\nJuly 10, 1907 [date supplied by Paul — not visible in the scan/evidence below]\n\nThere's no work to be found here.\n\nI've sent a letter to Mother, and to my sister as well. As for your own letter — I hadn't seen it before, but I've only just now received it, and it made me happy.I thought perhaps you simply hadn't written. Do write to me.\n\n[low-confidence]It troubles me that you all see[/low-confidence] that you want to go off to a wedding. Father asked me [low-confidence]to see it through[/low-confidence]. There's no news here in London.\n\nI was to be sent away to look into something, but things here are quiet. It seemed it might have been a bit of luck, if only it would work out for me. [low-confidence]I alone[/low-confidence] have [low-confidence]seen to it.[/low-confidence]\n\nCousin Alice sends her regards. [low-confidence]It's a wonder how things go along.[/low-confidence] In any case — [low-confidence]a few lines you'd asked me for.[/low-confidence]\n\n[low-confidence]John says that[/low-confidence] someone here who comes to me — the two of them — doesn't want to read this. [low-confidence]I'm telling you: I beg you, get it out of him[/low-confidence]. It's [low-confidence]urgent — do hurry for me; better a word[/low-confidence] than none.\n\nYour dear wife sends her regards. I send my own regards along with this.\n\nNow, about the important matter you asked about: [low-confidence]it concerns your father-in-law and all our good friends.[/low-confidence] I'm sending you Mother's letter [low-confidence]which…[/low-confidence]\n\nNo — what I'd say is that you should stay.\n\nYour cousin, Sam",
+    "title": "No News in London",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "circa 1910s",
+    "img": "images/scan-18.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: uncertain, likely 1910s. This letter addresses \"dear Dora, my wife\" (implying it postdates the marriage, itself only bracketed to 1910-1916 by other letter content) and mentions \"the Falkovs\" — a family already close to the Diamondsteins by the 1908 tenaim (two Falkauf/Felkauf witnesses) and still connected decades later through cousin Alice's 1930 marriage to John Felkov, so the Falkov mention alone doesn't narrow the date. No children, business letterhead, or seaside/kiddies details appear, which argues against both the 1916 business era and the 1919-1926 seaside cluster. Best guess: sometime in the 1910s, after the wedding and before those later, more datable clusters — but this is a wide, low-confidence range.[/low-confidence]\n\n[This letter survives only as a garbled fragment; large stretches could not be recovered and are marked below.]\n\n[low-confidence] ...I hear from your letter that you are going there, and about the Falkovs — and that everyone comes and goes [when...]; or perhaps they are staying. [/low-confidence] In a word, write me yourself what you are hearing. And about our \"golden country\" [America] — [low-confidence] the days are [...]; the ticket [...] still stands, and I [...]. [/low-confidence] Send a greeting, so that one might know everything at once. [low-confidence] What is to become of it [...]. [/low-confidence]\n\nAnd now, dear Dora, my wife —\n\nI am sending you here the address of a woman [young lady] who is traveling [low-confidence] [...] she will soon be [...]; [...] back to me [...] the first little letter [...] and [...] to say goodbye. [/low-confidence] I am sending you her address.\n\n116\n[low-confidence] [address fragment] [/low-confidence]\n...next [week?]",
+    "title": "The Emigration Ticket",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
+  },
+  {
+    "date": "3 Sep 1916",
+    "img": "images/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.jpeg",
+    "img_provenance": "archival-scan",
+    "translation": "[Letterhead:]\nS. Diamondstein & Co., Fur Dealers and Job Buyers, Importers and Exporters\n37 Fashion Street, Brick Lane, E.\nAll communications to be addressed to: 34 Alvington Crescent, Dalston, N.\n\nLondon, September 3, 1916\n\nDear Dora,\n\nI was surprised that I did not have a note from you on Saturday morning. Are you enjoying yourselves? Is the weather fine? I am quite well; you have nothing to worry about concerning me.\n\nNo doubt you have heard we brought down a Zeppelin. It was a fine sight. John and I had been at Leon's place at that time. I may come down next week. And have you received my pound?\n\nAre the kiddies enjoying themselves? Are they good, and don't they worry you much?\n\nI remain your loving husband,\nSam",
+    "title": "The Zeppelin, Again",
+    "item_id": "",
+    "artifact": null,
+    "yiddish": ""
   }
  ];
   window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
   window.MODAL_PEOPLE = { 
-  "person:alice-522b27": {
-    "img": "",
-    "dates": "",
-    "role": "A cousin, named often in the letters",
-    "bio": "",
-    "node_id": "person:alice-522b27",
-    "canonical": "Alice",
+  "person:dad-sam-104f4d": {
+    "img": "media/portrait-sam-young-real.jpg",
+    "dates": "c.1880–1978",
+    "role": "Husband, letter-writer",
+    "bio": "Born c.1880 in Korsovka (some sources say 1882), son of Getzel. Left for Montreal in 1901, settled in London by 1908, and built S. Diamondstein &amp; Co., a fur trading business. Retired early for his health; died in London in 1978, in his nineties.",
+    "node_id": "person:dad-sam-104f4d",
+    "canonical": "Sam Diamondstein",
     "letters": [
-      "The Panic of 1907",
-      "“Yours Samala”",
-      "No News in London",
-      "The Emigration Ticket",
-      "Three Pounds Enclosed"
+      "A Farewell Gathering",
+      "If I Were Rich",
+      "Still Young and Strong",
+      "The Homestead Grant",
+      "Mixed Yiddish and English"
     ],
-    "letters_total": 7,
-    "letters_page": "letters/by-person/alice-522b27.html",
-    "silhouette": "female"
+    "letters_total": 47,
+    "letters_page": "letters/by-person/dad-sam-104f4d.html",
+    "silhouette": null
   },
-  "person:auntie-sarah-c4173d": {
-    "img": "media/portrait-sarah-nygate-real.jpg",
-    "dates": "c.1896–1968",
-    "role": "Dora&#x27;s sister",
-    "bio": "A trusted go-between for news of the girls — “Auntie Sarah” in several letters.",
-    "node_id": "person:auntie-sarah-c4173d",
-    "canonical": "Sarah Nygate",
+  "person:dear-dora-3e5ca1": {
+    "img": "media/portrait-dora-young-real.jpg",
+    "dates": "1889–1984",
+    "role": "Wife, recipient",
+    "bio": "Born 1889; emigrated from Korsovka to England around 1903-04, aged about 14. Married Sam around February 1911. Almost none of her own letters survive. Died in 1984, in her nineties.",
+    "node_id": "person:dear-dora-3e5ca1",
+    "canonical": "Dora Diamondstein",
     "letters": [
-      "The Panic of 1907",
-      "Three Weeks, No Work",
-      "“Yours Samala”",
-      "Three Pounds Enclosed",
-      "Letter from S Diamondstein and Co to Dora Kiddie"
+      "A Letter From Cousin Lieb",
+      "A Farewell Gathering",
+      "The Austrian Christian Ruse",
+      "The Homestead Grant",
+      "Mixed Yiddish and English"
     ],
-    "letters_total": 8,
-    "letters_page": "letters/by-person/auntie-sarah-c4173d.html",
+    "letters_total": 78,
+    "letters_page": "letters/by-person/dear-dora-3e5ca1.html",
     "silhouette": null
   },
   "person:beatrice": {
@@ -451,52 +458,22 @@
     "letters_page": "letters/by-person/cynthia.html",
     "silhouette": null
   },
-  "person:dad-sam-104f4d": {
-    "img": "media/portrait-sam-young-real.jpg",
-    "dates": "c.1880–1978",
-    "role": "Husband, letter-writer",
-    "bio": "Born c.1880 in Korsovka (some sources say 1882), son of Getzel. Left for Montreal in 1901, settled in London by 1908, and built S. Diamondstein &amp; Co., a fur trading business. Retired early for his health; died in London in 1978, in his nineties.",
-    "node_id": "person:dad-sam-104f4d",
-    "canonical": "Sam Diamondstein",
+  "person:gladys": {
+    "img": "media/portrait-gladys-real.jpg",
+    "dates": "c.1912–1951",
+    "role": "Sam &amp; Dora&#x27;s daughter",
+    "bio": "Passed a piano exam at about 8, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 39 (1951).",
+    "node_id": "person:gladys",
+    "canonical": "Gladys Diamondstein",
     "letters": [
-      "A Farewell Gathering",
-      "If I Were Rich",
-      "Still Young and Strong",
-      "The Homestead Grant",
-      "Mixed Yiddish and English"
+      "The Whitstable Trip",
+      "Three Pounds Enclosed",
+      "Diamondstein Letter to Dora (Page 2)",
+      "Diamondstein Letter to Dora Kiddies (Aug 1919)",
+      "It Took My Breath Away"
     ],
-    "letters_total": 47,
-    "letters_page": "letters/by-person/dad-sam-104f4d.html",
-    "silhouette": null
-  },
-  "person:david-dimantshtein": {
-    "img": "",
-    "dates": "c.1825–1906",
-    "role": "Sam &amp; Dora&#x27;s grandfather",
-    "bio": "Born around 1825 in Dvinsk; died in London in 1906. Father of ten children — including Getzel (Sam&#x27;s father) and Reuven (Dora&#x27;s father), who were brothers, which is why Sam and Dora were cousins. His children scattered out of the Pale to Montreal, London, South Africa, and Palestine.",
-    "node_id": "person:david-dimantshtein",
-    "canonical": "David Dimantshtein",
-    "letters": [],
-    "letters_total": 0,
-    "letters_page": "letters/by-person/david-dimantshtein.html",
-    "silhouette": "male"
-  },
-  "person:dear-dora-3e5ca1": {
-    "img": "media/portrait-dora-young-real.jpg",
-    "dates": "1889–1984",
-    "role": "Wife, recipient",
-    "bio": "Born 1889; emigrated from Korsovka to England around 1903-04, aged about 14. Married Sam around February 1911. Almost none of her own letters survive. Died in 1984, in her nineties.",
-    "node_id": "person:dear-dora-3e5ca1",
-    "canonical": "Dora Diamondstein",
-    "letters": [
-      "A Letter From Cousin Lieb",
-      "A Farewell Gathering",
-      "The Austrian Christian Ruse",
-      "The Homestead Grant",
-      "Mixed Yiddish and English"
-    ],
-    "letters_total": 78,
-    "letters_page": "letters/by-person/dear-dora-3e5ca1.html",
+    "letters_total": 14,
+    "letters_page": "letters/by-person/gladys.html",
     "silhouette": null
   },
   "person:deborah-tomshinsky": {
@@ -513,22 +490,6 @@
     "letters_page": "letters/by-person/deborah-tomshinsky.html",
     "silhouette": "female"
   },
-  "person:dora-s-mother-hinde-41248e": {
-    "img": "",
-    "dates": "",
-    "role": "Dora&#x27;s mother",
-    "bio": "Married to Reuven. No further biographical detail survives in this project&#x27;s sources.",
-    "node_id": "person:dora-s-mother-hinde-41248e",
-    "canonical": "Hinde Diamondstein",
-    "letters": [
-      "If I Were Rich",
-      "A Promise to Write More",
-      "Mixed Yiddish and English"
-    ],
-    "letters_total": 3,
-    "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html",
-    "silhouette": "female"
-  },
   "person:getzel": {
     "img": "",
     "dates": "c.1857–c.1890",
@@ -539,65 +500,6 @@
     "letters": [],
     "letters_total": 0,
     "letters_page": "letters/by-person/getzel.html",
-    "silhouette": "male"
-  },
-  "person:gladys": {
-    "img": "media/portrait-gladys-real.jpg",
-    "dates": "c.1912–1951",
-    "role": "Sam &amp; Dora&#x27;s daughter",
-    "bio": "Passed a piano exam at 12, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 38 (1951).",
-    "node_id": "person:gladys",
-    "canonical": "Gladys Diamondstein",
-    "letters": [
-      "The Whitstable Trip",
-      "Three Pounds Enclosed",
-      "Diamondstein Letter to Dora (Page 2)",
-      "Diamondstein Letter to Dora Kiddies (Aug 1919)",
-      "It Took My Breath Away"
-    ],
-    "letters_total": 14,
-    "letters_page": "letters/by-person/gladys.html",
-    "silhouette": null
-  },
-  "person:john-felkov": {
-    "img": "",
-    "dates": "",
-    "role": "Alice&#x27;s husband",
-    "bio": "Sam&#x27;s close companion in the 1916 letters — watched the Cuffley Zeppelin fall together.",
-    "node_id": "person:john-felkov",
-    "canonical": "John Felkov",
-    "letters": [
-      "The Zeppelin, Again"
-    ],
-    "letters_total": 1,
-    "letters_page": "letters/by-person/john-felkov.html",
-    "silhouette": "male"
-  },
-  "person:keila-tsirel": {
-    "img": "",
-    "dates": "c.1830–c.1900s",
-    "role": "Sam &amp; Dora&#x27;s grandmother",
-    "bio": "Born around 1830; died in London some time in the 1900s (exact year unrecorded). Wife of David Dimantshtein and grandmother to both Sam and Dora. The family record gives her the nickname &quot;Cynthia.&quot;",
-    "node_id": "person:keila-tsirel",
-    "canonical": "Keila-Tsirel Dimantshtein",
-    "letters": [],
-    "letters_total": 0,
-    "letters_page": "letters/by-person/keila-tsirel.html",
-    "silhouette": "female"
-  },
-  "person:reuven": {
-    "img": "",
-    "dates": "c.1850–1934",
-    "role": "Dora&#x27;s father",
-    "bio": "Simultaneously Sam&#x27;s own paternal uncle — making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam&#x27;s marriage.",
-    "node_id": "person:reuven",
-    "canonical": "Reuven Diamondstein",
-    "letters": [
-      "A Hard Plan",
-      "Mixed Yiddish and English"
-    ],
-    "letters_total": 2,
-    "letters_page": "letters/by-person/reuven.html",
     "silhouette": "male"
   },
   "person:sonia": {
@@ -615,6 +517,55 @@
     "letters_page": "letters/by-person/sonia.html",
     "silhouette": "female"
   },
+  "person:auntie-sarah-c4173d": {
+    "img": "media/portrait-sarah-nygate-real.jpg",
+    "dates": "c.1896–1968",
+    "role": "Dora&#x27;s sister",
+    "bio": "A trusted go-between for news of the girls — “Auntie Sarah” in several letters.",
+    "node_id": "person:auntie-sarah-c4173d",
+    "canonical": "Sarah Nygate",
+    "letters": [
+      "The Panic of 1907",
+      "Three Weeks, No Work",
+      "“Yours Samala”",
+      "Three Pounds Enclosed",
+      "Letter from S Diamondstein and Co to Dora Kiddie"
+    ],
+    "letters_total": 8,
+    "letters_page": "letters/by-person/auntie-sarah-c4173d.html",
+    "silhouette": null
+  },
+  "person:dora-s-mother-hinde-41248e": {
+    "img": "",
+    "dates": "",
+    "role": "Dora&#x27;s mother",
+    "bio": "Married to Reuven. No further biographical detail survives in this project&#x27;s sources.",
+    "node_id": "person:dora-s-mother-hinde-41248e",
+    "canonical": "Hinde Diamondstein",
+    "letters": [
+      "If I Were Rich",
+      "A Promise to Write More",
+      "Mixed Yiddish and English"
+    ],
+    "letters_total": 3,
+    "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html",
+    "silhouette": "female"
+  },
+  "person:reuven": {
+    "img": "",
+    "dates": "c.1850–1934",
+    "role": "Dora&#x27;s father",
+    "bio": "Simultaneously Sam&#x27;s own paternal uncle — making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam&#x27;s marriage.",
+    "node_id": "person:reuven",
+    "canonical": "Reuven Diamondstein",
+    "letters": [
+      "A Hard Plan",
+      "Mixed Yiddish and English"
+    ],
+    "letters_total": 2,
+    "letters_page": "letters/by-person/reuven.html",
+    "silhouette": "male"
+  },
   "person:yehuda-leib": {
     "img": "media/portrait-yehuda-leib-real.jpeg",
     "dates": "d. 1929",
@@ -626,6 +577,62 @@
     "letters_total": 0,
     "letters_page": "letters/by-person/yehuda-leib.html",
     "silhouette": null
+  },
+  "person:david-dimantshtein": {
+    "img": "",
+    "dates": "c.1825–1906",
+    "role": "Sam &amp; Dora&#x27;s grandfather",
+    "bio": "Born around 1825 in Dvinsk; died in London in 1906. Father of ten children — including Getzel (Sam&#x27;s father) and Reuven (Dora&#x27;s father), who were brothers, which is why Sam and Dora were cousins. His children scattered out of the Pale to Montreal, London, South Africa, and Palestine.",
+    "node_id": "person:david-dimantshtein",
+    "canonical": "David Dimantshtein",
+    "letters": [],
+    "letters_total": 0,
+    "letters_page": "letters/by-person/david-dimantshtein.html",
+    "silhouette": "male"
+  },
+  "person:keila-tsirel": {
+    "img": "",
+    "dates": "c.1830–c.1900s",
+    "role": "Sam &amp; Dora&#x27;s grandmother",
+    "bio": "Born around 1830; died in London some time in the 1900s (exact year unrecorded). Wife of David Dimantshtein and grandmother to both Sam and Dora. The family record gives her the nickname &quot;Cynthia.&quot;",
+    "node_id": "person:keila-tsirel",
+    "canonical": "Keila-Tsirel Dimantshtein",
+    "letters": [],
+    "letters_total": 0,
+    "letters_page": "letters/by-person/keila-tsirel.html",
+    "silhouette": "female"
+  },
+  "person:alice-522b27": {
+    "img": "",
+    "dates": "",
+    "role": "A cousin, named often in the letters",
+    "bio": "",
+    "node_id": "person:alice-522b27",
+    "canonical": "Alice",
+    "letters": [
+      "The Panic of 1907",
+      "“Yours Samala”",
+      "No News in London",
+      "The Emigration Ticket",
+      "Three Pounds Enclosed"
+    ],
+    "letters_total": 7,
+    "letters_page": "letters/by-person/alice-522b27.html",
+    "silhouette": "female"
+  },
+  "person:john-felkov": {
+    "img": "",
+    "dates": "",
+    "role": "Alice&#x27;s husband",
+    "bio": "Sam&#x27;s close companion in the 1916 letters — watched the Cuffley Zeppelin fall together.",
+    "node_id": "person:john-felkov",
+    "canonical": "John Felkov",
+    "letters": [
+      "The Zeppelin, Again"
+    ],
+    "letters_total": 1,
+    "letters_page": "letters/by-person/john-felkov.html",
+    "silhouette": "male"
   }
  };
 </script>

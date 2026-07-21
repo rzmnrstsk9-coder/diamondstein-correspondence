@@ -288,9 +288,9 @@
      letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
      + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
      zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
-     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false,
-     rather than the partial forking into two shapes (single-honest-core principle applied to
-     markup, not just behavior). -->
+     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false
+     (same for #person-modal-nav-row + personPrevNext, added 2026-07-21), rather than the partial
+     forking into two shapes (single-honest-core principle applied to markup, not just behavior). -->
 <div class="overlay" id="person-overlay">
   <div class="person-modal">
     <button class="close-btn" id="person-modal-close">&times;</button>
@@ -306,6 +306,11 @@
     <div class="pm-bio" id="pm-bio"></div>
     <div class="pm-letters-label" id="pm-letters-label"></div>
     <div id="pm-letters-list"></div>
+    <div class="modal-nav-row" id="person-modal-nav-row">
+      <button class="nav-btn" id="person-modal-prev" aria-label="Previous person">&larr;</button>
+      <div class="modal-position mono" id="person-modal-position"></div>
+      <button class="nav-btn" id="person-modal-next" aria-label="Next person">&rarr;</button>
+    </div>
   </div>
 </div>
 
@@ -842,7 +847,7 @@
     "img": "media/portrait-gladys-real.jpg",
     "dates": "c.1912–1951",
     "role": "Sam &amp; Dora&#x27;s daughter",
-    "bio": "Passed a piano exam at 12, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 38 (1951).",
+    "bio": "Passed a piano exam at about 8, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 39 (1951).",
     "node_id": "person:gladys",
     "canonical": "Gladys Diamondstein",
     "letters": [

@@ -5,10 +5,12 @@
 // (formatBody/esc/escape-at-build) is UNCONDITIONAL — no config key disables it.
 (function() {
   const CONFIG = Object.assign(
-    {langToggle: true, prevNext: true, imgPathMatch: "root"}, window.MODAL_CONFIG || {});
+    {langToggle: true, prevNext: true, personPrevNext: false, imgPathMatch: "root"}, window.MODAL_CONFIG || {});
   const letters = window.MODAL_LETTERS || [];
   const titleIndex = window.MODAL_TITLE_INDEX || {};
   const people = window.MODAL_PEOPLE || {};
+  const personOrder = Object.keys(people);
+  let personIdx = 0;
 
   // person-card's no-real-photo placeholder (2026-07-20), mirrored from element.py's
   // _SILHOUETTE_SVGS -- the same two SVGs, picked by the person island's `silhouette` field.
@@ -72,6 +74,8 @@
   if (capsuleEl && !CONFIG.langToggle) capsuleEl.style.display = 'none';
   const navRowEl = document.getElementById('modal-nav-row');
   if (navRowEl && !CONFIG.prevNext) navRowEl.style.display = 'none';
+  const personNavRowEl = document.getElementById('person-modal-nav-row');
+  if (personNavRowEl && !CONFIG.personPrevNext) personNavRowEl.style.display = 'none';
 
   function setLang(lang) {
     if (!CONFIG.langToggle) return;
@@ -151,6 +155,7 @@
   function openPersonModal(nodeId) {
     const p = people[nodeId];
     if (!p) return;
+    personIdx = personOrder.indexOf(nodeId);
     const photoEl = document.getElementById('pm-photo');
     const placeholderEl = document.getElementById('pm-photo-placeholder');
     if (p.img) {
@@ -190,6 +195,9 @@
         btn.addEventListener('click', () => openLetterModal(btn.dataset.title));
       });
     }
+    if (CONFIG.personPrevNext) {
+      document.getElementById('person-modal-position').textContent = `${personIdx + 1} / ${personOrder.length}`;
+    }
     personOverlay.classList.add('open');
   }
 
@@ -211,6 +219,16 @@
   }
   document.getElementById('person-modal-close').addEventListener('click', () => personOverlay.classList.remove('open'));
   personOverlay.addEventListener('click', (e) => { if (e.target === personOverlay) personOverlay.classList.remove('open'); });
+  if (CONFIG.personPrevNext) {
+    document.getElementById('person-modal-prev').addEventListener('click', () => {
+      personIdx = (personIdx - 1 + personOrder.length) % personOrder.length;
+      openPersonModal(personOrder[personIdx]);
+    });
+    document.getElementById('person-modal-next').addEventListener('click', () => {
+      personIdx = (personIdx + 1) % personOrder.length;
+      openPersonModal(personOrder[personIdx]);
+    });
+  }
 
   const jumpTitle = new URLSearchParams(window.location.search).get('jump');
   if (jumpTitle) openLetterModal(jumpTitle);
