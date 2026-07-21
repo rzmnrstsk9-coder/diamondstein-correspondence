@@ -31,16 +31,25 @@
   @media (max-width: 760px) { .progress-rail { display: none; } }
 
   /* ---- opening: masthead visible immediately, then the reveal sequence, NYT scrollytelling-style.
-     Same spotlight treatment as the previous hero: full-bleed photo, dark vignette, the center
-     gradient stop's alpha animates in on load so the spotlight "opens" over the box. */
+     Same spotlight treatment as the previous hero: full-bleed photo, dark vignette. The vignette's
+     hole now opens as the reader SCROLLS (JS sets --hole-a below) rather than on a fixed timer, so
+     it rewards scrolling instead of just happening automatically whether anyone's looking or not.
+     The photo itself carries a slow, continuous Ken Burns drift (scale + pan), independent of
+     scroll, so the hero never reads as a static, frozen frame even before anyone touches it. */
   .masthead {
     position: relative; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; padding: 3rem 1.5rem; overflow: hidden; background: #0f0d0a;
   }
   .masthead::before {
-    content: ''; position: absolute; inset: 0;
+    content: ''; position: absolute; inset: -4%;
     background-image: url('assets/box-of-letters.jpeg'); background-size: cover; background-position: center 30%;
     filter: grayscale(90%) brightness(0.85); opacity: 0.92;
+    transform-origin: 50% 36%;
+    animation: ken-burns 26s ease-in-out infinite alternate;
+  }
+  @keyframes ken-burns {
+    from { transform: scale(1) translate(0, 0); }
+    to   { transform: scale(1.09) translate(-0.6%, -1.2%); }
   }
   @property --hole-a {
     syntax: '<number>'; inherits: false; initial-value: 0.9;
@@ -48,23 +57,46 @@
   .masthead::after {
     content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse 34% 26% at 50% 36%, rgba(10, 8, 6, var(--hole-a)) 0%, rgba(10,8,6,0.9) 78%, rgba(10,8,6,0.9) 100%);
-    animation: spotlight-reveal 3.5s ease-out forwards;
-  }
-  @keyframes spotlight-reveal {
-    from { --hole-a: 0.9; }
-    to   { --hole-a: 0; }
   }
   .masthead > * { position: relative; z-index: 1; }
   .hero-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #e8c98a; margin-bottom: 1.25rem; }
   .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 700; line-height: 1.05; max-width: 16ch; margin-bottom: 1.25rem; }
-  .scroll-cue { margin-top: 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; animation: bob 2s ease-in-out infinite; }
+  .scroll-cue {
+    margin-top: 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--ink-faint);
+    letter-spacing: 0.08em; text-transform: uppercase; opacity: 0;
+    animation: bob 2s ease-in-out infinite, cue-fade-in 0.8s ease-out 1.15s forwards;
+  }
   @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+  @keyframes cue-fade-in { to { opacity: 1; } }
+
+  /* ---- kinetic title reveal: kicker -> title settle in on load, staggered, with a slight
+     blur-to-sharp focus pull rather than a plain fade -- the "considered opening" beat.
+     .scroll-cue gets its own fade-only entrance (below, near its existing rule) since it already
+     owns `transform` for its perpetual bob -- a second transform-animation on the same element
+     would fight that one instead of composing with it. */
+  .hero-kicker, .hero-title { opacity: 0; filter: blur(6px); transform: translateY(14px); animation: hero-settle 1s ease-out forwards; }
+  .hero-kicker { animation-delay: 0.25s; }
+  .hero-title { animation-delay: 0.5s; }
+  @keyframes hero-settle { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .masthead::before { animation: none; }
+    .masthead { --hole-a: 0; }
+    .hero-kicker, .hero-title { animation: none; opacity: 1; filter: none; transform: none; }
+    .scroll-cue { animation: none; opacity: 1; }
+  }
 
   /* ---- the reveal sequence: one idea per screen, no buttons, no numbers -- just scroll ---- */
   .reveal { min-height: 78vh; display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
-  .reveal-inner { max-width: 620px; text-align: center; opacity: 0; transform: translateY(24px); transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.2,0.8,0.2,1); }
-  .reveal.in .reveal-inner { opacity: 1; transform: translateY(0); }
-  .reveal-text { font-size: clamp(1.3rem, 3vw, 1.7rem); line-height: 1.55; color: #fff; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; }
+  .reveal-inner {
+    max-width: 680px; text-align: center; opacity: 0; transform: translateY(24px); filter: blur(6px);
+    transition: opacity 1.8s ease, transform 1.8s cubic-bezier(0.2,0.8,0.2,1), filter 1.8s ease;
+  }
+  .reveal.in .reveal-inner { opacity: 1; transform: translateY(0); filter: blur(0); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-inner { transition: opacity 0.4s ease; filter: none; transform: none; }
+  }
+  .reveal-text { font-size: clamp(1.6rem, 4vw, 2.15rem); line-height: 1.5; color: #fff; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; }
   .reveal-text em { color: #e8c98a; font-style: normal; }
   .reveal-arrow { display: inline-block; margin-top: 1.75rem; font-size: 1.6rem; color: #e8c98a; text-decoration: none; animation: bob 2s ease-in-out infinite; transition: opacity 0.2s ease; }
   .reveal-arrow:hover { opacity: 0.7; }
@@ -77,6 +109,10 @@
   .doors { background: var(--cream); color: var(--ink); padding: 4rem 1.5rem 5rem; }
   .doors-intro { text-align: center; max-width: 62ch; margin: 0 auto 3rem; }
   .doors-intro p { font-size: 1rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
+  .doors-intro p.doors-intro-cta {
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem;
+    color: var(--rust); margin-top: 1.1rem;
+  }
   .door-featured { max-width: 1100px; margin: 0 auto 1.5rem; }
   .door-featured-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 1100px; margin: 0 auto 1.5rem; }
   .door-featured-pair .door-featured { max-width: none; margin: 0; min-width: 0; }
@@ -276,7 +312,8 @@
 
 <div class="doors" id="doors">
   <div class="doors-intro">
-    <p>This site is built from letters Sam and Dora Diamondstein exchanged between 1900 and 1926 &mdash; a window into one period of their lives, not the whole of it, reconstructed as honestly as the letters, the family tree, and living memory allow. Choose how you'd like to explore.</p>
+    <p>This site is built from letters Sam and Dora Diamondstein exchanged between 1900 and 1926 &mdash; a window into one period of their lives, not the whole of it, reconstructed as honestly as the letters, the family tree, and living memory allow.</p>
+    <p class="doors-intro-cta">Choose how you'd like to explore.</p>
   </div>
   <div class="door-featured-pair">
     <div class="door-featured">
@@ -406,6 +443,7 @@
     <a href="journey.html">Follow the Journey</a>
     <a href="pictures.html">The Story in Pictures</a>
     <a href="how-made.html">How This Was Made</a>
+    <a href="credits.html">Credits &amp; Sources</a>
   </nav>
   <p class="footer-credit">A family archive built by Paul Levine and Fernando Medrano &mdash; see <a href="how-made.html">How This Was Made</a> for the full process.</p>
   <p class="footer-contact">Questions or corrections? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
@@ -1074,7 +1112,9 @@
   // docs/prototypes/paul/onboarding-scroll-reveal-2026-07-17/.
   const reveals = document.querySelectorAll('.reveal');
   const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+    // Toggle, don't just add: leaving the panel resets it so scrolling back in fades it in again,
+    // rather than a one-time reveal that stays "in" forever once first seen.
+    entries.forEach(e => e.target.classList.toggle('in', e.isIntersecting));
   }, { threshold: 0.45 });
   reveals.forEach(r => revealObserver.observe(r));
 
@@ -1085,6 +1125,16 @@
   const mastheadEl = document.querySelector('.masthead');
   const doorsEl = document.getElementById('doors');
 
+  // The masthead's vignette "hole" now opens as the reader scrolls (was a fixed 3.5s timer) --
+  // rewards scrolling rather than just happening automatically. Fully open by ~65% of one
+  // viewport-height of scroll, snappier than the old timer felt.
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function updateMastheadReveal() {
+    if (reduceMotion) return;   // CSS already forces --hole-a's initial 0.9 to read as open via the media query below
+    const openProgress = Math.max(0, Math.min(1, window.scrollY / (window.innerHeight * 0.65)));
+    mastheadEl.style.setProperty('--hole-a', 0.9 * (1 - openProgress));
+  }
+
   function updateProgress() {
     const startY = mastheadEl.offsetTop;
     const endY = doorsEl.offsetTop;
@@ -1093,8 +1143,10 @@
     progress = Math.max(0, Math.min(1, progress));
     fill.style.height = (progress * 100) + '%';
     rail.classList.toggle('show', progress > 0.02 && progress < 0.98);
+    updateMastheadReveal();
   }
 
+  updateProgress();
   window.addEventListener('scroll', updateProgress, { passive: true });
   window.addEventListener('resize', updateProgress);
   updateProgress();
