@@ -78,6 +78,9 @@
   .doors-intro { text-align: center; max-width: 56ch; margin: 0 auto 3rem; }
   .doors-intro p { font-size: 1rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
   .door-featured { max-width: 1100px; margin: 0 auto 1.5rem; }
+  .door-featured-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 1100px; margin: 0 auto 1.5rem; }
+  .door-featured-pair .door-featured { max-width: none; margin: 0; min-width: 0; }
+  @media (max-width: 760px) { .door-featured-pair { grid-template-columns: 1fr; } }
   .door-featured-card { position: relative; background: #fff; border-radius: 16px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 14px 34px rgba(0,0,0,0.08); padding: 1.75rem 1.75rem 1.6rem; }
   .door-featured-card .door-content { padding: 0 2.5rem 1.3rem 0; }
   .see-all-link { position: absolute; top: 1.9rem; right: 1.75rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600; color: var(--rust); text-decoration: none; }
@@ -272,18 +275,19 @@
   <div class="doors-intro">
     <p>There's no one right way through this. Choose how you want to explore this letters archive.</p>
   </div>
-  <div class="door-featured">
-    <div class="door-featured-card">
-      <a class="see-all-link" href="letters.html">See all 114 letters &rarr;</a>
-      <div class="door-content">
-        <div class="door-eyebrow">Start here</div>
-        <div class="door-title">Every Letter</div>
-        <div class="door-body">Letters, translated and transcribed, sorted by era &mdash; the most basic way to browse the archive.</div>
-      </div>
-      <div class="letters-scroll-wrap">
-        <button class="scroll-arrow-btn left" type="button" aria-label="Scroll left">&larr;</button>
-        <div class="letters-scroll" id="letters-scroll" aria-label="A sample of letters from the archive">
-          <button class="mini-card" type="button" data-title="The Austrian Christian Ruse"><img src="images/1900.jpeg" alt="Scan: The Austrian Christian Ruse" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">11 Jun 1901</div><div class="mini-card-title">The Austrian Christian Ruse</div><div class="mini-card-summary">Sam writes to Dora from Montreal about posing as an &quot;Austrian Christian&quot; to get hired, then withdrawing after spotting an exploitative labor contract.</div></div></button>
+  <div class="door-featured-pair">
+    <div class="door-featured">
+      <div class="door-featured-card">
+        <a class="see-all-link" href="letters.html">See all 114 letters &rarr;</a>
+        <div class="door-content">
+          <div class="door-eyebrow">Read letter by letter</div>
+          <div class="door-title">Every Letter</div>
+          <div class="door-body">Letters, translated and transcribed, sorted by era &mdash; the most basic way to browse the archive.</div>
+        </div>
+        <div class="letters-scroll-wrap">
+          <button class="scroll-arrow-btn left" type="button" aria-label="Scroll left">&larr;</button>
+          <div class="letters-scroll" id="letters-scroll" aria-label="A sample of letters from the archive">
+            <button class="mini-card" type="button" data-title="The Austrian Christian Ruse"><img src="images/1900.jpeg" alt="Scan: The Austrian Christian Ruse" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">11 Jun 1901</div><div class="mini-card-title">The Austrian Christian Ruse</div><div class="mini-card-summary">Sam writes to Dora from Montreal about posing as an &quot;Austrian Christian&quot; to get hired, then withdrawing after spotting an exploitative labor contract.</div></div></button>
 <button class="mini-card" type="button" data-title="The Panic of 1907"><img src="images/scan-41.jpeg" alt="Scan: The Panic of 1907" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c. 1907–1908</div><div class="mini-card-title">The Panic of 1907</div><div class="mini-card-summary">Sam writes to friends the Falkovs and Elis/Alice that the economic crisis has thrown hundreds out of work in Montreal, himself included.</div></div></button>
 <button class="mini-card" type="button" data-title="The Decision"><img src="images/1908-aug.jpeg" alt="Scan: The Decision" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">1 Aug 1908</div><div class="mini-card-title">The Decision</div><div class="mini-card-summary">Garbled fragment: Sam explains he hasn&#39;t stayed put in Montreal and describes his winding path toward London.</div></div></button>
 <button class="mini-card" type="button" data-title="Strong As a Lion"><img src="images/1910-august-23-letter-from-dean-felkoff-manufacturing-furriers-to-miss-d-dean-about-visiting-london.jpeg" alt="Scan: Strong As a Lion" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">23 Aug 1910</div><div class="mini-card-title">Strong As a Lion</div><div class="mini-card-summary">Sam writes Dora on Dean &amp; Felkoff furriers letterhead, planning a Saturday visit and saying how much he misses her.</div></div></button>
@@ -293,24 +297,24 @@
 <button class="mini-card" type="button" data-title="Pontoon at Bournemouth"><img src="images/1923-yiddish-letter-leipzig-hotel-paper.jpeg" alt="Scan: Pontoon at Bournemouth" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">29 Dec 1923</div><div class="mini-card-title">Pontoon at Bournemouth</div><div class="mini-card-summary">A daughter writes Daddy from Bournemouth about Christmas presents, card games, and the promised five-pound notes.</div></div></button>
 <button class="mini-card" type="button" data-title="The House That Got Away"><img src="images/1924-12-30-letter-to-dora-and-kiddies.jpeg" alt="Scan: The House That Got Away" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">30 Dec 1924</div><div class="mini-card-title">The House That Got Away</div><div class="mini-card-summary">Sam reassures Dora after she backed out of buying a house, and swears the family to secrecy about his goods purchases.</div></div></button>
 <button class="mini-card" type="button" data-title="Eight Pounds"><img src="images/1926-08-11-diamondstein-letter-to-dora-children.jpeg" alt="Scan: Eight Pounds" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">11 Aug 1926</div><div class="mini-card-title">Eight Pounds</div><div class="mini-card-summary">Sam sends eight pounds to cover Dora and the children&#39;s expenses and reports all is well at home.</div></div></button>
-          <a class="mini-card-more" href="letters.html">See all<br>114 letters &rarr;</a>
+            <a class="mini-card-more" href="letters.html">See all<br>114 letters &rarr;</a>
+          </div>
+          <button class="scroll-arrow-btn right" type="button" aria-label="Scroll right">&rarr;</button>
         </div>
-        <button class="scroll-arrow-btn right" type="button" aria-label="Scroll right">&rarr;</button>
       </div>
     </div>
-  </div>
-  <div class="door-featured">
-    <div class="door-featured-card">
-      <a class="see-all-link" href="family.html">See all 16 people &rarr;</a>
-      <div class="door-content">
-        <div class="door-eyebrow">Browse</div>
-        <div class="door-title">Every Person</div>
-        <div class="door-body">Everyone named in the letters &mdash; family, friends, and the people caught up in their story.</div>
-      </div>
-      <div class="letters-scroll-wrap">
-        <button class="scroll-arrow-btn left" type="button" aria-label="Scroll left">&larr;</button>
-        <div class="letters-scroll" aria-label="People mentioned in the letters">
-          <button class="mini-card person-card" type="button" data-person="person:dad-sam-104f4d"><img src="media/portrait-sam-real.jpg" alt="Sam Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1880–1978</div><div class="mini-card-title">Sam<br>Diamondstein</div><div class="mini-card-summary">Husband, letter-writer</div></div></button>
+    <div class="door-featured">
+      <div class="door-featured-card">
+        <a class="see-all-link" href="family.html">See all 16 people &rarr;</a>
+        <div class="door-content">
+          <div class="door-eyebrow">Meet the people</div>
+          <div class="door-title">Every Person</div>
+          <div class="door-body">Everyone named in the letters &mdash; family, friends, and the people caught up in their story.</div>
+        </div>
+        <div class="letters-scroll-wrap">
+          <button class="scroll-arrow-btn left" type="button" aria-label="Scroll left">&larr;</button>
+          <div class="letters-scroll" aria-label="People mentioned in the letters">
+            <button class="mini-card person-card" type="button" data-person="person:dad-sam-104f4d"><img src="media/portrait-sam-real.jpg" alt="Sam Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1880–1978</div><div class="mini-card-title">Sam<br>Diamondstein</div><div class="mini-card-summary">Husband, letter-writer</div></div></button>
 <button class="mini-card person-card" type="button" data-person="person:dear-dora-3e5ca1"><img src="media/portrait-dora-real.jpg" alt="Dora Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">1889–1984</div><div class="mini-card-title">Dora<br>Diamondstein</div><div class="mini-card-summary">Wife, recipient</div></div></button>
 <button class="mini-card person-card" type="button" data-person="person:gladys"><img src="media/portrait-gladys-real.jpg" alt="Gladys Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1912–1951</div><div class="mini-card-title">Gladys<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
 <button class="mini-card person-card" type="button" data-person="person:beatrice"><img src="media/portrait-beatrice-real.jpg" alt="Beatrice Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">b. c.1915</div><div class="mini-card-title">Beatrice<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
@@ -326,16 +330,17 @@
 <button class="mini-card person-card" type="button" data-person="person:auntie-sarah-c4173d"><img src="media/portrait-sarah-nygate-real.jpg" alt="Sarah Nygate" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1896–1968</div><div class="mini-card-title">Sarah<br>Nygate</div><div class="mini-card-summary">Dora&#39;s sister</div></div></button>
 <button class="mini-card person-card" type="button" data-person="person:alice-522b27"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">Alice</div><div class="mini-card-summary">A cousin, named often in the letters</div></div></button>
 <button class="mini-card person-card" type="button" data-person="person:john-felkov"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">John<br>Felkov</div><div class="mini-card-summary">Alice&#39;s husband</div></div></button>
-          <a class="mini-card-more" href="family.html">See all<br>16 people &rarr;</a>
+            <a class="mini-card-more" href="family.html">See all<br>16 people &rarr;</a>
+          </div>
+          <button class="scroll-arrow-btn right" type="button" aria-label="Scroll right">&rarr;</button>
         </div>
-        <button class="scroll-arrow-btn right" type="button" aria-label="Scroll right">&rarr;</button>
       </div>
     </div>
   </div>
   <div class="door-featured">
     <div class="door-featured-card">
       <div class="door-content">
-        <div class="door-eyebrow">Recommended next</div>
+        <div class="door-eyebrow">Read it as a story</div>
         <div class="door-title">Read the Story</div>
         <div class="door-body">The same events, three ways &mdash; pick the pace and format that suits you. All three are woven from the real letters, with real photographs throughout &mdash; see <a href="how-made.html" class="inline-link">How This Was Made</a>.</div>
       </div>
@@ -368,13 +373,21 @@
     </div>
   </div>
   <div class="door-grid">
-    <a class="door wide" href="journey.html">
+    <a class="door" href="journey.html">
       <div class="door-img"><img src="media/journey-teaser.png" alt="A real screenshot of the live journey map, showing the family's routes fanning out from the Pale"></div>
       <div class="door-content">
-        <div class="door-eyebrow">~5 min</div>
+        <div class="door-eyebrow">Follow the journey</div>
         <div class="door-title">Follow the Journey</div>
         <div class="door-body">Every place this family went, on a map &mdash; each one explained, not just shown.</div>
         <div class="door-time">5 maps + timeline</div>
+      </div>
+    </a>
+    <a class="door" href="how-made.html">
+      <div class="door-img"><img src="media/how-made-teaser.jpg" alt="Postal workers sorting mail at a New York post office, 1914"></div>
+      <div class="door-content">
+        <div class="door-eyebrow">See how it was built</div>
+        <div class="door-title">How This Was Made</div>
+        <div class="door-body">The process behind the archive &mdash; what's verified, what's uncertain, and what the tools did versus what a person decided.</div>
       </div>
     </a>
   </div>
