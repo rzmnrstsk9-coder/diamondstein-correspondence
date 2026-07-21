@@ -39,7 +39,7 @@
   }
   .masthead::before {
     content: ''; position: absolute; inset: 0;
-    background-image: url('images/box-of-letters.jpeg'); background-size: cover; background-position: center 30%;
+    background-image: url('assets/box-of-letters.jpeg'); background-size: cover; background-position: center 30%;
     filter: grayscale(90%) brightness(0.85); opacity: 0.92;
   }
   @property --hole-a {
@@ -109,6 +109,8 @@
   .mini-card img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; }
   .mini-card.person-card { flex: 0 0 161px; }
   .mini-card.person-card img { aspect-ratio: 0.95; object-position: center; }
+  .mini-card-photo-placeholder { width: 100%; aspect-ratio: 0.95; display: flex; align-items: center; justify-content: center; background-image: repeating-linear-gradient(135deg, rgba(0,0,0,0.04) 0 10px, transparent 10px 20px); }
+  .mini-card-photo-placeholder .pc-silhouette { opacity: 0.3; width: 38%; height: auto; }
   .mini-card-body { padding: 0.65rem 0.8rem 0.85rem; }
   .mini-card-date { font-family: 'IBM Plex Mono', monospace; font-size: 0.64rem; color: var(--navy); font-weight: 600; margin-bottom: 0.25rem; }
   .mini-card-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 0.84rem; line-height: 1.3; margin-bottom: 0.4rem; }
@@ -193,6 +195,9 @@
   .person-modal .close-btn:hover { background: rgba(0,0,0,0.12); }
   .pm-top { display: flex; gap: 1.1rem; align-items: center; margin-bottom: 1.1rem; }
   .pm-photo { width: 110px; height: 110px; border-radius: 10px; object-fit: cover; object-position: center; flex-shrink: 0; }
+  .pm-photo-placeholder { width: 110px; height: 110px; border-radius: 10px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; background-image: repeating-linear-gradient(135deg, rgba(0,0,0,0.04) 0 10px, transparent 10px 20px); }
+  .pm-silhouette { opacity: 0.32; width: 44%; height: auto; }
+  .pm-photo-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.58rem; color: rgba(26,26,26,0.4); text-align: center; line-height: 1.3; padding: 0 0.35rem; }
   .pm-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.2rem; }
   .pm-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
   .pm-role { font-size: 0.82rem; color: var(--rust); font-weight: 600; margin-top: 0.25rem; }
@@ -305,22 +310,22 @@
       <div class="letters-scroll-wrap">
         <button class="scroll-arrow-btn left" type="button" aria-label="Scroll left">&larr;</button>
         <div class="letters-scroll" aria-label="People mentioned in the letters">
-          <button class="mini-card person-card" type="button" data-person="person:dad-sam-104f4d"><img src="media/portrait-sam-diamondstein-young.png" alt="Sam Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1880–1978</div><div class="mini-card-title">Sam<br>Diamondstein</div><div class="mini-card-summary">Husband, letter-writer</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:dear-dora-3e5ca1"><img src="media/portrait-dora-diamondstein-young.png" alt="Dora Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">1889–1984</div><div class="mini-card-title">Dora<br>Diamondstein</div><div class="mini-card-summary">Wife, recipient</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:gladys"><img src="media/portrait-gladys.png" alt="Gladys Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1912–1951</div><div class="mini-card-title">Gladys<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:beatrice"><img src="media/portrait-beatrice.png" alt="Beatrice Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">b. c.1915</div><div class="mini-card-title">Beatrice<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:cynthia"><img src="media/portrait-cynthia.png" alt="Cynthia Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">b. c.1920</div><div class="mini-card-title">Cynthia<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:david-dimantshtein"><img src="media/portrait-david-dimantshtein.png" alt="David Dimantshtein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1825–1906</div><div class="mini-card-title">David<br>Dimantshtein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s grandfather</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:keila-tsirel"><img src="media/portrait-keila-tsirel.png" alt="Keila-Tsirel Dimantshtein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1830–c.1900s</div><div class="mini-card-title">Keila-Tsirel<br>Dimantshtein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s grandmother</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:getzel"><img src="media/portrait-getzel.png" alt="Getzel Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1857–c.1890</div><div class="mini-card-title">Getzel<br>Diamondstein</div><div class="mini-card-summary">Sam&#39;s father</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:deborah-tomshinsky"><img src="media/portrait-deborah-tomshinsky.png" alt="Deborah Tomshinsky" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">Deborah<br>Tomshinsky</div><div class="mini-card-summary">Possibly Getzel&#39;s wife</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:reuven"><img src="media/portrait-reuven.png" alt="Reuven Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1850–1934</div><div class="mini-card-title">Reuven<br>Diamondstein</div><div class="mini-card-summary">Dora&#39;s father</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:dora-s-mother-hinde-41248e"><img src="media/portrait-hinde.png" alt="Hinde Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">Hinde<br>Diamondstein</div><div class="mini-card-summary">Dora&#39;s mother</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:yehuda-leib"><img src="media/portrait-yehuda-leib.png" alt="Yehuda-Leib Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">d. 1929</div><div class="mini-card-title">Yehuda-Leib<br>Diamondstein</div><div class="mini-card-summary">Dora&#39;s brother</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:sonia"><img src="media/portrait-sonia.png" alt="Sonia Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1893–1986</div><div class="mini-card-title">Sonia<br>Diamondstein</div><div class="mini-card-summary">Sam&#39;s sister</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:auntie-sarah-c4173d"><img src="media/portrait-sarah-nygate.png" alt="Sarah Nygate" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1896–1968</div><div class="mini-card-title">Sarah<br>Nygate</div><div class="mini-card-summary">Dora&#39;s sister</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:alice-522b27"><img src="media/portrait-cousin-alice.png" alt="Alice" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">Alice</div><div class="mini-card-summary">A cousin, named often in the letters</div></div></button>
-<button class="mini-card person-card" type="button" data-person="person:john-felkov"><img src="media/portrait-john-felkov.png" alt="John Felkov" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">John<br>Felkov</div><div class="mini-card-summary">Alice&#39;s husband</div></div></button>
+          <button class="mini-card person-card" type="button" data-person="person:dad-sam-104f4d"><img src="media/portrait-sam-real.jpg" alt="Sam Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1880–1978</div><div class="mini-card-title">Sam<br>Diamondstein</div><div class="mini-card-summary">Husband, letter-writer</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:dear-dora-3e5ca1"><img src="media/portrait-dora-real.jpg" alt="Dora Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">1889–1984</div><div class="mini-card-title">Dora<br>Diamondstein</div><div class="mini-card-summary">Wife, recipient</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:gladys"><img src="media/portrait-gladys-real.jpg" alt="Gladys Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1912–1951</div><div class="mini-card-title">Gladys<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:beatrice"><img src="media/portrait-beatrice-real.jpg" alt="Beatrice Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">b. c.1915</div><div class="mini-card-title">Beatrice<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:cynthia"><img src="media/portrait-cynthia-real.jpg" alt="Cynthia Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">b. c.1920</div><div class="mini-card-title">Cynthia<br>Diamondstein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s daughter</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:david-dimantshtein"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono">c.1825–1906</div><div class="mini-card-title">David<br>Dimantshtein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s grandfather</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:keila-tsirel"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono">c.1830–c.1900s</div><div class="mini-card-title">Keila-Tsirel<br>Dimantshtein</div><div class="mini-card-summary">Sam &amp; Dora&#39;s grandmother</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:getzel"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono">c.1857–c.1890</div><div class="mini-card-title">Getzel<br>Diamondstein</div><div class="mini-card-summary">Sam&#39;s father</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:deborah-tomshinsky"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">Deborah<br>Tomshinsky</div><div class="mini-card-summary">Possibly Getzel&#39;s wife</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:reuven"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono">c.1850–1934</div><div class="mini-card-title">Reuven<br>Diamondstein</div><div class="mini-card-summary">Dora&#39;s father</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:dora-s-mother-hinde-41248e"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">Hinde<br>Diamondstein</div><div class="mini-card-summary">Dora&#39;s mother</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:yehuda-leib"><img src="media/portrait-yehuda-leib-real.jpeg" alt="Yehuda-Leib Diamondstein" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">d. 1929</div><div class="mini-card-title">Yehuda-Leib<br>Diamondstein</div><div class="mini-card-summary">Dora&#39;s brother</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:sonia"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono">c.1893–1986</div><div class="mini-card-title">Sonia<br>Diamondstein</div><div class="mini-card-summary">Sam&#39;s sister</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:auntie-sarah-c4173d"><img src="media/portrait-sarah-nygate-real.jpg" alt="Sarah Nygate" loading="lazy"><div class="mini-card-body"><div class="mini-card-date mono">c.1896–1968</div><div class="mini-card-title">Sarah<br>Nygate</div><div class="mini-card-summary">Dora&#39;s sister</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:alice-522b27"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">Alice</div><div class="mini-card-summary">A cousin, named often in the letters</div></div></button>
+<button class="mini-card person-card" type="button" data-person="person:john-felkov"><div class="mini-card-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg></div><div class="mini-card-body"><div class="mini-card-date mono"></div><div class="mini-card-title">John<br>Felkov</div><div class="mini-card-summary">Alice&#39;s husband</div></div></button>
           <a class="mini-card-more" href="family.html">See all<br>16 people &rarr;</a>
         </div>
         <button class="scroll-arrow-btn right" type="button" aria-label="Scroll right">&rarr;</button>
@@ -332,31 +337,31 @@
       <div class="door-content">
         <div class="door-eyebrow">Recommended next</div>
         <div class="door-title">Read the Story</div>
-        <div class="door-body">The same events, three ways &mdash; pick the pace and format that suits you. The narrative is woven from the real letters; illustrated scenes are AI-generated to evoke them, not literal photos &mdash; see <a href="how-made.html" class="inline-link">How This Was Made</a>.</div>
+        <div class="door-body">The same events, three ways &mdash; pick the pace and format that suits you. All three are woven from the real letters, with real photographs throughout &mdash; see <a href="how-made.html" class="inline-link">How This Was Made</a>.</div>
       </div>
       <div class="story-row">
         <a class="story-tile" href="long-read.html">
-          <img src="media/scene-crossing-in-the-mail.png" alt="Illustration: letters crossing in the mail">
+          <img src="media/hist-l31-zeppelin-1915.jpg" alt="A German naval Zeppelin airborne, 1915">
           <div class="story-tile-body">
             <div class="story-tile-eyebrow">~30 min</div>
             <div class="story-tile-title">Read the Story: Complete Version</div>
-            <div class="story-tile-summary">The whole arc, every detail &mdash; six chapters, book-style with a cover and back page, letters linked inline.</div>
+            <div class="story-tile-summary">The whole arc, every detail &mdash; six chapters, book-style with a cover and back page, real photos and letters linked inline.</div>
           </div>
         </a>
         <a class="story-tile" href="story-excerpt.html">
-          <img src="media/scene-atlantic-crossing.png" alt="Illustration: Sam's Atlantic crossing">
+          <img src="media/hist-atlantic-steerage.jpg" alt="Steerage passengers on an Atlantic emigrant ship, c.1907-1914">
           <div class="story-tile-body">
             <div class="story-tile-eyebrow">Shorter version &middot; ~10 min</div>
             <div class="story-tile-title">Read the Story: Condensed Version</div>
-            <div class="story-tile-summary">The same story, condensed &mdash; five chapters, with the maps, portraits, and illustrations woven in exactly where they belong.</div>
+            <div class="story-tile-summary">The same story, condensed &mdash; five chapters, with real photos and portraits woven in exactly where they belong.</div>
           </div>
         </a>
         <a class="story-tile" href="pictures.html">
-          <img src="media/scene-austrian-christian.png" alt="Illustration: Sam passing as an Austrian Christian">
+          <img src="media/family-sam-and-dora-1950s.png" alt="Sam and Dora Diamondstein, photographed together in the 1950s">
           <div class="story-tile-body">
             <div class="story-tile-eyebrow">Browse</div>
             <div class="story-tile-title">The Story in Pictures</div>
-            <div class="story-tile-summary">23 illustrated scenes, if you'd rather see it than read it.</div>
+            <div class="story-tile-summary">25 real photographs, if you'd rather see it than read it.</div>
           </div>
         </a>
       </div>
@@ -402,6 +407,7 @@
     <button class="close-btn" id="person-modal-close">&times;</button>
     <div class="pm-top">
       <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div class="pm-photo-placeholder" id="pm-photo-placeholder" style="display:none"></div>
       <div>
         <div class="pm-name" id="pm-name"></div>
         <div class="pm-dates mono" id="pm-dates"></div>
@@ -774,7 +780,7 @@
   window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
   window.MODAL_PEOPLE = { 
   "person:dad-sam-104f4d": {
-    "img": "media/portrait-sam-diamondstein-young.png",
+    "img": "media/portrait-sam-real.jpg",
     "dates": "c.1880–1978",
     "role": "Husband, letter-writer",
     "bio": "Born c.1880 in Korsovka (some sources say 1882), son of Getzel. Left for Montreal in 1901, settled in London by 1908, and built S. Diamondstein &amp; Co., a fur trading business. Retired early for his health; died in London in 1978, in his nineties.",
@@ -788,10 +794,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 47,
-    "letters_page": "letters/by-person/dad-sam-104f4d.html"
+    "letters_page": "letters/by-person/dad-sam-104f4d.html",
+    "silhouette": null
   },
   "person:dear-dora-3e5ca1": {
-    "img": "media/portrait-dora-diamondstein-young.png",
+    "img": "media/portrait-dora-real.jpg",
     "dates": "1889–1984",
     "role": "Wife, recipient",
     "bio": "Born 1889; emigrated from Korsovka to England around 1903-04, aged about 14. Married Sam around February 1911. Almost none of her own letters survive. Died in 1984, in her nineties.",
@@ -805,10 +812,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 78,
-    "letters_page": "letters/by-person/dear-dora-3e5ca1.html"
+    "letters_page": "letters/by-person/dear-dora-3e5ca1.html",
+    "silhouette": null
   },
   "person:gladys": {
-    "img": "media/portrait-gladys.png",
+    "img": "media/portrait-gladys-real.jpg",
     "dates": "c.1912–1951",
     "role": "Sam &amp; Dora&#x27;s daughter",
     "bio": "Passed a piano exam at 12, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 38 (1951).",
@@ -822,10 +830,11 @@
       "It Took My Breath Away"
     ],
     "letters_total": 14,
-    "letters_page": "letters/by-person/gladys.html"
+    "letters_page": "letters/by-person/gladys.html",
+    "silhouette": null
   },
   "person:beatrice": {
-    "img": "media/portrait-beatrice.png",
+    "img": "media/portrait-beatrice-real.jpg",
     "dates": "b. c.1915",
     "role": "Sam &amp; Dora&#x27;s daughter",
     "bio": "Sam &amp; Dora&#x27;s second daughter; born around 1915-1916 (estimate only -- no document gives an exact year). Her own daughter Hilary later became a source of family testimony for this project.",
@@ -839,10 +848,11 @@
       "Grand Hotel Du Pavillon Paris Letter (Aug 1922)"
     ],
     "letters_total": 10,
-    "letters_page": "letters/by-person/beatrice.html"
+    "letters_page": "letters/by-person/beatrice.html",
+    "silhouette": null
   },
   "person:cynthia": {
-    "img": "media/portrait-cynthia.png",
+    "img": "media/portrait-cynthia-real.jpg",
     "dates": "b. c.1920",
     "role": "Sam &amp; Dora&#x27;s daughter",
     "bio": "Sam &amp; Dora&#x27;s third daughter; born around 1920-1923 (estimate only -- no document gives an exact year). Named alongside her sisters in Sam&#x27;s letters home from his fur-buying trips.",
@@ -853,10 +863,11 @@
       "How Is Cynthia?"
     ],
     "letters_total": 2,
-    "letters_page": "letters/by-person/cynthia.html"
+    "letters_page": "letters/by-person/cynthia.html",
+    "silhouette": null
   },
   "person:david-dimantshtein": {
-    "img": "media/portrait-david-dimantshtein.png",
+    "img": "",
     "dates": "c.1825–1906",
     "role": "Sam &amp; Dora&#x27;s grandfather",
     "bio": "Born around 1825 in Dvinsk; died in London in 1906. Father of ten children — including Getzel (Sam&#x27;s father) and Reuven (Dora&#x27;s father), who were brothers, which is why Sam and Dora were cousins. His children scattered out of the Pale to Montreal, London, South Africa, and Palestine.",
@@ -864,10 +875,11 @@
     "canonical": "David Dimantshtein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/david-dimantshtein.html"
+    "letters_page": "letters/by-person/david-dimantshtein.html",
+    "silhouette": "male"
   },
   "person:keila-tsirel": {
-    "img": "media/portrait-keila-tsirel.png",
+    "img": "",
     "dates": "c.1830–c.1900s",
     "role": "Sam &amp; Dora&#x27;s grandmother",
     "bio": "Born around 1830; died in London some time in the 1900s (exact year unrecorded). Wife of David Dimantshtein and grandmother to both Sam and Dora. The family record gives her the nickname &quot;Cynthia.&quot;",
@@ -875,10 +887,11 @@
     "canonical": "Keila-Tsirel Dimantshtein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/keila-tsirel.html"
+    "letters_page": "letters/by-person/keila-tsirel.html",
+    "silhouette": "female"
   },
   "person:getzel": {
-    "img": "media/portrait-getzel.png",
+    "img": "",
     "dates": "c.1857–c.1890",
     "role": "Sam&#x27;s father",
     "bio": "Died in Korsovka around 1890, when Sam was a boy of eight to ten.",
@@ -886,10 +899,11 @@
     "canonical": "Getzel Diamondstein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/getzel.html"
+    "letters_page": "letters/by-person/getzel.html",
+    "silhouette": "male"
   },
   "person:deborah-tomshinsky": {
-    "img": "media/portrait-deborah-tomshinsky.png",
+    "img": "",
     "dates": "",
     "role": "Possibly Getzel&#x27;s wife",
     "bio": "Named as Getzel&#x27;s possible wife based on physical adjacency in the family tree chart (detailed-tree.jpeg), not an explicitly labeled marriage link. If accurate, she would be Sam&#x27;s mother. Not confirmed by any other source.",
@@ -899,10 +913,11 @@
       "If I Were Rich"
     ],
     "letters_total": 1,
-    "letters_page": "letters/by-person/deborah-tomshinsky.html"
+    "letters_page": "letters/by-person/deborah-tomshinsky.html",
+    "silhouette": "female"
   },
   "person:reuven": {
-    "img": "media/portrait-reuven.png",
+    "img": "",
     "dates": "c.1850–1934",
     "role": "Dora&#x27;s father",
     "bio": "Simultaneously Sam&#x27;s own paternal uncle — making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam&#x27;s marriage.",
@@ -913,10 +928,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 2,
-    "letters_page": "letters/by-person/reuven.html"
+    "letters_page": "letters/by-person/reuven.html",
+    "silhouette": "male"
   },
   "person:dora-s-mother-hinde-41248e": {
-    "img": "media/portrait-hinde.png",
+    "img": "",
     "dates": "",
     "role": "Dora&#x27;s mother",
     "bio": "Married to Reuven. No further biographical detail survives in this project&#x27;s sources.",
@@ -928,10 +944,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 3,
-    "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html"
+    "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html",
+    "silhouette": "female"
   },
   "person:yehuda-leib": {
-    "img": "media/portrait-yehuda-leib.png",
+    "img": "media/portrait-yehuda-leib-real.jpeg",
     "dates": "d. 1929",
     "role": "Dora&#x27;s brother",
     "bio": "Dora&#x27;s brother. Emigrated to Jerusalem. Died during the 1929 Palestine Riots — severely wounded in the Arab attack on the Diskin Orphanage, Givat Shaul, and died four days later. His son Avraham later adopted the surname “Yahalomi” — Hebrew for “diamond.” Not known from any letter — from the family&#x27;s own biographical account of him.",
@@ -939,10 +956,11 @@
     "canonical": "Yehuda-Leib Diamondstein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/yehuda-leib.html"
+    "letters_page": "letters/by-person/yehuda-leib.html",
+    "silhouette": null
   },
   "person:sonia": {
-    "img": "media/portrait-sonia.png",
+    "img": "",
     "dates": "c.1893–1986",
     "role": "Sam&#x27;s sister",
     "bio": "Hospitalized for an operation in Leipzig/Berlin, January 1923, while Sam was there on a fur-buying trip.",
@@ -953,10 +971,11 @@
       "1923 · Yiddish Letter Fragment B"
     ],
     "letters_total": 2,
-    "letters_page": "letters/by-person/sonia.html"
+    "letters_page": "letters/by-person/sonia.html",
+    "silhouette": "female"
   },
   "person:auntie-sarah-c4173d": {
-    "img": "media/portrait-sarah-nygate.png",
+    "img": "media/portrait-sarah-nygate-real.jpg",
     "dates": "c.1896–1968",
     "role": "Dora&#x27;s sister",
     "bio": "A trusted go-between for news of the girls — “Auntie Sarah” in several letters.",
@@ -970,10 +989,11 @@
       "Letter from S Diamondstein and Co to Dora Kiddie"
     ],
     "letters_total": 8,
-    "letters_page": "letters/by-person/auntie-sarah-c4173d.html"
+    "letters_page": "letters/by-person/auntie-sarah-c4173d.html",
+    "silhouette": null
   },
   "person:alice-522b27": {
-    "img": "media/portrait-cousin-alice.png",
+    "img": "",
     "dates": "",
     "role": "A cousin, named often in the letters",
     "bio": "",
@@ -987,10 +1007,11 @@
       "Three Pounds Enclosed"
     ],
     "letters_total": 7,
-    "letters_page": "letters/by-person/alice-522b27.html"
+    "letters_page": "letters/by-person/alice-522b27.html",
+    "silhouette": "female"
   },
   "person:john-felkov": {
-    "img": "media/portrait-john-felkov.png",
+    "img": "",
     "dates": "",
     "role": "Alice&#x27;s husband",
     "bio": "Sam&#x27;s close companion in the 1916 letters — watched the Cuffley Zeppelin fall together.",
@@ -1000,7 +1021,8 @@
       "The Zeppelin, Again"
     ],
     "letters_total": 1,
-    "letters_page": "letters/by-person/john-felkov.html"
+    "letters_page": "letters/by-person/john-felkov.html",
+    "silhouette": "male"
   }
  };
 </script>

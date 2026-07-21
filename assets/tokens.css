@@ -15,6 +15,7 @@
   --surface-dark:#131110; --surface-darker:#0a0908;
   --ink-on-dark:rgba(255,255,255,0.90); --ink-on-dark-soft:rgba(255,255,255,0.55);
   --navy-on-dark:#6a9acc;
+  --fill-sunken-on-dark:rgba(255,255,255,0.04); --line-on-dark:rgba(255,255,255,0.08);
 
   /* Color — lines, fills, scrims */
   --surface:#ffffff; --line:rgba(0,0,0,0.08); --line-strong:rgba(0,0,0,0.15);

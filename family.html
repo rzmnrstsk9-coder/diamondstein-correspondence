@@ -23,6 +23,9 @@
   .person-modal { background: #fff; border-radius: 16px; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
   .pm-top { display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; }
   .pm-photo { width: 128px; height: 128px; border-radius: 12px; object-fit: cover; flex-shrink: 0; }
+  .pm-photo-placeholder { width: 128px; height: 128px; border-radius: 12px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.4rem; background-image: repeating-linear-gradient(135deg, var(--fill-sunken) 0 10px, transparent 10px 20px); }
+  .pm-silhouette { opacity: 0.32; width: 44%; height: auto; }
+  .pm-photo-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; color: var(--ink-faint); text-align: center; line-height: 1.3; padding: 0 0.4rem; }
   .pm-name { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.25rem; }
   .pm-dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; color: rgba(26,26,26,0.5); margin-top: 0.2rem; }
   .pm-role { font-size: 0.84rem; color: var(--rust); font-weight: 600; margin-top: 0.25rem; }
@@ -50,9 +53,9 @@
 </div>
 
 <div class="family-sections">
-<section class="family-section" data-section="featured"><div class="cast-grid"><button class="cast-card featured" data-person="person:dad-sam-104f4d" data-item="person:dad-sam-104f4d"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-sam-diamondstein-young.png" alt="Sam Diamondstein" loading="lazy"></div><div class="pc-name display">Sam Diamondstein</div><div class="pc-dates mono">c.1880–1978</div><div class="pc-role">Husband, letter-writer</div></button><button class="cast-card featured" data-person="person:dear-dora-3e5ca1" data-item="person:dear-dora-3e5ca1"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-dora-diamondstein-young.png" alt="Dora Diamondstein" loading="lazy"></div><div class="pc-name display">Dora Diamondstein</div><div class="pc-dates mono">1889–1984</div><div class="pc-role">Wife, recipient</div></button></div></section>
-<section class="family-section" data-section="daughters"><h2 class="family-section-heading display">Daughters</h2><div class="cast-grid"><button class="cast-card" data-person="person:beatrice" data-item="person:beatrice"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-beatrice.png" alt="Beatrice Diamondstein" loading="lazy"></div><div class="pc-name display">Beatrice Diamondstein</div><div class="pc-dates mono">b. c.1915</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button><button class="cast-card" data-person="person:cynthia" data-item="person:cynthia"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-cynthia.png" alt="Cynthia Diamondstein" loading="lazy"></div><div class="pc-name display">Cynthia Diamondstein</div><div class="pc-dates mono">b. c.1920</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button><button class="cast-card" data-person="person:gladys" data-item="person:gladys"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-gladys.png" alt="Gladys Diamondstein" loading="lazy"></div><div class="pc-name display">Gladys Diamondstein</div><div class="pc-dates mono">c.1912–1951</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button></div></section>
-<section class="family-section" data-section="cast"><h2 class="family-section-heading display">The Wider Cast</h2><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Sam's Family</h3><div class="cast-grid"><button class="cast-card" data-person="person:deborah-tomshinsky" data-item="person:deborah-tomshinsky"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-deborah-tomshinsky.png" alt="Deborah Tomshinsky" loading="lazy"></div><div class="pc-name display">Deborah Tomshinsky</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Possibly Getzel&#x27;s wife</div></button><button class="cast-card" data-person="person:getzel" data-item="person:getzel"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-getzel.png" alt="Getzel Diamondstein" loading="lazy"></div><div class="pc-name display">Getzel Diamondstein</div><div class="pc-dates mono">c.1857–c.1890</div><div class="pc-role">Sam&#x27;s father</div></button><button class="cast-card" data-person="person:sonia" data-item="person:sonia"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-sonia.png" alt="Sonia Diamondstein" loading="lazy"></div><div class="pc-name display">Sonia Diamondstein</div><div class="pc-dates mono">c.1893–1986</div><div class="pc-role">Sam&#x27;s sister</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Dora's Family</h3><div class="cast-grid"><button class="cast-card" data-person="person:auntie-sarah-c4173d" data-item="person:auntie-sarah-c4173d"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-sarah-nygate.png" alt="Sarah Nygate" loading="lazy"></div><div class="pc-name display">Sarah Nygate</div><div class="pc-dates mono">c.1896–1968</div><div class="pc-role">Dora&#x27;s sister</div></button><button class="cast-card" data-person="person:dora-s-mother-hinde-41248e" data-item="person:dora-s-mother-hinde-41248e"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-hinde.png" alt="Hinde Diamondstein" loading="lazy"></div><div class="pc-name display">Hinde Diamondstein</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Dora&#x27;s mother</div></button><button class="cast-card" data-person="person:reuven" data-item="person:reuven"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-reuven.png" alt="Reuven Diamondstein" loading="lazy"></div><div class="pc-name display">Reuven Diamondstein</div><div class="pc-dates mono">c.1850–1934</div><div class="pc-role">Dora&#x27;s father</div></button><button class="cast-card" data-person="person:yehuda-leib" data-item="person:yehuda-leib"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-yehuda-leib.png" alt="Yehuda-Leib Diamondstein" loading="lazy"></div><div class="pc-name display">Yehuda-Leib Diamondstein</div><div class="pc-dates mono">d. 1929</div><div class="pc-role">Dora&#x27;s brother</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Grandparents</h3><div class="cast-grid"><button class="cast-card" data-person="person:david-dimantshtein" data-item="person:david-dimantshtein"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-david-dimantshtein.png" alt="David Dimantshtein" loading="lazy"></div><div class="pc-name display">David Dimantshtein</div><div class="pc-dates mono">c.1825–1906</div><div class="pc-role">Sam &amp; Dora&#x27;s grandfather</div></button><button class="cast-card" data-person="person:keila-tsirel" data-item="person:keila-tsirel"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-keila-tsirel.png" alt="Keila-Tsirel Dimantshtein" loading="lazy"></div><div class="pc-name display">Keila-Tsirel Dimantshtein</div><div class="pc-dates mono">c.1830–c.1900s</div><div class="pc-role">Sam &amp; Dora&#x27;s grandmother</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Extended & Friends</h3><div class="cast-grid"><button class="cast-card" data-person="person:alice-522b27" data-item="person:alice-522b27"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-cousin-alice.png" alt="Alice" loading="lazy"></div><div class="pc-name display">Alice</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">A cousin, named often in the letters</div></button><button class="cast-card" data-person="person:john-felkov" data-item="person:john-felkov"><div class="pc-photo"><img data-field="photo" data-provenance="ai-generated" src="media/portrait-john-felkov.png" alt="John Felkov" loading="lazy"></div><div class="pc-name display">John Felkov</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Alice&#x27;s husband</div></button></div></div></section>
+<section class="family-section" data-section="featured"><div class="cast-grid"><button class="cast-card featured" data-person="person:dad-sam-104f4d" data-item="person:dad-sam-104f4d"><div class="pc-photo"><img data-field="photo" data-provenance="archival-photo" src="media/portrait-sam-real.jpg" alt="Sam Diamondstein" loading="lazy"></div><div class="pc-name display">Sam Diamondstein</div><div class="pc-dates mono">c.1880–1978</div><div class="pc-role">Husband, letter-writer</div></button><button class="cast-card featured" data-person="person:dear-dora-3e5ca1" data-item="person:dear-dora-3e5ca1"><div class="pc-photo"><img data-field="photo" data-provenance="archival-photo" src="media/portrait-dora-real.jpg" alt="Dora Diamondstein" loading="lazy"></div><div class="pc-name display">Dora Diamondstein</div><div class="pc-dates mono">1889–1984</div><div class="pc-role">Wife, recipient</div></button></div></section>
+<section class="family-section" data-section="daughters"><h2 class="family-section-heading display">Daughters</h2><div class="cast-grid"><button class="cast-card" data-person="person:beatrice" data-item="person:beatrice"><div class="pc-photo"><img data-field="photo" data-provenance="archival-photo" src="media/portrait-beatrice-real.jpg" alt="Beatrice Diamondstein" loading="lazy"></div><div class="pc-name display">Beatrice Diamondstein</div><div class="pc-dates mono">b. c.1915</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button><button class="cast-card" data-person="person:cynthia" data-item="person:cynthia"><div class="pc-photo"><img data-field="photo" data-provenance="archival-photo" src="media/portrait-cynthia-real.jpg" alt="Cynthia Diamondstein" loading="lazy"></div><div class="pc-name display">Cynthia Diamondstein</div><div class="pc-dates mono">b. c.1920</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button><button class="cast-card" data-person="person:gladys" data-item="person:gladys"><div class="pc-photo"><img data-field="photo" data-provenance="archival-photo" src="media/portrait-gladys-real.jpg" alt="Gladys Diamondstein" loading="lazy"></div><div class="pc-name display">Gladys Diamondstein</div><div class="pc-dates mono">c.1912–1951</div><div class="pc-role">Sam &amp; Dora&#x27;s daughter</div></button></div></section>
+<section class="family-section" data-section="cast"><h2 class="family-section-heading display">The Wider Cast</h2><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Sam's Family</h3><div class="cast-grid"><button class="cast-card" data-person="person:deborah-tomshinsky" data-item="person:deborah-tomshinsky"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">Deborah Tomshinsky</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Possibly Getzel&#x27;s wife</div></button><button class="cast-card" data-person="person:getzel" data-item="person:getzel"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">Getzel Diamondstein</div><div class="pc-dates mono">c.1857–c.1890</div><div class="pc-role">Sam&#x27;s father</div></button><button class="cast-card" data-person="person:sonia" data-item="person:sonia"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">Sonia Diamondstein</div><div class="pc-dates mono">c.1893–1986</div><div class="pc-role">Sam&#x27;s sister</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Dora's Family</h3><div class="cast-grid"><button class="cast-card" data-person="person:auntie-sarah-c4173d" data-item="person:auntie-sarah-c4173d"><div class="pc-photo"><img data-field="photo" data-provenance="archival-photo" src="media/portrait-sarah-nygate-real.jpg" alt="Sarah Nygate" loading="lazy"></div><div class="pc-name display">Sarah Nygate</div><div class="pc-dates mono">c.1896–1968</div><div class="pc-role">Dora&#x27;s sister</div></button><button class="cast-card" data-person="person:dora-s-mother-hinde-41248e" data-item="person:dora-s-mother-hinde-41248e"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">Hinde Diamondstein</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Dora&#x27;s mother</div></button><button class="cast-card" data-person="person:reuven" data-item="person:reuven"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">Reuven Diamondstein</div><div class="pc-dates mono">c.1850–1934</div><div class="pc-role">Dora&#x27;s father</div></button><button class="cast-card" data-person="person:yehuda-leib" data-item="person:yehuda-leib"><div class="pc-photo"><img data-field="photo" data-provenance="archival-photo" src="media/portrait-yehuda-leib-real.jpeg" alt="Yehuda-Leib Diamondstein" loading="lazy"></div><div class="pc-name display">Yehuda-Leib Diamondstein</div><div class="pc-dates mono">d. 1929</div><div class="pc-role">Dora&#x27;s brother</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Grandparents</h3><div class="cast-grid"><button class="cast-card" data-person="person:david-dimantshtein" data-item="person:david-dimantshtein"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">David Dimantshtein</div><div class="pc-dates mono">c.1825–1906</div><div class="pc-role">Sam &amp; Dora&#x27;s grandfather</div></button><button class="cast-card" data-person="person:keila-tsirel" data-item="person:keila-tsirel"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">Keila-Tsirel Dimantshtein</div><div class="pc-dates mono">c.1830–c.1900s</div><div class="pc-role">Sam &amp; Dora&#x27;s grandmother</div></button></div></div><div class="cast-subgroup"><h3 class="cast-subgroup-heading mono">Extended & Friends</h3><div class="cast-grid"><button class="cast-card" data-person="person:alice-522b27" data-item="person:alice-522b27"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">Alice</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">A cousin, named often in the letters</div></button><button class="cast-card" data-person="person:john-felkov" data-item="person:john-felkov"><div class="pc-photo placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg><div class="pc-photo-label">No photograph survives</div></div><div class="pc-name display">John Felkov</div><div class="pc-dates mono unknown">Dates unknown</div><div class="pc-role">Alice&#x27;s husband</div></button></div></div></section>
 </div>
 
 <!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
@@ -67,6 +70,7 @@
     <button class="close-btn" id="person-modal-close">&times;</button>
     <div class="pm-top">
       <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div class="pm-photo-placeholder" id="pm-photo-placeholder" style="display:none"></div>
       <div>
         <div class="pm-name" id="pm-name"></div>
         <div class="pm-dates mono" id="pm-dates"></div>
@@ -379,7 +383,7 @@
   window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
   window.MODAL_PEOPLE = { 
   "person:alice-522b27": {
-    "img": "media/portrait-cousin-alice.png",
+    "img": "",
     "dates": "",
     "role": "A cousin, named often in the letters",
     "bio": "",
@@ -393,10 +397,11 @@
       "Three Pounds Enclosed"
     ],
     "letters_total": 7,
-    "letters_page": "letters/by-person/alice-522b27.html"
+    "letters_page": "letters/by-person/alice-522b27.html",
+    "silhouette": "female"
   },
   "person:auntie-sarah-c4173d": {
-    "img": "media/portrait-sarah-nygate.png",
+    "img": "media/portrait-sarah-nygate-real.jpg",
     "dates": "c.1896–1968",
     "role": "Dora&#x27;s sister",
     "bio": "A trusted go-between for news of the girls — “Auntie Sarah” in several letters.",
@@ -410,10 +415,11 @@
       "Letter from S Diamondstein and Co to Dora Kiddie"
     ],
     "letters_total": 8,
-    "letters_page": "letters/by-person/auntie-sarah-c4173d.html"
+    "letters_page": "letters/by-person/auntie-sarah-c4173d.html",
+    "silhouette": null
   },
   "person:beatrice": {
-    "img": "media/portrait-beatrice.png",
+    "img": "media/portrait-beatrice-real.jpg",
     "dates": "b. c.1915",
     "role": "Sam &amp; Dora&#x27;s daughter",
     "bio": "Sam &amp; Dora&#x27;s second daughter; born around 1915-1916 (estimate only -- no document gives an exact year). Her own daughter Hilary later became a source of family testimony for this project.",
@@ -427,10 +433,11 @@
       "Grand Hotel Du Pavillon Paris Letter (Aug 1922)"
     ],
     "letters_total": 10,
-    "letters_page": "letters/by-person/beatrice.html"
+    "letters_page": "letters/by-person/beatrice.html",
+    "silhouette": null
   },
   "person:cynthia": {
-    "img": "media/portrait-cynthia.png",
+    "img": "media/portrait-cynthia-real.jpg",
     "dates": "b. c.1920",
     "role": "Sam &amp; Dora&#x27;s daughter",
     "bio": "Sam &amp; Dora&#x27;s third daughter; born around 1920-1923 (estimate only -- no document gives an exact year). Named alongside her sisters in Sam&#x27;s letters home from his fur-buying trips.",
@@ -441,10 +448,11 @@
       "How Is Cynthia?"
     ],
     "letters_total": 2,
-    "letters_page": "letters/by-person/cynthia.html"
+    "letters_page": "letters/by-person/cynthia.html",
+    "silhouette": null
   },
   "person:dad-sam-104f4d": {
-    "img": "media/portrait-sam-diamondstein-young.png",
+    "img": "media/portrait-sam-real.jpg",
     "dates": "c.1880–1978",
     "role": "Husband, letter-writer",
     "bio": "Born c.1880 in Korsovka (some sources say 1882), son of Getzel. Left for Montreal in 1901, settled in London by 1908, and built S. Diamondstein &amp; Co., a fur trading business. Retired early for his health; died in London in 1978, in his nineties.",
@@ -458,10 +466,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 47,
-    "letters_page": "letters/by-person/dad-sam-104f4d.html"
+    "letters_page": "letters/by-person/dad-sam-104f4d.html",
+    "silhouette": null
   },
   "person:david-dimantshtein": {
-    "img": "media/portrait-david-dimantshtein.png",
+    "img": "",
     "dates": "c.1825–1906",
     "role": "Sam &amp; Dora&#x27;s grandfather",
     "bio": "Born around 1825 in Dvinsk; died in London in 1906. Father of ten children — including Getzel (Sam&#x27;s father) and Reuven (Dora&#x27;s father), who were brothers, which is why Sam and Dora were cousins. His children scattered out of the Pale to Montreal, London, South Africa, and Palestine.",
@@ -469,10 +478,11 @@
     "canonical": "David Dimantshtein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/david-dimantshtein.html"
+    "letters_page": "letters/by-person/david-dimantshtein.html",
+    "silhouette": "male"
   },
   "person:dear-dora-3e5ca1": {
-    "img": "media/portrait-dora-diamondstein-young.png",
+    "img": "media/portrait-dora-real.jpg",
     "dates": "1889–1984",
     "role": "Wife, recipient",
     "bio": "Born 1889; emigrated from Korsovka to England around 1903-04, aged about 14. Married Sam around February 1911. Almost none of her own letters survive. Died in 1984, in her nineties.",
@@ -486,10 +496,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 78,
-    "letters_page": "letters/by-person/dear-dora-3e5ca1.html"
+    "letters_page": "letters/by-person/dear-dora-3e5ca1.html",
+    "silhouette": null
   },
   "person:deborah-tomshinsky": {
-    "img": "media/portrait-deborah-tomshinsky.png",
+    "img": "",
     "dates": "",
     "role": "Possibly Getzel&#x27;s wife",
     "bio": "Named as Getzel&#x27;s possible wife based on physical adjacency in the family tree chart (detailed-tree.jpeg), not an explicitly labeled marriage link. If accurate, she would be Sam&#x27;s mother. Not confirmed by any other source.",
@@ -499,10 +510,11 @@
       "If I Were Rich"
     ],
     "letters_total": 1,
-    "letters_page": "letters/by-person/deborah-tomshinsky.html"
+    "letters_page": "letters/by-person/deborah-tomshinsky.html",
+    "silhouette": "female"
   },
   "person:dora-s-mother-hinde-41248e": {
-    "img": "media/portrait-hinde.png",
+    "img": "",
     "dates": "",
     "role": "Dora&#x27;s mother",
     "bio": "Married to Reuven. No further biographical detail survives in this project&#x27;s sources.",
@@ -514,10 +526,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 3,
-    "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html"
+    "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html",
+    "silhouette": "female"
   },
   "person:getzel": {
-    "img": "media/portrait-getzel.png",
+    "img": "",
     "dates": "c.1857–c.1890",
     "role": "Sam&#x27;s father",
     "bio": "Died in Korsovka around 1890, when Sam was a boy of eight to ten.",
@@ -525,10 +538,11 @@
     "canonical": "Getzel Diamondstein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/getzel.html"
+    "letters_page": "letters/by-person/getzel.html",
+    "silhouette": "male"
   },
   "person:gladys": {
-    "img": "media/portrait-gladys.png",
+    "img": "media/portrait-gladys-real.jpg",
     "dates": "c.1912–1951",
     "role": "Sam &amp; Dora&#x27;s daughter",
     "bio": "Passed a piano exam at 12, left school in 1925 with a glowing reference — “keen, intelligent, and well-behaved.” Married 1934; died at about 38 (1951).",
@@ -542,10 +556,11 @@
       "It Took My Breath Away"
     ],
     "letters_total": 14,
-    "letters_page": "letters/by-person/gladys.html"
+    "letters_page": "letters/by-person/gladys.html",
+    "silhouette": null
   },
   "person:john-felkov": {
-    "img": "media/portrait-john-felkov.png",
+    "img": "",
     "dates": "",
     "role": "Alice&#x27;s husband",
     "bio": "Sam&#x27;s close companion in the 1916 letters — watched the Cuffley Zeppelin fall together.",
@@ -555,10 +570,11 @@
       "The Zeppelin, Again"
     ],
     "letters_total": 1,
-    "letters_page": "letters/by-person/john-felkov.html"
+    "letters_page": "letters/by-person/john-felkov.html",
+    "silhouette": "male"
   },
   "person:keila-tsirel": {
-    "img": "media/portrait-keila-tsirel.png",
+    "img": "",
     "dates": "c.1830–c.1900s",
     "role": "Sam &amp; Dora&#x27;s grandmother",
     "bio": "Born around 1830; died in London some time in the 1900s (exact year unrecorded). Wife of David Dimantshtein and grandmother to both Sam and Dora. The family record gives her the nickname &quot;Cynthia.&quot;",
@@ -566,10 +582,11 @@
     "canonical": "Keila-Tsirel Dimantshtein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/keila-tsirel.html"
+    "letters_page": "letters/by-person/keila-tsirel.html",
+    "silhouette": "female"
   },
   "person:reuven": {
-    "img": "media/portrait-reuven.png",
+    "img": "",
     "dates": "c.1850–1934",
     "role": "Dora&#x27;s father",
     "bio": "Simultaneously Sam&#x27;s own paternal uncle — making Sam and Dora first cousins. His signed tenaim obligated him to a fifty-pound dowry for Dora and Sam&#x27;s marriage.",
@@ -580,10 +597,11 @@
       "Mixed Yiddish and English"
     ],
     "letters_total": 2,
-    "letters_page": "letters/by-person/reuven.html"
+    "letters_page": "letters/by-person/reuven.html",
+    "silhouette": "male"
   },
   "person:sonia": {
-    "img": "media/portrait-sonia.png",
+    "img": "",
     "dates": "c.1893–1986",
     "role": "Sam&#x27;s sister",
     "bio": "Hospitalized for an operation in Leipzig/Berlin, January 1923, while Sam was there on a fur-buying trip.",
@@ -594,10 +612,11 @@
       "1923 · Yiddish Letter Fragment B"
     ],
     "letters_total": 2,
-    "letters_page": "letters/by-person/sonia.html"
+    "letters_page": "letters/by-person/sonia.html",
+    "silhouette": "female"
   },
   "person:yehuda-leib": {
-    "img": "media/portrait-yehuda-leib.png",
+    "img": "media/portrait-yehuda-leib-real.jpeg",
     "dates": "d. 1929",
     "role": "Dora&#x27;s brother",
     "bio": "Dora&#x27;s brother. Emigrated to Jerusalem. Died during the 1929 Palestine Riots — severely wounded in the Arab attack on the Diskin Orphanage, Givat Shaul, and died four days later. His son Avraham later adopted the surname “Yahalomi” — Hebrew for “diamond.” Not known from any letter — from the family&#x27;s own biographical account of him.",
@@ -605,7 +624,8 @@
     "canonical": "Yehuda-Leib Diamondstein",
     "letters": [],
     "letters_total": 0,
-    "letters_page": "letters/by-person/yehuda-leib.html"
+    "letters_page": "letters/by-person/yehuda-leib.html",
+    "silhouette": null
   }
  };
 </script>

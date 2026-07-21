@@ -10,6 +10,13 @@
   const titleIndex = window.MODAL_TITLE_INDEX || {};
   const people = window.MODAL_PEOPLE || {};
 
+  // person-card's no-real-photo placeholder (2026-07-20), mirrored from element.py's
+  // _SILHOUETTE_SVGS -- the same two SVGs, picked by the person island's `silhouette` field.
+  const SILHOUETTES = {
+    male: '<svg class="pm-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg>',
+    female: '<svg class="pm-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg>',
+  };
+
   const zoomOverlay = document.getElementById('zoom-overlay');
   const zoomOverlayImg = document.getElementById('zoom-overlay-img');
   const zoomOverlayCap = document.getElementById('zoom-overlay-cap');
@@ -144,8 +151,21 @@
   function openPersonModal(nodeId) {
     const p = people[nodeId];
     if (!p) return;
-    document.getElementById('pm-photo').src = p.img;
-    document.getElementById('pm-photo').alt = p.canonical;
+    const photoEl = document.getElementById('pm-photo');
+    const placeholderEl = document.getElementById('pm-photo-placeholder');
+    if (p.img) {
+      photoEl.src = p.img;
+      photoEl.alt = p.canonical;
+      photoEl.style.display = '';
+      if (placeholderEl) { placeholderEl.style.display = 'none'; placeholderEl.innerHTML = ''; }
+    } else {
+      photoEl.style.display = 'none';
+      if (placeholderEl) {
+        placeholderEl.style.display = '';
+        placeholderEl.innerHTML = (SILHOUETTES[p.silhouette] || '')
+          + '<div class="pm-photo-label">No photograph survives</div>';
+      }
+    }
     document.getElementById('pm-name').textContent = p.canonical;
     document.getElementById('pm-dates').innerHTML = p.dates;
     document.getElementById('pm-role').innerHTML = p.role;
