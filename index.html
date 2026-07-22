@@ -11,6 +11,15 @@
   :root {
     --cream: #f0eee9; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a;
     --ink-soft: rgba(255,255,255,0.75); --ink-faint: rgba(255,255,255,0.5);
+    /* Motion — durations only (Paul's explicit dial: how fast things settle/fade, not scroll
+       thresholds or drift intensity, which stay fixed). Named here rather than promoted to the
+       shared tokens.css since this page doesn't link that stylesheet (its own self-contained
+       :root, same as --cream/--ink/etc. above) -- see docs/handoff/to-fernando-claude.md,
+       2026-07-21, for the fuller answer on where motion values should live site-wide. */
+    --motion-fade-slow: 1.8s;   /* the scroll-panel text fade-in (was 0.9s) */
+    --motion-fade-base: 1s;     /* hero kicker/title settle-in */
+    --motion-fade-quick: 0.8s;  /* scroll-cue fade-in */
+    --motion-drift-slow: 26s;   /* masthead Ken Burns cycle */
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -45,7 +54,7 @@
     background-image: url('assets/box-of-letters.jpeg'); background-size: cover; background-position: center 30%;
     filter: grayscale(90%) brightness(0.85); opacity: 0.92;
     transform-origin: 50% 36%;
-    animation: ken-burns 26s ease-in-out infinite alternate;
+    animation: ken-burns var(--motion-drift-slow) ease-in-out infinite alternate;
   }
   @keyframes ken-burns {
     from { transform: scale(1) translate(0, 0); }
@@ -64,7 +73,7 @@
   .scroll-cue {
     margin-top: 1rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--ink-faint);
     letter-spacing: 0.08em; text-transform: uppercase; opacity: 0;
-    animation: bob 2s ease-in-out infinite, cue-fade-in 0.8s ease-out 1.15s forwards;
+    animation: bob 2s ease-in-out infinite, cue-fade-in var(--motion-fade-quick) ease-out 1.15s forwards;
   }
   @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
   @keyframes cue-fade-in { to { opacity: 1; } }
@@ -74,7 +83,7 @@
      .scroll-cue gets its own fade-only entrance (below, near its existing rule) since it already
      owns `transform` for its perpetual bob -- a second transform-animation on the same element
      would fight that one instead of composing with it. */
-  .hero-kicker, .hero-title { opacity: 0; filter: blur(6px); transform: translateY(14px); animation: hero-settle 1s ease-out forwards; }
+  .hero-kicker, .hero-title { opacity: 0; filter: blur(6px); transform: translateY(14px); animation: hero-settle var(--motion-fade-base) ease-out forwards; }
   .hero-kicker { animation-delay: 0.25s; }
   .hero-title { animation-delay: 0.5s; }
   @keyframes hero-settle { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
@@ -86,20 +95,23 @@
     .scroll-cue { animation: none; opacity: 1; }
   }
 
-  /* ---- the reveal sequence: one idea per screen, no buttons, no numbers -- just scroll ---- */
-  .reveal { min-height: 78vh; display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
-  .reveal-inner {
+  /* ---- the scroll-panel sequence: one idea per screen, no buttons, no numbers -- just scroll.
+     Named "scroll-panel" (not "reveal") because the engine already registers an element called
+     `reveal` (how-made's <details> disclosure) -- same word, unrelated mechanism; renamed here
+     per Paul's call to avoid the collision (docs/handoff/to-fernando-claude.md, 2026-07-21). */
+  .scroll-panel { min-height: 78vh; display: flex; align-items: center; justify-content: center; padding: 3rem 1.5rem; }
+  .scroll-panel-inner {
     max-width: 680px; text-align: center; opacity: 0; transform: translateY(24px); filter: blur(6px);
-    transition: opacity 1.8s ease, transform 1.8s cubic-bezier(0.2,0.8,0.2,1), filter 1.8s ease;
+    transition: opacity var(--motion-fade-slow) ease, transform var(--motion-fade-slow) cubic-bezier(0.2,0.8,0.2,1), filter var(--motion-fade-slow) ease;
   }
-  .reveal.in .reveal-inner { opacity: 1; transform: translateY(0); filter: blur(0); }
+  .scroll-panel.in .scroll-panel-inner { opacity: 1; transform: translateY(0); filter: blur(0); }
   @media (prefers-reduced-motion: reduce) {
-    .reveal-inner { transition: opacity 0.4s ease; filter: none; transform: none; }
+    .scroll-panel-inner { transition: opacity 0.4s ease; filter: none; transform: none; }
   }
-  .reveal-text { font-size: clamp(1.6rem, 4vw, 2.15rem); line-height: 1.5; color: #fff; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; }
-  .reveal-text em { color: #e8c98a; font-style: normal; }
-  .reveal-arrow { display: inline-block; margin-top: 1.75rem; font-size: 1.6rem; color: #e8c98a; text-decoration: none; animation: bob 2s ease-in-out infinite; transition: opacity 0.2s ease; }
-  .reveal-arrow:hover { opacity: 0.7; }
+  .scroll-panel-text { font-size: clamp(1.6rem, 4vw, 2.15rem); line-height: 1.5; color: #fff; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500; }
+  .scroll-panel-text em { color: #e8c98a; font-style: normal; }
+  .scroll-panel-arrow { display: inline-block; margin-top: 1.75rem; font-size: 1.6rem; color: #e8c98a; text-decoration: none; animation: bob 2s ease-in-out infinite; transition: opacity 0.2s ease; }
+  .scroll-panel-arrow:hover { opacity: 0.7; }
 
   .closing { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 3rem 1.5rem 5rem; }
   .hero-experiment { font-size: 0.78rem; color: rgba(255,255,255,0.45); max-width: 42ch; line-height: 1.5; }
@@ -278,34 +290,34 @@
   <p class="scroll-cue">Scroll to begin &darr;</p>
 </div>
 
-<section class="reveal" data-step="1">
-  <div class="reveal-inner">
-    <p class="reveal-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p>
+<section class="scroll-panel" data-step="1">
+  <div class="scroll-panel-inner">
+    <p class="scroll-panel-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p>
   </div>
 </section>
 
-<section class="reveal" data-step="2">
-  <div class="reveal-inner">
-    <p class="reveal-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p>
+<section class="scroll-panel" data-step="2">
+  <div class="scroll-panel-inner">
+    <p class="scroll-panel-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p>
   </div>
 </section>
 
-<section class="reveal" data-step="3">
-  <div class="reveal-inner">
-    <p class="reveal-text">They turned out to be <em>Sam and Dora Diamondstein's</em> &mdash; great-grandparents of one of this site's creators, writing to each other in the early 1900s.</p>
+<section class="scroll-panel" data-step="3">
+  <div class="scroll-panel-inner">
+    <p class="scroll-panel-text">They turned out to be <em>Sam and Dora Diamondstein's</em> &mdash; great-grandparents of one of this site's creators, writing to each other in the early 1900s.</p>
   </div>
 </section>
 
-<section class="reveal" data-step="4">
-  <div class="reveal-inner">
-    <p class="reveal-text"><em>AI</em> translated and transcribed every one, then helped rebuild the story from family trees, research, and memory.</p>
+<section class="scroll-panel" data-step="4">
+  <div class="scroll-panel-inner">
+    <p class="scroll-panel-text"><em>AI</em> translated and transcribed every one, then helped rebuild the story from family trees, research, and memory.</p>
   </div>
 </section>
 
-<section class="reveal" data-step="5">
-  <div class="reveal-inner">
-    <p class="reveal-text">This web site is what resulted &mdash; a real experiment in using AI to do genealogical research honestly.</p>
-    <a href="#doors" class="reveal-arrow" aria-label="Scroll down to the site content">&darr;</a>
+<section class="scroll-panel" data-step="5">
+  <div class="scroll-panel-inner">
+    <p class="scroll-panel-text">This web site is what resulted &mdash; a real experiment in using AI to do genealogical research honestly.</p>
+    <a href="#doors" class="scroll-panel-arrow" aria-label="Scroll down to the site content">&darr;</a>
   </div>
 </section>
 
@@ -1110,13 +1122,13 @@
   // Scroll-reveal onboarding (Paul's ask, 2026-07-17): one idea per screen, fading in as it's
   // scrolled into view -- no buttons, no numbers. Prototyped at
   // docs/prototypes/paul/onboarding-scroll-reveal-2026-07-17/.
-  const reveals = document.querySelectorAll('.reveal');
-  const revealObserver = new IntersectionObserver((entries) => {
+  const scrollPanels = document.querySelectorAll('.scroll-panel');
+  const scrollPanelObserver = new IntersectionObserver((entries) => {
     // Toggle, don't just add: leaving the panel resets it so scrolling back in fades it in again,
     // rather than a one-time reveal that stays "in" forever once first seen.
     entries.forEach(e => e.target.classList.toggle('in', e.isIntersecting));
   }, { threshold: 0.45 });
-  reveals.forEach(r => revealObserver.observe(r));
+  scrollPanels.forEach(r => scrollPanelObserver.observe(r));
 
   // Scroll-progress rail: fills as the reader moves through the onboarding sequence
   // (masthead -> closing), fades out once the doors section (real site content) is reached.
