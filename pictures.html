@@ -29,6 +29,13 @@
   .slide { position: absolute; inset: 0; transition: transform 0.65s cubic-bezier(0.65, 0, 0.35, 1); will-change: transform; }
   .slide img { width: 100%; height: 100%; object-fit: contain; display: block; animation: kenburns 9s ease-out forwards; }
   @keyframes kenburns { from { transform: scale(1.0); } to { transform: scale(1.07); } }
+  /* Reduced motion: the 9s Ken Burns drift and the 0.65s slide are decorative -- the photograph is
+     the content, and it reads identically at rest. Kill both; the slide still CHANGES (instantly),
+     so navigation keeps working. Guarded by verify.sustained_motion_without_reduced_motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .slide { transition: none; }
+    .slide img { animation: none; transform: none; }
+  }
 
   .stage-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 52px; height: 52px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); background: rgba(10,9,8,0.55); backdrop-filter: blur(6px); color: #fff; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease, transform 0.15s ease; }
   .stage-nav-btn:hover { background: rgba(193,72,31,0.85); transform: translateY(-50%) scale(1.06); }
