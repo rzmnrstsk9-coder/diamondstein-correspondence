@@ -220,7 +220,12 @@
 
   function attachMapHandlers(map, el, spec) {
 
-    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+    // Zoom +/- buttons: London only (Paul's ask, 2026-07-21) -- the other maps are wide-area
+    // route/scatter overviews where zoom controls add UI without adding value; London is the one
+    // map a reader might actually want to zoom into (street-level addresses).
+    if (spec.map === 'map-london') {
+      map.addControl(new maplibregl.NavigationControl({ showCompass: false }), 'top-right');
+    }
     map.addControl(new maplibregl.AttributionControl({ customAttribution: attributionFor(spec) }));
     map.scrollZoom.disable();   // the map sits inside a scrolling page, not a dedicated viewer
 
