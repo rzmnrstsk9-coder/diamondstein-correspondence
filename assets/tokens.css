@@ -33,9 +33,10 @@
   --space-1:0.4rem; --space-2:0.6rem; --space-3:0.9rem; --space-4:1.2rem;
   --space-5:1.5rem; --space-6:2.2rem; --space-7:3.5rem;
 
-  /* Radius — ladder (scales with element size) */
-  --radius-chip:4px; --radius-img:8px; --radius-card:12px;
-  --radius-panel:16px; --radius-pill:999px; --radius-circle:50%;
+  /* Radius — ladder (scales with element size). Sharp corners site-wide (Paul, 2026-07-22) --
+     only --radius-circle stays non-zero, since a circular avatar/close-button isn't a "corner". */
+  --radius-chip:0; --radius-img:0; --radius-card:0;
+  --radius-panel:0; --radius-pill:0; --radius-circle:50%;
 
   /* Elevation — 3 shadows */
   --shadow-rest:0 4px 14px rgba(0,0,0,0.04); --shadow-hover:0 10px 24px rgba(0,0,0,0.09);
