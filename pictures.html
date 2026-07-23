@@ -267,7 +267,16 @@
     progressBar.style.width = `${((idx + 1) / panels.length) * 100}%`;
     filmstripNav.querySelectorAll('.fn-thumb').forEach((el, i) => el.classList.toggle('active', i === idx));
     const activeThumb = filmstripNav.querySelector('.fn-thumb.active');
-    if (activeThumb) activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    // Center the active thumb WITHIN the filmstrip's own horizontal scroll only -- scrollIntoView's
+    // `block: 'nearest'` is meant to leave vertical scroll alone, but if the filmstrip (bottom of a
+    // tall gallery card) isn't fully inside the viewport at load, the browser can still scroll the
+    // whole PAGE down to satisfy it: on entry, the topbar/header ended up scrolled out of view
+    // before the reader had done anything (Paul, 2026-07-23). scrollTo() on the filmstrip element
+    // itself can only ever move that element's own scroll position, never the page's.
+    if (activeThumb) {
+      const target = activeThumb.offsetLeft - (filmstripNav.clientWidth - activeThumb.offsetWidth) / 2;
+      filmstripNav.scrollTo({ left: target, behavior: 'smooth' });
+    }
   }
 
   function go(i) {
