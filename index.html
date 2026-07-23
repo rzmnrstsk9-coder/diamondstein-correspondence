@@ -19,10 +19,11 @@
     --motion-fade-slow: 1.8s;   /* the scroll-panel text fade-in (was 0.9s) */
     --motion-fade-base: 1s;     /* hero kicker/title settle-in */
     --motion-fade-quick: 0.8s;  /* scroll-cue fade-in */
-    /* --motion-drift-slow (the 26s Ken Burns cycle) was retired 2026-07-22: the masthead zoom is
-       now scroll-driven, so there is no autoplay cycle left to time. Removed rather than left
-       defined-but-unused -- a dial that turns nothing is worse than no dial. The three fade dials
-       above are still live. */
+    /* --motion-drift-slow REINSTATED (Paul, 2026-07-23): the masthead zoom is no longer
+       scroll-driven (that was Fernando's --zoom system, retired along with the phased opening) --
+       the box just fades in/out now, so the Ken Burns autoplay drift is back to give it life while
+       it's visible. */
+    --motion-drift-slow: 26s;   /* masthead Ken Burns cycle */
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -42,74 +43,64 @@
   .progress-fill { width: 100%; height: 0%; background: #e8c98a; border-radius: 0; transition: height 0.1s linear; }
   @media (max-width: 760px) { .progress-rail { display: none; } }
 
-  /* Scroll debug HUD (see the #debug note in <body>). Fixed top-left, monospace, never printed. */
-  .scroll-hud { position: fixed; top: 1rem; left: 1rem; z-index: 9999;
-    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; line-height: 1.5;
-    background: rgba(10,9,8,0.82); color: #e8c98a; padding: 0.6rem 0.8rem; border-radius: 0;
-    border: 1px solid rgba(232,201,138,0.25); pointer-events: none; letter-spacing: 0.02em;
-    -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); min-width: 15rem; }
-  .scroll-hud[hidden] { display: none; }
-  .hud-phase { font-size: 1.05rem; font-weight: 500; color: #fff; }
-  .hud-metrics { color: rgba(255,255,255,0.72); white-space: pre; }
-  .hud-hint { color: rgba(255,255,255,0.4); font-size: 0.62rem; margin-top: 0.35rem; }
+  /* Debug HUD removed (Paul, 2026-07-23): it existed to visualise Fernando's phased box-opening,
+     which this section retires -- keeping it would just be a broken tool pointed at a system that
+     no longer exists. */
 
-  /* ---- opening: masthead visible immediately, then the reveal sequence, NYT scrollytelling-style.
-     Same spotlight treatment as the previous hero: full-bleed photo, dark vignette. The vignette's
-     hole now opens as the reader SCROLLS (JS sets --hole-a below) rather than on a fixed timer, so
-     it rewards scrolling instead of just happening automatically whether anyone's looking or not.
-     The photo itself carries a slow, continuous Ken Burns drift (scale + pan), independent of
-     scroll, so the hero never reads as a static, frozen frame even before anyone touches it. */
-  /* The track's EXTRA height is the reveal's duration: the stage sticks to the top and the box holds
-     still while the aperture opens, then the page scrolls on and the panels rise over it. Keep this
-     in step with OPENING.travel below -- the reveal should finish comfortably before the track ends,
-     so the fully-open box gets a beat of stillness rather than opening at the exit. */
-  /* 280vh, up from 220: the extra 60 is the LINGER — the box holds open, brightening slightly,
-     before the drain begins. Without the extra track there is no scroll for it to hold across and
-     the phase collapses into the drain. */
-  /* 290vh = the four opening phases summed as scroll distance (title 0.5 + open 0.8 + LINGER 1.0 +
-     drain 0.6 screens). Keep in step with OPENING.phases in the script -- that object is the source
-     of the boundaries, this is the runway they play across. */
-  .masthead-track { position: relative; height: 290vh; }
+  /* ---- opening: masthead visible immediately, box-of-letters photo + spotlight vignette, now the
+     sticky stage for the WHOLE letters-field scroll (Paul, 2026-07-23) -- one continuous track,
+     not a separate box-opening runway followed by a separate letters runway. The box's own opacity
+     (--box-a) is JS-driven in the script below: fades IN on load, then fades back OUT over the
+     first bit of scroll, handing off to the letters + callouts for the rest of the field.
+     Box + spotlight sit IN FRONT of the letter layers (z-index 4/6 vs the letters' 1-3, Paul
+     2026-07-23) -- a crossfade/dissolve, not a collage: the box is the opaque foreground while
+     --box-a is high, and as it fades the letters emerge from underneath rather than the two
+     competing for attention simultaneously. */
   .masthead {
     position: sticky; top: 0; height: 100vh;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; padding: 3rem 1.5rem; overflow: hidden; background: #0f0d0a;
+    --box-a: 0;
   }
-  /* SCROLL IS THE ONLY CLOCK (2026-07-22, art direction approved by Paul; adopted from the
-     comfyui-mcp scroll-opening prototype). The image previously drifted on an infinite `ken-burns`
-     timer, so it moved whether or not the reader did -- two clocks running against each other, and
-     the drift competed with the aperture for attention. The zoom is now keyed to scroll position
-     via --zoom, so the box emerges *because* you scroll and holds still when you stop. */
   .masthead::before {
-    content: ''; position: absolute; inset: -4%;
-    background-image: url('assets/box-of-letters.jpeg'); background-size: cover; background-position: center 30%;
-    filter: grayscale(90%) brightness(var(--photo-bright, 0.85));
-    opacity: var(--photo-fade, 0.92);
+    content: ''; position: absolute; inset: -4%; z-index: 4;
+    background-image: url('assets/box-of-letters-no-text.jpeg'); background-size: cover; background-position: center 30%;
+    filter: grayscale(80%) brightness(1.05); opacity: var(--box-a);
+    transition: opacity 0.7s ease-out;
     transform-origin: 50% 36%;
-    transform: scale(var(--zoom, 1));
+    animation: ken-burns var(--motion-drift-slow) ease-in-out infinite alternate;
   }
-  /* The aperture is a hole opening in darkness, NOT a spotlight on a wall of it. That distinction
-     is why all THREE gradient stops lift and the ellipse GROWS -- driving only the centre (as this
-     did until 2026-07-22) reads as a torch beam, because the surround never yields. Each stop lifts
-     by a different amount so the edge of frame stays moody after the centre is clear. */
-  /* `inherits: TRUE` is load-bearing, not a style choice. The gradient is painted on ::after, and
-     these are set inline on .masthead -- with inherits:false the pseudo-element refused the inline
-     value and kept resolving to initial-value, so the darkness NEVER lifted: only the ellipse grew
-     (--hole-w is unregistered, so it worked). Symptom: "the dark overlay doesn't seem to change
-     with the scroll", with the JS provably setting the right numbers the whole time. */
-  @property --hole-a { syntax: '<number>'; inherits: true; initial-value: 0.9; }
-  @property --hole-m { syntax: '<number>'; inherits: true; initial-value: 0.9; }
-  @property --hole-o { syntax: '<number>'; inherits: true; initial-value: 0.9; }
+  @keyframes ken-burns {
+    from { transform: scale(1) translate(0, 0); }
+    to   { transform: scale(1.09) translate(-0.6%, -1.2%); }
+  }
+  /* Spotlight sized to the text, not the frame (Paul, 2026-07-23): 40%/30%+42%/32% covered most of
+     the viewport -- closer to "everything dimly visible" than an actual spotlight. Shrunk to
+     26%/19%+28%/21%, sized to comfortably fit the longest callout (4 lines, 680px max-width)
+     without spilling much past it, so the dark surround reads as a real spotlight around the text
+     specifically. Trade-off: the box's own moment is now darker at the edges too (same vignette,
+     same size) -- worth another pass if that undoes "the box needs to be more visible" from
+     earlier, but not asked for here. */
   .masthead::after {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(ellipse var(--hole-w, 34%) var(--hole-h, 26%) at 50% 36%,
-      rgba(15, 13, 10, var(--hole-a)) 0%,
-      rgba(15, 13, 10, var(--hole-m)) 78%,
-      rgba(15, 13, 10, var(--hole-o)) 100%);
+    content: ''; position: absolute; inset: 0; z-index: 6;
+    background:
+      radial-gradient(ellipse 26% 19% at 50% 50%, rgba(255,235,205,0.32) 0%, rgba(255,235,205,0) 65%),
+      radial-gradient(ellipse 28% 21% at 50% 50%, rgba(10,8,6,0) 0%, rgba(10,8,6,0.92) 100%);
+    /* Only on when there's a box or a piece of text for it to light (--spot-a, JS-driven, matching
+       whichever is currently most visible) -- otherwise it was a lit oval over nothing during the
+       stretch after the last callout fades and before the doors section. Paul, 2026-07-23. */
+    opacity: var(--spot-a, 1);
+    transition: opacity 0.4s ease-out;
   }
-  .masthead > * { position: relative; z-index: 1; }
-  /* Phase 1's moving unit. `will-change` because this transforms on every scroll frame. */
-  .hero-text { display: flex; flex-direction: column; align-items: center; will-change: transform, opacity; }
+  /* Text sits ABOVE everything -- the letter layers (1-3), the box (4), and the vignette (6). .hero-text wraps
+     the kicker/title/cue so scroll can fade them out as one unit, handing off to the callouts. */
+  .hero-text { position: relative; z-index: 10; will-change: opacity; }
+  /* Same dark halo as .lp-callout-text (Paul, 2026-07-23) -- the box photo has its own texture
+     (crumpled cardboard, handwriting on the propped letters) directly behind this text too. */
+  .hero-kicker, .hero-title, .scroll-cue {
+    position: relative; z-index: 10;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9);
+  }
   .hero-kicker { font-family: 'IBM Plex Mono', monospace; font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase; color: #e8c98a; margin-bottom: 1.25rem; }
   .hero-title { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 700; line-height: 1.05; max-width: 16ch; margin-bottom: 1.25rem; }
   .scroll-cue {
@@ -121,82 +112,52 @@
   @keyframes cue-fade-in { to { opacity: 1; } }
 
   /* ---- kinetic title reveal: kicker -> title settle in on load, staggered, with a slight
-     blur-to-sharp focus pull rather than a plain fade -- the "considered opening" beat.
-     .scroll-cue gets its own fade-only entrance (below, near its existing rule) since it already
-     owns `transform` for its perpetual bob -- a second transform-animation on the same element
-     would fight that one instead of composing with it. */
+     blur-to-sharp focus pull rather than a plain fade -- the "considered opening" beat. */
   .hero-kicker, .hero-title { opacity: 0; filter: blur(6px); transform: translateY(14px); animation: hero-settle var(--motion-fade-base) ease-out forwards; }
   .hero-kicker { animation-delay: 0.25s; }
   .hero-title { animation-delay: 0.5s; }
   @keyframes hero-settle { to { opacity: 1; filter: blur(0); transform: translateY(0); } }
 
   @media (prefers-reduced-motion: reduce) {
-    /* The photo no longer animates at all (scroll drives --zoom), so pin it at rest and force the
-       aperture FULLY OPEN on every stop. Clearing only --hole-a here would have left a reduced-motion
-       reader looking at the box through a permanent spotlight -- the resting state must be the
-       RESOLVED one, never the mid-transition one. */
-    .masthead::before { transform: none; }
-    .masthead {
-      /* Must MATCH what phase 2 resolves to (hole-m = 0.9*(1-0.68), hole-o = 0.9*(1-0.18)) --
-         otherwise reduced-motion readers get a different, brighter picture than everyone else. */
-      --hole-a: 0; --hole-m: 0.288; --hole-o: 0.738; --hole-w: 104%; --hole-h: 92%;
-      --photo-bright: 0.95; --photo-fade: 0.97;   /* the RESOLVED look, not the dim starting one */
-    }
+    .masthead { position: relative; height: auto; --box-a: 1; }
+    .masthead::before { animation: none; transition: none; }
     .hero-kicker, .hero-title { animation: none; opacity: 1; filter: none; transform: none; }
     .scroll-cue { animation: none; opacity: 1; }
-    /* Phase 1 never runs under reduced motion (the JS returns early), so pin the hero text at its
-       resting, READABLE state rather than leaving it mid-lift. */
-    .hero-text { transform: none; opacity: 1; }
   }
 
-  /* ---- the letter-parallax field: the five beats, carried by the real letters ----------------
-     Replaced the five .scroll-panel screens (2026-07-22). Same copy, verbatim; it now sits beside
-     the letters it describes instead of on empty ground. Rendered from data/letter-parallax.json.
+  /* ---- the onboarding narrative: five callouts (rendered from data/letter-parallax.json,
+     including "a box of over 100 letters", moved back in 2026-07-23) taking turns centred "inside
+     the box," in the same spot hero-text just vacated -- evenly spaced across the field by
+     index/count (see the script below), not tied to any specific letter's position. Paul's
+     original treatment: large centred white type, gold <em>, blur-to-sharp -- not Fernando's
+     boxed cream-plate style, which this replaces. */
+  .lp-callout {
+    position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 0 1.5rem; will-change: opacity, filter, transform;
+  }
+  .lp-callout-text {
+    max-width: 680px; font-size: clamp(1.6rem, 4vw, 2.15rem); line-height: 1.5; color: #fff;
+    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 500;
+    /* A busy letter (handwriting, fold lines) directly behind the text competed with it for
+       contrast -- a dark halo separates the white type from whatever's underneath without
+       resorting to an opaque plate. Paul, 2026-07-23. */
+    text-shadow: 0 2px 20px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9);
+  }
+  .lp-callout-text em { color: #e8c98a; font-style: normal; }
 
-     ONE BLACK EVERYWHERE: #0f0d0a, the site's warm near-black -- the masthead stage, this stage and
-     the veil all use it. An earlier prototype build had three different blacks and the seam between
-     acts was visible. Do not introduce a second one here. */
-  /* Height is written by the build from the lane count (letter_parallax.track_height_vh) -- the
-     runway must follow the data, or adding a letter would silently run the field off its own track. */
-  .lp-track { position: relative; height: 1130vh; }
-  .lp-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: #0f0d0a; }
-  .lp-veil { position: absolute; inset: 0; z-index: 5; pointer-events: none;
-    background: radial-gradient(ellipse 90% 70% at 50% 62%, rgba(15,13,10,0) 0%, rgba(15,13,10,0.55) 100%); }
+  /* ---- the letter-parallax field: real letters rising in three depth layers as the reader
+     scrolls, on top of the box + spotlight. Rendered from data/letter-parallax.json at build time
+     (see letter_parallax.py) -- placement is reviewable data, not a JS array.
+     Height is written by the build from the field's own span (letter_parallax.track_height_vh). */
+  .lp-track { position: relative; height: 465vh; z-index: 1; background: #0f0d0a; }
   .lp-layer { position: absolute; inset: 0; }
   .lp-letter {
     position: absolute; top: 0; will-change: transform, filter;
     /* DEPTH is TONALITY, not opacity: a receding letter is paper in shadow, never translucent
-       paper. The layer darkens/flattens (brightness/contrast/blur) instead -- an explicit art
-       direction call, and why the back layer is dimmed rather than faded.
-       The ONE exception is set from JS: a letter sitting under a readable callout fades back so
-       the text stays legible. That is legibility, not depth -- text wins over texture. */
+       paper -- the layer darkens/flattens/warms (sepia/brightness/contrast/blur) instead. */
     opacity: 1;
   }
   .lp-letter img { display: block; width: 100%; height: auto; }
-  .lp-callout {
-    position: absolute; z-index: 6; max-width: min(38vw, 30rem);
-    will-change: transform, opacity;
-  }
-  .lp-callout.lp-left  { left: 6vw; }
-  .lp-callout.lp-right { right: 6vw; }
-  /* BOXED TEXT, the Hudson Yards treatment (nytimes.com/interactive/2019/03/14/arts/design/
-     hudson-yards-nyc.html, Fernando's reference). An opaque plate that hugs the LINE BREAKS —
-     `box-decoration-break: clone` puts the background on each rendered line rather than one
-     rectangle around the block, so the plate steps with the text like the NYT's.
-     This replaces a runtime pass that dimmed whatever letter sat under a callout: with a plate,
-     legibility no longer depends on what is behind it, so the imagery never has to yield. Bigger
-     type too — it can afford to be, now that it isn't competing with texture. */
-  .lp-callout-text {
-    font-size: clamp(1.5rem, 3.1vw, 2.4rem); line-height: 1.55; color: #14110d;
-    font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600;
-    display: inline; /* required for the plate to follow line boxes */
-    /* Dead plain aged white -- no gradient, no glow. The plate's job is to be a surface the text
-       sits on, not an effect of its own. */
-    background: #f4f1ea;
-    -webkit-box-decoration-break: clone; box-decoration-break: clone;
-    padding: 0.18em 0.42em;
-  }
-  .lp-callout-text em { color: var(--rust); font-style: normal; }
   .lp-arrow {
     position: absolute; left: 50%; bottom: 2.5rem; transform: translateX(-50%); z-index: 7;
     font-size: 1.6rem; color: #e8c98a; text-decoration: none;
@@ -204,42 +165,15 @@
   }
   .lp-arrow.in { opacity: 1; }
   .lp-arrow:hover { opacity: 0.7; }
-  @media (max-width: 760px) {
-    /* On a phone the two columns collapse: a 38vw callout beside a 44vw letter is unreadable at
-       both. The callout takes the full width and the letters run behind it. */
-    .lp-callout { max-width: none; left: 6vw; right: 6vw; }
-    .lp-callout.lp-left, .lp-callout.lp-right { left: 6vw; right: 6vw; }
-  }
   @media (prefers-reduced-motion: reduce) {
-    /* ⚠️ REDUCED MOTION GETS A STATIC LAYOUT, NOT A FROZEN ANIMATION.
-       The obvious version of this rule -- transform:none on everything -- passes the motion guard
-       and DESTROYS the section: every letter and all five callouts are absolutely positioned and
-       placed purely by transform, so removing it stacks all 41 elements at top:0 inside a 100vh
-       sticky stage. Measured: allLettersAtTop true, all five callouts at top 0, overlapping.
-       The same trap as the rail card -- "turn the motion off" silently costs the content.
-       So: unstick the stage, let the track collapse to its content, and lay the beats out as an
-       ordinary vertical document. Nothing moves, everything is readable, nothing is lost. */
+    /* Static fallback: the letters (position/opacity is all JS-driven) are hidden outright rather
+       than frozen mid-animation; hero-text and the callouts stack as an ordinary vertical document
+       -- `.masthead` above is already position:relative/height:auto/flex-column under reduced
+       motion, so removing position:absolute here is enough to let them flow normally, one per
+       screen-ish, in the same order a sighted, motion-enabled reader sees them. */
     .lp-track { height: auto !important; }
-    /* A flex column so `order` can INTERLEAVE the callouts with their letters. The DOM renders all
-       layers first and callouts last (right for the animated case, where position is transform-set);
-       laid out statically in DOM order that would be 14 letters followed by 5 orphaned paragraphs,
-       each beat divorced from the letter it describes. `order` is set per element below from the
-       same lane the animation uses, so the two layouts tell the SAME story in the same sequence. */
-    .lp-stage { position: static; height: auto; padding: 4rem 0; display: flex; flex-direction: column; }
-    .lp-veil { display: none; }
-    .lp-layer { position: static; display: contents; }
-    /* Only the front layer carries readable content; mid/back are depth, and stacking them into a
-       static column would just be noise between the beats. */
-    .lp-layer[data-speed="0.28"], .lp-layer[data-speed="0.55"] { display: none; }
-    .lp-letter {
-      position: static; width: min(70vw, 30rem) !important; margin: 2.5rem auto;
-      transform: none !important; filter: none !important; visibility: visible !important;
-    }
-    .lp-callout {
-      position: static; max-width: 42rem; margin: 3rem auto; padding: 0 6vw;
-      opacity: 1 !important; transform: none !important;
-    }
-    .lp-callout.lp-left, .lp-callout.lp-right { left: auto; right: auto; }
+    .lp-layer { display: none; }
+    .lp-callout { position: static; opacity: 1 !important; filter: none !important; transform: none !important; padding: 3rem 1.5rem; }
     .lp-arrow { position: static; display: block; text-align: center; opacity: 1; animation: none; transform: none; }
   }
 
@@ -248,8 +182,12 @@
   .hero-experiment a { color: #e8c98a; text-decoration: underline; text-decoration-color: rgba(232,201,138,0.4); }
   .hero-experiment a:hover { text-decoration-color: #e8c98a; }
 
+  /* Doors section reverted to the original light/cream treatment (Paul, 2026-07-23) -- the
+     continuous-black surface across masthead/field/content (Fernando, 2026-07-22) is retired along
+     with the phased opening it was designed to bridge into; the real site content reads as its own
+     bright, paper-toned section again, distinct from the dark onboarding sequence above it. */
   .doors { background: var(--cream); color: var(--ink); padding: 4rem 1.5rem 5rem; }
-  .doors-intro { text-align: center; max-width: 62ch; margin: 0 auto 3rem; }
+  .doors-intro { text-align: center; max-width: 62rem; margin: 0 auto 3rem; }
   .doors-intro p { font-size: 1rem; line-height: 1.65; color: rgba(26,26,26,0.7); }
   .doors-intro p.doors-intro-cta {
     font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.3rem;
@@ -314,49 +252,30 @@
 </head>
 <body>
 
-<!-- SCROLL DEBUG HUD — a shared coordinate for tuning the art direction. OFF by default; visible
-     only with #debug in the URL (or after pressing `h`), so it never reaches a visitor. Three
-     per-phase readouts (BOX / LETTERS / CONTENT, each 0-100) so "at LETTERS 85, X should happen"
-     means the same thing at any window size. Built 2026-07-22 for the full art-direction pass. -->
-<div class="scroll-hud" id="scroll-hud" hidden>
-  <div class="hud-phase" id="hud-phase">—</div>
-  <div class="hud-metrics" id="hud-metrics"></div>
-  <div class="hud-hint">press <b>c</b> to copy · <b>h</b> to hide</div>
-</div>
-
 <div class="progress-rail" id="progress-rail">
   <div class="progress-fill" id="progress-fill"></div>
 </div>
 
-<!-- The masthead is a STICKY STAGE inside a taller track (the prototype's pattern, and the NYT
-     Hudson Yards one): the box holds still while the reveal plays out over ~2 viewport-heights of
-     scroll, instead of sliding away as it opens. The track's height IS the reveal's duration. -->
-<div class="masthead-track" id="masthead-track">
+<!-- The masthead is now the ONE sticky stage for the whole opening (Paul, 2026-07-23) -- box photo
+     + spotlight + drifting letters + text all in the same `.lp-track`, not a separate box-opening
+     runway followed by a separate letters runway. `id="lp-track"` / `data-field-vh` stay on the
+     outer wrapper so the letter-parallax JS keeps finding the same element; `.masthead` itself is
+     the sticky stage. -->
+<div class="lp-track" id="lp-track" data-field-vh="465">
   <div class="masthead">
-    <!-- Wrapped so phase 1 lifts kicker/title/cue as ONE unit -- moving them separately would
-         have them drift apart on the way out. -->
+<div class="lp-layer" data-speed="0.2222" data-offset="-0.591" style="z-index:1"><div class="lp-letter" style="left:5.47vw;width:12.46vw" data-t="1.299" data-rot="-5.36" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="eager" decoding="async"></div><div class="lp-letter" style="left:22.60vw;width:15.57vw" data-t="2.386" data-rot="-2.75" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-51"><img src="media/letters/scan-51.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:77.84vw;width:10.67vw" data-t="4.404" data-rot="4.64" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-49"><img src="media/letters/scan-49.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:60.71vw;width:13.56vw" data-t="5.795" data-rot="2.45" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-26"><img src="media/letters/scan-26.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:67.47vw;width:14.22vw" data-t="8.421" data-rot="3.44" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-48"><img src="media/letters/scan-48.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:8.97vw;width:13.78vw" data-t="9.03" data-rot="-4.78" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-62"><img src="media/letters/scan-62.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:64.21vw;width:14.88vw" data-t="11.047" data-rot="3.03" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-57"><img src="media/letters/scan-57.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:81.34vw;width:11.99vw" data-t="12.134" data-rot="5.23" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="1920-07-25-letter-to-gladys-and-beaty-p1"><img src="media/letters/1920-07-25-letter-to-gladys-and-beaty-p1.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:78.08vw;width:12.65vw" data-t="14.76" data-rot="4.82" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="undated-letter-berlin-leipzig-trip-1924"><img src="media/letters/undated-letter-berlin-leipzig-trip-1924.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:19.58vw;width:12.21vw" data-t="15.369" data-rot="-3.4" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-19"><img src="media/letters/scan-19.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:2.44vw;width:15.10vw" data-t="16.76" data-rot="-5.6" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="undated-letter-darling-dora-operation"><img src="media/letters/undated-letter-darling-dora-operation.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:9.21vw;width:15.76vw" data-t="19.386" data-rot="-4.61" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="undated-letter-whitstable-trip"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:50.58vw;width:13.09vw" data-t="20.169" data-rot="1.0" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london"><img src="media/letters/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:5.95vw;width:10.42vw" data-t="22.013" data-rot="-5.44" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:23.08vw;width:13.53vw" data-t="23.099" data-rot="-2.82" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="scan-51"><img src="media/letters/scan-51.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:54.08vw;width:14.41vw" data-t="25.421" data-rot="1.58" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="undated-letter-fragment-closing-gladys-bertie-cynthia"><img src="media/letters/undated-letter-fragment-closing-gladys-bertie-cynthia.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:36.95vw;width:11.30vw" data-t="36.764" data-rot="-1.04" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="1.46" data-sepia="0.428" data-artifact="undated-children-letters-beaty-and-gladys-fragment"><img src="media/letters/undated-children-letters-beaty-and-gladys-fragment.webp" alt="" loading="lazy" decoding="async"></div></div>
+<div class="lp-layer" data-speed="0.4545" data-offset="0.499" style="z-index:2"><div class="lp-letter" style="left:50.10vw;width:25.38vw" data-t="1.439" data-rot="1.79" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="scan-62"><img src="media/letters/scan-62.webp" alt="" loading="eager" decoding="async"></div><div class="lp-letter" style="left:51.73vw;width:25.97vw" data-t="3.445" data-rot="2.06" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="scan-48"><img src="media/letters/scan-48.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:53.36vw;width:18.55vw" data-t="5.451" data-rot="1.77" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="scan-21"><img src="media/letters/scan-21.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:77.27vw;width:22.70vw" data-t="6.195" data-rot="5.41" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="scan-41"><img src="media/letters/scan-41.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:78.90vw;width:23.29vw" data-t="8.201" data-rot="5.68" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="scan-19"><img src="media/letters/scan-19.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:66.52vw;width:23.87vw" data-t="10.207" data-rot="3.98" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="undated-letter-berlin-leipzig-trip-1924"><img src="media/letters/undated-letter-berlin-leipzig-trip-1924.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:8.80vw;width:19.43vw" data-t="11.367" data-rot="-4.41" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="scan-38"><img src="media/letters/scan-38.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:10.43vw;width:20.02vw" data-t="17.209" data-rot="-4.14" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="1.02" data-sepia="0.3" data-artifact="undated-letter-whitstable-trip"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div></div>
+<div class="lp-layer" data-speed="1.0" data-offset="-0.4" style="z-index:3"><div class="lp-letter" style="left:14.33vw;width:37.20vw" data-t="0.0" data-rot="-3.0" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="1920-yiddish-letter-fragment-a"><img src="media/letters/1920-yiddish-letter-fragment-a.webp" alt="" loading="eager" decoding="async"></div><div class="lp-letter" style="left:52.81vw;width:41.40vw" data-t="0.0" data-rot="2.54" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:58.88vw;width:34.30vw" data-t="0.527" data-rot="2.82" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="scan-51"><img src="media/letters/scan-51.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:11.77vw;width:43.60vw" data-t="1.026" data-rot="-3.03" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="scan-48"><img src="media/letters/scan-48.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:42.17vw;width:41.10vw" data-t="2.045" data-rot="3.03" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london"><img src="media/letters/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:2.55vw;width:42.50vw" data-t="2.999" data-rot="-2.47" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="1920-07-25-letter-to-gladys-and-beaty-p1"><img src="media/letters/1920-07-25-letter-to-gladys-and-beaty-p1.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:59.08vw;width:38.50vw" data-t="2.999" data-rot="2.91" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-letter-whitstable-trip"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:46.20vw;width:41.40vw" data-t="3.462" data-rot="2.29" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="1920-03-26-letter-to-dora-and-kiddies-margate"><img src="media/letters/1920-03-26-letter-to-dora-and-kiddies-margate.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:4.44vw;width:40.00vw" data-t="4.042" data-rot="-2.5" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-letter-berlin-leipzig-trip-1924"><img src="media/letters/undated-letter-berlin-leipzig-trip-1924.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:14.32vw;width:43.60vw" data-t="4.98" data-rot="-2.94" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-hotel-montreal-paris-notes"><img src="media/letters/undated-hotel-montreal-paris-notes.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:50.09vw;width:34.90vw" data-t="4.98" data-rot="2.5" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-letter-fragment-berlin-trip-morry-sagon"><img src="media/letters/undated-letter-fragment-berlin-trip-morry-sagon.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:17.59vw;width:39.30vw" data-t="5.49" data-rot="-2.27" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-letter-fragment-berlin-trip-morry-sagon"><img src="media/letters/undated-letter-fragment-berlin-trip-morry-sagon.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:57.28vw;width:41.10vw" data-t="5.49" data-rot="2.7" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="1920-07-25-letter-to-gladys-and-beaty-p1"><img src="media/letters/1920-07-25-letter-to-gladys-and-beaty-p1.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:61.09vw;width:38.50vw" data-t="5.953" data-rot="2.98" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-letter-whitstable-trip"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:4.44vw;width:40.00vw" data-t="6.469" data-rot="-2.5" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-letter-berlin-leipzig-trip-1924"><img src="media/letters/undated-letter-berlin-leipzig-trip-1924.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:50.09vw;width:34.90vw" data-t="6.912" data-rot="2.5" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-sepia="0.0" data-artifact="undated-letter-fragment-berlin-trip-morry-sagon"><img src="media/letters/undated-letter-fragment-berlin-trip-morry-sagon.webp" alt="" loading="lazy" decoding="async"></div></div>
     <div class="hero-text" id="hero-text">
       <p class="hero-kicker">A Family Archive, 1900&ndash;1926</p>
       <h1 class="hero-title display">The Sam and Dora Letters</h1>
       <p class="scroll-cue">Scroll to begin &darr;</p>
     </div>
-  </div>
-</div>
-
-<!-- The letter-parallax field: the same five beats, now carried by the real letters rising
-     behind them. Rendered from data/letter-parallax.json at build time (see letter_parallax.py) --
-     placement is reviewable data, not a JS array. -->
-<div class="lp-track" id="lp-track">
-  <div class="lp-stage">
-    <div class="lp-veil"></div>
-<div class="lp-layer" data-speed="0.2222" data-offset="10.162" style="z-index:1"><div class="lp-letter" style="left:27.80vw;width:13.90vw;order:0" data-t="0.0" data-rot="-2.13" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="eager" decoding="async"></div><div class="lp-letter" style="left:37.25vw;width:10.75vw;order:2" data-t="0.0" data-rot="-0.88" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-51"><img src="media/letters/scan-51.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:34.40vw;width:13.60vw;order:4" data-t="0.0" data-rot="-1.06" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-yiddish-letter-fragment-a"><img src="media/letters/1920-yiddish-letter-fragment-a.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:3.27vw;width:10.45vw;order:6" data-t="0.588" data-rot="-5.81" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-hotel-berlin-letter-to-dora-kiddies"><img src="media/letters/undated-hotel-berlin-letter-to-dora-kiddies.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:23.09vw;width:13.30vw;order:8" data-t="1.132" data-rot="-2.84" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-closing-signature"><img src="media/letters/undated-letter-fragment-closing-signature.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:42.91vw;width:10.16vw;order:10" data-t="2.375" data-rot="-0.28" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-27"><img src="media/letters/scan-27.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:34.99vw;width:13.01vw;order:12" data-t="2.918" data-rot="-1.02" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-50"><img src="media/letters/scan-50.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:82.56vw;width:15.86vw;order:14" data-t="4.162" data-rot="5.67" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-63"><img src="media/letters/scan-63.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:18.38vw;width:12.71vw;order:16" data-t="5.405" data-rot="-3.54" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-children-letters-beaty-and-gladys-fragment"><img src="media/letters/undated-children-letters-beaty-and-gladys-fragment.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:38.20vw;width:15.56vw;order:18" data-t="5.949" data-rot="-0.56" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-closing-gladys-bertie-cynthia"><img src="media/letters/undated-letter-fragment-closing-gladys-bertie-cynthia.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:58.03vw;width:12.41vw;order:20" data-t="7.192" data-rot="1.99" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-26"><img src="media/letters/scan-26.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:77.85vw;width:15.26vw;order:22" data-t="7.735" data-rot="4.97" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-49"><img src="media/letters/scan-49.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:13.67vw;width:12.11vw;order:24" data-t="8.979" data-rot="-4.24" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-62"><img src="media/letters/scan-62.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:33.50vw;width:14.97vw;order:26" data-t="9.522" data-rot="-1.26" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-08-04-gladys2mum"><img src="media/letters/1920-08-04-gladys2mum.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:53.32vw;width:11.82vw;order:28" data-t="10.765" data-rot="1.29" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-berlin-trip-morry-sagon"><img src="media/letters/undated-letter-fragment-berlin-trip-morry-sagon.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:73.14vw;width:14.67vw;order:30" data-t="11.309" data-rot="4.27" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-25"><img src="media/letters/scan-25.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:8.96vw;width:11.52vw;order:32" data-t="12.552" data-rot="-4.94" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-48"><img src="media/letters/scan-48.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:28.79vw;width:14.37vw;order:34" data-t="13.795" data-rot="-1.96" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-60"><img src="media/letters/scan-60.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:48.61vw;width:11.22vw;order:36" data-t="14.339" data-rot="0.59" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-08-02-letter-to-dora-gladys-betty"><img src="media/letters/1920-08-02-letter-to-dora-gladys-betty.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:68.43vw;width:14.07vw;order:38" data-t="15.582" data-rot="3.57" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-alice-baby-news"><img src="media/letters/undated-letter-fragment-alice-baby-news.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:4.26vw;width:10.92vw;order:40" data-t="16.126" data-rot="-5.64" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-21"><img src="media/letters/scan-21.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:24.08vw;width:13.78vw;order:42" data-t="17.369" data-rot="-2.66" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-41"><img src="media/letters/scan-41.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:43.90vw;width:10.63vw;order:44" data-t="17.912" data-rot="-0.11" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-57"><img src="media/letters/scan-57.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:63.72vw;width:13.48vw;order:46" data-t="19.156" data-rot="2.86" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-07-25-letter-to-gladys-and-beaty-p1"><img src="media/letters/1920-07-25-letter-to-gladys-and-beaty-p1.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:83.55vw;width:10.33vw;order:48" data-t="19.699" data-rot="5.42" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-darling-dora-operation"><img src="media/letters/undated-letter-darling-dora-operation.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:19.37vw;width:13.18vw;order:50" data-t="20.942" data-rot="-3.37" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-19"><img src="media/letters/scan-19.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:39.19vw;width:10.03vw;order:52" data-t="22.186" data-rot="-0.81" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-38"><img src="media/letters/scan-38.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:59.02vw;width:12.88vw;order:54" data-t="22.729" data-rot="2.16" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-53"><img src="media/letters/scan-53.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:78.84vw;width:15.73vw;order:56" data-t="23.972" data-rot="5.14" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-03-26-letter-to-dora-and-kiddies-margate"><img src="media/letters/1920-03-26-letter-to-dora-and-kiddies-margate.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:14.66vw;width:12.59vw;order:58" data-t="24.516" data-rot="-4.07" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-berlin-leipzig-trip-1924"><img src="media/letters/undated-letter-berlin-leipzig-trip-1924.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:34.49vw;width:15.44vw;order:60" data-t="25.759" data-rot="-1.09" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-whitstable-trip"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:54.31vw;width:12.29vw;order:62" data-t="26.303" data-rot="1.46" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-31"><img src="media/letters/scan-31.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:74.13vw;width:15.14vw;order:64" data-t="27.546" data-rot="4.44" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-52"><img src="media/letters/scan-52.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:11.99vw;order:66" data-t="28.789" data-rot="0.96" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london"><img src="media/letters/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:14.84vw;order:68" data-t="29.333" data-rot="1.13" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-hotel-montreal-paris-notes"><img src="media/letters/undated-hotel-montreal-paris-notes.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:49.60vw;width:11.69vw;order:70" data-t="30.576" data-rot="0.76" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-re-gladys"><img src="media/letters/undated-letter-fragment-re-gladys.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:69.42vw;width:14.54vw;order:72" data-t="31.119" data-rot="3.74" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:11.40vw;order:74" data-t="40.32" data-rot="0.92" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-51"><img src="media/letters/scan-51.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:14.25vw;order:76" data-t="40.32" data-rot="1.1" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-yiddish-letter-fragment-a"><img src="media/letters/1920-yiddish-letter-fragment-a.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:11.10vw;order:78" data-t="40.32" data-rot="0.91" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-hotel-berlin-letter-to-dora-kiddies"><img src="media/letters/undated-hotel-berlin-letter-to-dora-kiddies.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:64.71vw;width:13.95vw;order:80" data-t="40.32" data-rot="3.04" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-closing-signature"><img src="media/letters/undated-letter-fragment-closing-signature.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:0.54vw;width:10.80vw;order:82" data-t="35.936" data-rot="-6.17" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-27"><img src="media/letters/scan-27.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:20.36vw;width:13.65vw;order:84" data-t="37.18" data-rot="-3.19" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-50"><img src="media/letters/scan-50.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:40.18vw;width:10.50vw;order:86" data-t="37.723" data-rot="-0.64" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-63"><img src="media/letters/scan-63.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:34.65vw;width:13.35vw;order:88" data-t="38.966" data-rot="-1.04" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-children-letters-beaty-and-gladys-fragment"><img src="media/letters/undated-children-letters-beaty-and-gladys-fragment.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:37.79vw;width:10.21vw;order:90" data-t="39.51" data-rot="-0.85" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-closing-gladys-bertie-cynthia"><img src="media/letters/undated-letter-fragment-closing-gladys-bertie-cynthia.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:15.65vw;width:13.06vw;order:92" data-t="40.753" data-rot="-3.89" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-26"><img src="media/letters/scan-26.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:35.47vw;width:15.91vw;order:94" data-t="41.296" data-rot="-0.92" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-49"><img src="media/letters/scan-49.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:55.30vw;width:12.76vw;order:96" data-t="42.54" data-rot="1.64" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-62"><img src="media/letters/scan-62.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:75.12vw;width:15.61vw;order:98" data-t="43.783" data-rot="4.61" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-08-04-gladys2mum"><img src="media/letters/1920-08-04-gladys2mum.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:10.94vw;width:12.46vw;order:100" data-t="44.326" data-rot="-4.6" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-berlin-trip-morry-sagon"><img src="media/letters/undated-letter-fragment-berlin-trip-morry-sagon.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:30.77vw;width:15.31vw;order:102" data-t="45.57" data-rot="-1.62" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-25"><img src="media/letters/scan-25.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:50.59vw;width:12.16vw;order:104" data-t="46.113" data-rot="0.93" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-48"><img src="media/letters/scan-48.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:70.41vw;width:15.02vw;order:106" data-t="47.357" data-rot="3.91" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-60"><img src="media/letters/scan-60.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:11.87vw;order:108" data-t="47.9" data-rot="0.95" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-08-02-letter-to-dora-gladys-betty"><img src="media/letters/1920-08-02-letter-to-dora-gladys-betty.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:14.72vw;order:110" data-t="49.143" data-rot="1.12" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-alice-baby-news"><img src="media/letters/undated-letter-fragment-alice-baby-news.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:11.57vw;order:112" data-t="49.687" data-rot="0.93" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-21"><img src="media/letters/scan-21.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:65.70vw;width:14.42vw;order:114" data-t="50.93" data-rot="3.21" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-41"><img src="media/letters/scan-41.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:11.27vw;order:116" data-t="52.173" data-rot="0.92" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-57"><img src="media/letters/scan-57.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:14.12vw;order:118" data-t="52.717" data-rot="1.09" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-07-25-letter-to-gladys-and-beaty-p1"><img src="media/letters/1920-07-25-letter-to-gladys-and-beaty-p1.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:41.17vw;width:10.98vw;order:120" data-t="53.96" data-rot="-0.47" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-darling-dora-operation"><img src="media/letters/undated-letter-darling-dora-operation.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:60.99vw;width:13.83vw;order:122" data-t="54.503" data-rot="2.51" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-19"><img src="media/letters/scan-19.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:37.32vw;width:10.68vw;order:124" data-t="55.747" data-rot="-0.88" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-38"><img src="media/letters/scan-38.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:16.64vw;width:13.53vw;order:126" data-t="56.29" data-rot="-3.72" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-53"><img src="media/letters/scan-53.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:36.46vw;width:10.38vw;order:128" data-t="57.534" data-rot="-1.17" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-03-26-letter-to-dora-and-kiddies-margate"><img src="media/letters/1920-03-26-letter-to-dora-and-kiddies-margate.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:34.77vw;width:13.23vw;order:130" data-t="58.777" data-rot="-1.03" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-berlin-leipzig-trip-1924"><img src="media/letters/undated-letter-berlin-leipzig-trip-1924.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:37.92vw;width:10.08vw;order:132" data-t="59.32" data-rot="-0.84" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-whitstable-trip"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:11.93vw;width:12.93vw;order:134" data-t="60.564" data-rot="-4.42" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-31"><img src="media/letters/scan-31.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:31.75vw;width:15.79vw;order:136" data-t="61.107" data-rot="-1.45" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-52"><img src="media/letters/scan-52.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:35.36vw;width:12.64vw;order:138" data-t="62.35" data-rot="-1.0" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london"><img src="media/letters/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:71.40vw;width:15.49vw;order:140" data-t="62.894" data-rot="4.08" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-hotel-montreal-paris-notes"><img src="media/letters/undated-hotel-montreal-paris-notes.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:7.22vw;width:12.34vw;order:142" data-t="64.137" data-rot="-5.13" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-re-gladys"><img src="media/letters/undated-letter-fragment-re-gladys.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:27.05vw;width:15.19vw;order:144" data-t="64.68" data-rot="-2.15" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:46.87vw;width:12.04vw;order:146" data-t="65.924" data-rot="0.4" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-51"><img src="media/letters/scan-51.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:66.69vw;width:14.89vw;order:148" data-t="67.167" data-rot="3.38" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="1920-yiddish-letter-fragment-a"><img src="media/letters/1920-yiddish-letter-fragment-a.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:2.52vw;width:11.74vw;order:150" data-t="67.711" data-rot="-5.83" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-hotel-berlin-letter-to-dora-kiddies"><img src="media/letters/undated-hotel-berlin-letter-to-dora-kiddies.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:22.34vw;width:14.60vw;order:152" data-t="68.954" data-rot="-2.85" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-closing-signature"><img src="media/letters/undated-letter-fragment-closing-signature.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:42.16vw;width:11.45vw;order:154" data-t="69.497" data-rot="-0.3" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-27"><img src="media/letters/scan-27.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:61.98vw;width:14.30vw;order:156" data-t="70.741" data-rot="2.68" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-50"><img src="media/letters/scan-50.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:81.81vw;width:11.15vw;order:158" data-t="71.284" data-rot="5.23" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-63"><img src="media/letters/scan-63.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:17.63vw;width:14.00vw;order:160" data-t="72.527" data-rot="-3.55" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-children-letters-beaty-and-gladys-fragment"><img src="media/letters/undated-children-letters-beaty-and-gladys-fragment.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:37.45vw;width:10.85vw;order:162" data-t="73.071" data-rot="-1.0" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="undated-letter-fragment-closing-gladys-bertie-cynthia"><img src="media/letters/undated-letter-fragment-closing-gladys-bertie-cynthia.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:57.28vw;width:13.70vw;order:164" data-t="74.314" data-rot="1.98" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-26"><img src="media/letters/scan-26.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:77.10vw;width:10.55vw;order:166" data-t="75.557" data-rot="4.53" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-49"><img src="media/letters/scan-49.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:12.92vw;width:13.41vw;order:168" data-t="76.101" data-rot="-4.25" data-amp="0.0601" data-gain="0.2333" data-bri="0.378" data-con="0.736" data-blur="5.83" data-artifact="scan-62"><img src="media/letters/scan-62.webp" alt="" loading="lazy" decoding="async"></div></div>
-<div class="lp-layer" data-speed="0.4545" data-offset="6.743" style="z-index:2"><div class="lp-letter" style="left:24.15vw;width:23.85vw;order:0" data-t="0.0" data-rot="-1.67" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-26"><img src="media/letters/scan-26.webp" alt="" loading="eager" decoding="async"></div><div class="lp-letter" style="left:28.87vw;width:19.13vw;order:2" data-t="0.0" data-rot="-1.39" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-49"><img src="media/letters/scan-49.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:3.54vw;width:23.40vw;order:4" data-t="0.0" data-rot="-4.87" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-62"><img src="media/letters/scan-62.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:23.36vw;width:18.68vw;order:6" data-t="0.263" data-rot="-2.42" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="1920-08-04-gladys2mum"><img src="media/letters/1920-08-04-gladys2mum.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:25.04vw;width:22.96vw;order:8" data-t="0.796" data-rot="-1.62" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-fragment-berlin-trip-morry-sagon"><img src="media/letters/undated-letter-fragment-berlin-trip-morry-sagon.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:63.01vw;width:18.23vw;order:10" data-t="2.03" data-rot="3.1" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-25"><img src="media/letters/scan-25.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:82.83vw;width:22.51vw;order:12" data-t="2.563" data-rot="6.17" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-48"><img src="media/letters/scan-48.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:18.65vw;width:26.79vw;order:14" data-t="3.796" data-rot="-2.51" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-60"><img src="media/letters/scan-60.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:38.48vw;width:22.06vw;order:16" data-t="5.03" data-rot="-0.07" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="1920-08-02-letter-to-dora-gladys-betty"><img src="media/letters/1920-08-02-letter-to-dora-gladys-betty.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:58.30vw;width:26.34vw;order:18" data-t="5.563" data-rot="3.01" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-fragment-alice-baby-news"><img src="media/letters/undated-letter-fragment-alice-baby-news.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:78.12vw;width:21.62vw;order:20" data-t="6.797" data-rot="5.45" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-21"><img src="media/letters/scan-21.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:13.94vw;width:25.89vw;order:22" data-t="7.33" data-rot="-3.24" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-41"><img src="media/letters/scan-41.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:33.77vw;width:21.17vw;order:24" data-t="8.564" data-rot="-0.79" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-57"><img src="media/letters/scan-57.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:53.59vw;width:25.45vw;order:26" data-t="9.097" data-rot="2.28" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="1920-07-25-letter-to-gladys-and-beaty-p1"><img src="media/letters/1920-07-25-letter-to-gladys-and-beaty-p1.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:73.41vw;width:20.73vw;order:28" data-t="10.331" data-rot="4.73" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-darling-dora-operation"><img src="media/letters/undated-letter-darling-dora-operation.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:9.24vw;width:25.00vw;order:30" data-t="10.864" data-rot="-3.96" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-19"><img src="media/letters/scan-19.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:29.06vw;width:20.28vw;order:32" data-t="12.098" data-rot="-1.51" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-38"><img src="media/letters/scan-38.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:48.88vw;width:24.56vw;order:34" data-t="13.331" data-rot="1.56" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-53"><img src="media/letters/scan-53.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:68.71vw;width:19.83vw;order:36" data-t="13.864" data-rot="4.01" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="1920-03-26-letter-to-dora-and-kiddies-margate"><img src="media/letters/1920-03-26-letter-to-dora-and-kiddies-margate.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:24.11vw;order:38" data-t="15.098" data-rot="1.69" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-berlin-leipzig-trip-1924"><img src="media/letters/undated-letter-berlin-leipzig-trip-1924.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:19.39vw;order:40" data-t="15.631" data-rot="1.4" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-whitstable-trip"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:23.66vw;order:42" data-t="19.712" data-rot="1.66" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-31"><img src="media/letters/scan-31.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:29.06vw;width:18.94vw;order:44" data-t="17.398" data-rot="-1.38" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-52"><img src="media/letters/scan-52.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:24.78vw;width:23.22vw;order:46" data-t="18.632" data-rot="-1.63" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london"><img src="media/letters/1916-09-03-letter-from-husband-to-dora-from-s-diamondstein-and-co-fur-dealers-fashion-street-london.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:19.64vw;width:18.49vw;order:48" data-t="19.165" data-rot="-2.96" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-hotel-montreal-paris-notes"><img src="media/letters/undated-hotel-montreal-paris-notes.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:39.47vw;width:22.77vw;order:50" data-t="20.399" data-rot="0.12" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-fragment-re-gladys"><img src="media/letters/undated-letter-fragment-re-gladys.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:59.29vw;width:18.05vw;order:52" data-t="21.632" data-rot="2.56" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:79.11vw;width:22.33vw;order:54" data-t="22.166" data-rot="5.64" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-51"><img src="media/letters/scan-51.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:26.60vw;order:56" data-t="23.399" data-rot="1.84" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="1920-yiddish-letter-fragment-a"><img src="media/letters/1920-yiddish-letter-fragment-a.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:21.88vw;order:58" data-t="23.932" data-rot="1.55" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-hotel-berlin-letter-to-dora-kiddies"><img src="media/letters/undated-hotel-berlin-letter-to-dora-kiddies.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:54.58vw;width:26.16vw;order:60" data-t="25.166" data-rot="2.47" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-fragment-closing-signature"><img src="media/letters/undated-letter-fragment-closing-signature.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:74.40vw;width:21.43vw;order:62" data-t="25.699" data-rot="4.92" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-27"><img src="media/letters/scan-27.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:10.23vw;width:25.71vw;order:64" data-t="26.933" data-rot="-3.77" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-50"><img src="media/letters/scan-50.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:30.05vw;width:20.99vw;order:66" data-t="28.166" data-rot="-1.32" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-63"><img src="media/letters/scan-63.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:22.74vw;width:25.26vw;order:68" data-t="28.7" data-rot="-1.76" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-children-letters-beaty-and-gladys-fragment"><img src="media/letters/undated-children-letters-beaty-and-gladys-fragment.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:27.46vw;width:20.54vw;order:70" data-t="29.933" data-rot="-1.47" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-fragment-closing-gladys-bertie-cynthia"><img src="media/letters/undated-letter-fragment-closing-gladys-bertie-cynthia.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:5.52vw;width:24.82vw;order:72" data-t="30.467" data-rot="-4.49" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-26"><img src="media/letters/scan-26.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:25.34vw;width:20.09vw;order:74" data-t="31.7" data-rot="-2.05" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-49"><img src="media/letters/scan-49.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:45.16vw;width:24.37vw;order:76" data-t="32.234" data-rot="1.03" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-62"><img src="media/letters/scan-62.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:64.99vw;width:19.65vw;order:78" data-t="33.467" data-rot="3.47" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="1920-08-04-gladys2mum"><img src="media/letters/1920-08-04-gladys2mum.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:0.81vw;width:23.92vw;order:80" data-t="34.0" data-rot="-5.21" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="undated-letter-fragment-berlin-trip-morry-sagon"><img src="media/letters/undated-letter-fragment-berlin-trip-morry-sagon.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:20.63vw;width:19.20vw;order:82" data-t="35.234" data-rot="-2.77" data-amp="0.0735" data-gain="0.1636" data-bri="0.564" data-con="0.815" data-blur="4.09" data-artifact="scan-25"><img src="media/letters/scan-25.webp" alt="" loading="lazy" decoding="async"></div></div>
-<div class="lp-layer" data-speed="1.0" data-offset="4.032" style="z-index:3"><div class="lp-letter" style="left:6.00vw;width:40.46vw;order:0" data-t="-0.017" data-rot="-2.61" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="scan-19" data-beat="0"><img src="media/letters/scan-19.webp" alt="" loading="eager" decoding="async"></div><div class="lp-letter" style="left:2.45vw;width:43.57vw;order:2" data-t="1.011" data-rot="-2.83" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="scan-26"><img src="media/letters/scan-26.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:37.70vw;width:40.68vw;order:4" data-t="2.039" data-rot="0.88" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="scan-29"><img src="media/letters/scan-29.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:43.79vw;order:6" data-t="2.967" data-rot="2.63" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="scan-41"><img src="media/letters/scan-41.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:4.19vw;width:40.90vw;order:8" data-t="3.995" data-rot="-2.79" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="scan-50"><img src="media/letters/scan-50.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:39.44vw;width:38.01vw;order:10" data-t="5.023" data-rot="0.93" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="scan-52"><img src="media/letters/scan-52.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:22.68vw;width:41.12vw;order:12" data-t="5.951" data-rot="-0.74" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="scan-60"><img src="media/letters/scan-60.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:38.23vw;order:14" data-t="6.978" data-rot="2.32" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="1920-yiddish-letter-fragment-a" data-beat="1"><img src="media/letters/1920-yiddish-letter-fragment-a.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:6.00vw;width:41.34vw;order:16" data-t="8.006" data-rot="-2.57" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="1920-07-25-letter-to-gladys-and-beaty-p1" data-beat="2"><img src="media/letters/1920-07-25-letter-to-gladys-and-beaty-p1.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:24.42vw;width:38.45vw;order:18" data-t="9.034" data-rot="-0.7" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="1920-08-04-gladys2mum"><img src="media/letters/1920-08-04-gladys2mum.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:41.56vw;order:20" data-t="9.962" data-rot="2.51" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="undated-hotel-montreal-paris-notes" data-beat="3"><img src="media/letters/undated-hotel-montreal-paris-notes.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:52.00vw;width:38.67vw;order:22" data-t="10.99" data-rot="2.35" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="undated-letter-fragment-alice-baby-news"><img src="media/letters/undated-letter-fragment-alice-baby-news.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:26.16vw;width:41.78vw;order:24" data-t="12.018" data-rot="-0.32" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="undated-letter-fragment-closing-gladys-bertie-cynthia"><img src="media/letters/undated-letter-fragment-closing-gladys-bertie-cynthia.webp" alt="" loading="lazy" decoding="async"></div><div class="lp-letter" style="left:6.00vw;width:38.89vw;order:26" data-t="13.046" data-rot="-2.7" data-amp="0.105" data-gain="0.0" data-bri="1.0" data-con="1.0" data-blur="0.0" data-artifact="undated-letter-whitstable-trip" data-beat="4"><img src="media/letters/undated-letter-whitstable-trip.webp" alt="" loading="lazy" decoding="async"></div></div>
-<div class="lp-callout lp-right" style="order:1" data-t="-0.017" data-beat="0" data-beside="scan-19"><p class="lp-callout-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p></div>
-<div class="lp-callout lp-left" style="order:15" data-t="6.978" data-beat="1" data-beside="1920-yiddish-letter-fragment-a"><p class="lp-callout-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p></div>
-<div class="lp-callout lp-right" style="order:17" data-t="8.006" data-beat="2" data-beside="1920-07-25-letter-to-gladys-and-beaty-p1"><p class="lp-callout-text">They turned out to be <em>Sam and Dora Diamondstein&rsquo;s</em> &mdash; great-grandparents of one of this site&rsquo;s creators, writing to each other in the early 1900s.</p></div>
-<div class="lp-callout lp-left" style="order:21" data-t="9.962" data-beat="3" data-beside="undated-hotel-montreal-paris-notes"><p class="lp-callout-text"><em>AI</em> translated and transcribed every one, then helped rebuild the story from family trees, research, and memory.</p></div>
-<div class="lp-callout lp-right" style="order:27" data-t="13.046" data-beat="4" data-beside="undated-letter-whitstable-trip"><p class="lp-callout-text">This web site is what resulted &mdash; a real experiment in using AI to do genealogical research honestly.</p></div>
+<div class="lp-callout" data-i="0"><p class="lp-callout-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p></div>
+<div class="lp-callout" data-i="1"><p class="lp-callout-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p></div>
+<div class="lp-callout" data-i="2"><p class="lp-callout-text">They turned out to be <em>Sam and Dora Diamondstein&rsquo;s</em> &mdash; great-grandparents of one of this site&rsquo;s creators, writing to each other in the early 1900s.</p></div>
+<div class="lp-callout" data-i="3"><p class="lp-callout-text"><em>AI</em> translated and transcribed every one, then helped rebuild the story from family trees, research, and memory.</p></div>
+<div class="lp-callout" data-i="4"><p class="lp-callout-text">This web site is what resulted &mdash; a real experiment in using AI to do genealogical research honestly.</p></div>
     <a href="#doors" class="lp-arrow" aria-label="Scroll down to the site content">&darr;</a>
   </div>
 </div>
@@ -477,46 +396,84 @@
     el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
   });
 
-  // ---- the letter-parallax field ------------------------------------------------------------
-  // Replaces the five .scroll-panel screens (2026-07-22). Same copy, now carried by the letters.
+  // ---- the letter-parallax field + masthead (Paul, 2026-07-23) ------------------------------
+  // ONE sticky stage (`.masthead`, inside `.lp-track`) now carries the box photo + spotlight, the
+  // drifting letters, and all six pieces of text (hero-text, then five callouts) -- not a separate
+  // box-opening track handed off to a separate letters track. `reduceMotion` gates the whole thing,
+  // same as before: the reduced-motion CSS pins every piece at its resolved, readable state and this
+  // script simply doesn't run.
   //
-  // THE MOTION MODEL, and the reason it's worth the code: every letter's state is a function of
-  // WHERE IT SITS IN THE VIEWPORT, not of scroll progress. That makes it self-synchronising at any
-  // scroll speed -- flick or crawl, a letter at centre-screen is always fully resolved -- and it
-  // makes the reduced-motion variant trivial: the same function, clamped to its resolved value.
-  //
-  // CLIPPED / PLATEAU EASING: `HOLD` is a dead-zone across the middle of the viewport where the
-  // letter is fully resolved (upright, large, bright) and STAYS there, instead of hitting that
-  // state for one instant and immediately leaving it. This is what makes a letter feel READ rather
-  // than swept past, and it's the single most load-bearing number here.
-  // Declared HERE, before its first use: both the parallax field and the masthead reveal need it,
-  // and a `const` used above its declaration is a temporal-dead-zone ReferenceError that would kill
-  // the whole script, not just the animation.
+  // THE LETTERS' MOTION MODEL (Fernando's, kept as-is -- it is the real contribution here): every
+  // letter's state is a function of WHERE IT SITS IN THE VIEWPORT, not of scroll progress, so it is
+  // self-synchronising at any scroll speed. DEPTH (blur/brightness/contrast/sepia) is a pure function
+  // of the layer -- a back letter is always dim, blurry and warmer, wherever it sits on screen.
+  // ARRIVAL (the scale pop) is the only thing scroll position drives.
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const lpTrack = document.getElementById('lp-track');
+  const mastheadEl = document.querySelector('.masthead');
+  const heroText = document.getElementById('hero-text');
+  const rail = document.getElementById('progress-rail');
+  const fill = document.getElementById('progress-fill');
+  const doorsEl = document.getElementById('doors');
+
   if (lpTrack && !reduceMotion) {
     const LP = {
       hold: 0.30,        // half-width of the letters' resolved plateau (0..1 of the viewport)
-      textHold: 0.68,    // the callouts' plateau -- wider, because a sentence must be READ
       // Written by the build from data/letter-parallax.json. MUST match the value the track height
       // was computed from -- a mismatch puts every letter at the wrong place on its own track.
       laneVh: 62,
-      span:   13.0,     // field length in lane-units; the static layer spreads over this
+      span:   7.5,     // field length in lane-units; the callouts space evenly across this
       leadIn: 1.15,      // empty lanes before the first letter, so the field opens on black
       overshoot: 0.55,   // how much scale over/undershoots on approach and exit
     };
-    window.__LP = LP;    // the debug HUD reads these to place beats on its coordinate
     const layers = [...lpTrack.querySelectorAll('.lp-layer')];
     const callouts = [...lpTrack.querySelectorAll('.lp-callout')];
     const arrow = lpTrack.querySelector('.lp-arrow');
+    // The masthead's sticky pin releases once less than its OWN height (100vh) of track remains
+    // below the current scroll position -- past that point the masthead scrolls normally with the
+    // page instead of staying centred, so nothing can be reliably screen-centred there any more.
+    // REGRESSION (Paul, 2026-07-23): the callout spacing below used to divide LP.span (the field's
+    // nominal lane count) evenly, with no awareness of this ceiling -- callout 4 landed at lane 7.9
+    // while the usable range topped out around 6.7, so it was already past the release point and
+    // never actually appeared on screen, empty scroll instead of "This web site is what resulted...".
+    const fieldRunwayVh = parseFloat(lpTrack.getAttribute('data-field-vh')) || 500;
+    const maxUsableLane = (fieldRunwayVh - 100) / LP.laneVh;
+    const heroFadeLanes = 0.5;    // hero-text fades out over the first half-lane of scroll,
+                                   // clearing the way for callout 0 -- which is already sitting
+                                   // underneath it (z-index 10 either way, but hero-text is the one
+                                   // that needs to get OUT of the way as the reader starts scrolling)
+    const boxFadeLanes = 0.25;    // the box photo fades in on load (no scroll yet), then fades back
+                                   // OUT almost immediately -- as soon as scrolling begins (Paul,
+                                   // 2026-07-23). Was briefly 2.5 (to let letters rise up over a
+                                   // still-lit box first), but the box being gone right away is now
+                                   // the explicit ask -- takes priority over that earlier reasoning.
+    // Callouts sit 1.105 lanes apart (the corrected usable range / 5 -- see maxUsableLane above),
+    // so each one's half-width (hold + fade) must stay under half that gap (0.553) or adjacent
+    // callouts overlap. The OLD values (0.3 + 0.8 = 1.1) were sized for the field's full nominal
+    // span, where callouts were much farther apart -- against the corrected, tighter spacing they
+    // very nearly doubled onto their neighbours the whole time. Paul, 2026-07-23.
+    // hold+fade must stay under half the 0.947-lane gap (0.474) or adjacent callouts overlap --
+    // 0.3+0.12=0.42 leaves a ~0.05-lane margin. Longer hold (0.12 -> 0.3), shorter fade (0.25 ->
+    // 0.12): more time reading each callout at full opacity, a quicker transition between them.
+    // Paul, 2026-07-23: "each callout needs to stay on screen for a bit longer."
+    const textHoldLanes = 0.3;     // each callout's fully-visible half-width, in lanes
+    const textFadeLanes = 0.12;    // ...fading to 0 over this many additional lanes each side
+    // The spotlight stays ON continuously through the whole callout sequence -- including the GAPS
+    // between callouts, where no individual callout is near its own centre -- rather than tracking
+    // whichever callout is instantaneously most visible (Paul, 2026-07-23: "the spotlight should
+    // stay in place for the whole scroll while each callout fades into it"). It only fades out once
+    // the reader is truly past the LAST callout, with nothing left to illuminate.
+    const lastCalloutCentre =
+      LP.leadIn + (callouts.length - 0.5) * ((maxUsableLane - LP.leadIn) / callouts.length);
+    const spotOnUntilLane = lastCalloutCentre + textHoldLanes + textFadeLanes;
+    const spotFadeOutLanes = 0.4;  // how many lanes the spotlight takes to fade out after that
     const vh = () => window.innerHeight;
 
-    // Plateau easing: 0 across the whole middle band, ramping to 1 at the viewport edges.
-    // Clamped at BOTH ends. Clamping only the low end (as this did at first) lets an element far
-    // off-screen return e.g. 11.4, which made callout opacity -24 and gave letters absurd scale and
-    // brightness values. Browsers clamp opacity so it LOOKED fine -- the visible symptom would have
-    // been letters flickering at odd sizes when scrolled fast, long after the cause was forgotten.
+    // Plateau easing: 0 across the whole middle band, ramping to 1 at the viewport edges. Clamped
+    // at both ends -- an unclamped low end lets an off-screen element return e.g. 11.4, which gives
+    // absurd scale/brightness values (browsers clamp opacity so it LOOKS fine, but a letter can
+    // still flicker at odd sizes when scrolled fast).
     function edgeness(centreFrac) {
       const a = Math.abs(centreFrac - 0.5) * 2;          // 0 at centre, 1 at either edge
       const e = (a - LP.hold) / (1 - LP.hold);           // clipped: 0 across the plateau
@@ -525,17 +482,17 @@
 
     function frame() {
       const trackTop = lpTrack.getBoundingClientRect().top;
+      const lanesScrolled = Math.max(0, -trackTop) / (LP.laneVh * vh() / 100);
+
+      if (heroText) {
+        heroText.style.opacity = Math.max(0, 1 - lanesScrolled / heroFadeLanes).toFixed(3);
+      }
+      if (mastheadEl) {
+        mastheadEl.style.setProperty('--box-a', Math.max(0, 1 - lanesScrolled / boxFadeLanes).toFixed(3));
+      }
+
       for (const layer of layers) {
-        // PARALLAX FACTOR f (= 1 - 1/z). f=1 tracks the camera exactly; f=0 is the infinite
-        // horizon -- completely static, like a distant sky. A static layer is PINNED to the
-        // viewport: it never translates, so it has no arrival to wait for, which is what let the
-        // lead-in drop from 5.35 lanes to 3.25 (that runway existed only to keep a slow-but-moving
-        // back layer off screen until the box finished draining).
         const speed = parseFloat(layer.dataset.speed);
-        // Each layer has its OWN origin (t_offset), not a shared lead-in. dx_layer = dx_camera * f
-        // means every layer lives in its own coordinate space, so a slow layer simply starts lower
-        // rather than making every other layer wait for it to travel in. The old global lead-in was
-        // sized by the slowest layer and charged to all of them — 33% of the field was empty scroll.
         const offset = parseFloat(layer.dataset.offset);
         for (const el of layer.children) {
           const t = parseFloat(el.dataset.t);
@@ -547,66 +504,48 @@
           }
           el.style.visibility = '';
           const e = edgeness(centreFrac);
-          const amp = parseFloat(el.dataset.amp), gain = parseFloat(el.dataset.gain);
+          const amp = parseFloat(el.dataset.amp);
           const rot = parseFloat(el.dataset.rot), bri = parseFloat(el.dataset.bri);
           const con = parseFloat(el.dataset.con), blur = parseFloat(el.dataset.blur);
-          // scale POPS at centre and overshoots slightly on the way in/out, so the held state reads
-          // as arrival rather than as the top of a smooth curve.
+          const sepia = parseFloat(el.dataset.sepia) || 0;
           const scale = 1 + amp * (1 - e) - amp * LP.overshoot * e;
-          el.style.opacity = '';   // reset; the callout pass below re-dims only what it must
           el.style.transform =
             `translate3d(0, ${y.toFixed(1)}px, 0) rotate(${(rot * e).toFixed(2)}deg) scale(${scale.toFixed(4)})`;
-          el.style.filter =
-            `brightness(${(bri + gain * (1 - e)).toFixed(3)}) contrast(${con}) blur(${(blur * e).toFixed(2)}px)`;
+          // sepia() before brightness/contrast: it warms the paper toward amber as the letter
+          // recedes, so the darkening reads as aged/warm shadow, not cold grey.
+          el.style.filter = `sepia(${sepia}) brightness(${bri}) contrast(${con}) blur(${blur}px)`;
         }
       }
+
+      // The five callouts: no longer locked to a specific letter's position -- each takes its turn
+      // centred "inside the box," in the fixed spot hero-text just vacated, evenly spaced across
+      // the USABLE range (leadIn .. maxUsableLane, not the field's full nominal span -- see above)
+      // purely by index/count, fading in/out by how close the overall scroll is to its own turn.
+      // RISE + FADE, not fade in place (Paul, 2026-07-23): a callout approaching its turn (signed
+      // distance < 0, still below its resting spot) rises INTO place as it fades in; once past
+      // (signed distance > 0) it keeps rising as it fades OUT -- one continuous upward drift
+      // through its whole lifecycle, so the next callout arriving feels like it's taking over
+      // from the one just leaving, not just cross-dissolving in the same spot.
+      const calloutRisePx = 40;
       for (const c of callouts) {
-        const t = parseFloat(c.dataset.t);
-        // Sit the callout at the vertical CENTRE of its letter's lane, not at the lane's top edge:
-        // a ~90px line of text and a ~700px letter share a `t`, so aligning their tops leaves the
-        // text riding high above the letter it belongs to.
-        const laneCentre = (LP.leadIn + t + 0.5) * LP.laneVh * vh() / 100;
-        const y = trackTop + laneCentre - c.offsetHeight * 0.5;
-        const centreFrac = (y + c.offsetHeight * 0.5) / vh();
-        // Text gets a WIDER plateau than the letters. A letter is legible in a glance; a sentence
-        // has to be READ, and with the letters' 0.30 hold a short callout never reached full
-        // opacity at all (measured max 0.56 across the whole field).
-        const a = Math.abs(centreFrac - 0.5) * 2;
-        const eText = Math.min(1, Math.max(0, (a - LP.textHold) / (1 - LP.textHold)));
-        c.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+        const i = parseFloat(c.dataset.i);
+        const centreLane = LP.leadIn + (i + 0.5) * ((maxUsableLane - LP.leadIn) / callouts.length);
+        const signedDist = lanesScrolled - centreLane;
+        const dist = Math.abs(signedDist);
+        const eText = Math.min(1, Math.max(0, (dist - textHoldLanes) / textFadeLanes));
         c.style.opacity = (1 - eText).toFixed(3);
+        c.style.filter = `blur(${(eText * 6).toFixed(1)}px)`;
+        const riseY = (signedDist < 0 ? eText : -eText) * calloutRisePx;
+        c.style.transform = `translateY(${riseY.toFixed(1)}px)`;
       }
-      // THE BEAT PAIR OWNS ITS SPACE — enforced against REAL rectangles, at render time.
-      // A callout and its letter are a deterministic pair (they are placed side by side in the
-      // data), so nothing else may sit between or across them. FOUR data-side attempts failed to
-      // hold this: the generator can't predict rendered geometry, because a callout's height comes
-      // from wrapped text, a letter's from aspect ratio and its scale-pop, and both change with the
-      // viewport. Measured after the last data-side pass: still 100% overlap on two callouts while
-      // the data reported zero. The runtime knows where things actually are.
-      //
-      // Displacement, not dimming: the intruder slides horizontally out of the text's box, which
-      // keeps every letter at full tonality (depth is carried by blur/brightness, never opacity).
-      for (const c of callouts) {
-        if (parseFloat(c.style.opacity || 0) < 0.05) continue;
-        const cr = c.getBoundingClientRect();
-        const pad = vh() * 0.012;
-        for (const layer of layers) {
-          for (const el of layer.children) {
-            if (el.style.visibility === 'hidden') continue;
-            // A beat letter is exempt from ITS OWN callout only — that pairing is the whole point.
-            // Exempting it from EVERY callout was too broad: beat 3's letter was still on screen
-            // when callout 4 arrived and sat across it at 38%.
-            if (el.dataset.beat !== undefined && el.dataset.beat === c.dataset.beat) continue;
-            const r = el.getBoundingClientRect();
-            if (r.right <= cr.left - pad || r.left >= cr.right + pad) continue;
-            if (r.bottom <= cr.top - pad || r.top >= cr.bottom + pad) continue;
-            // shove it to whichever side of the callout it is already closer to
-            const toLeft = (cr.left - pad) - r.right;
-            const toRight = (cr.right + pad) - r.left;
-            const shift = Math.abs(toLeft) < Math.abs(toRight) ? toLeft : toRight;
-            el.style.transform += ` translate3d(${shift.toFixed(1)}px, 0, 0)`;
-          }
-        }
+
+      // The spotlight stays on continuously through the callout sequence -- gaps between callouts
+      // don't turn it off, only being truly past the LAST one does (see spotOnUntilLane above).
+      if (mastheadEl) {
+        const spotA = lanesScrolled <= spotOnUntilLane
+          ? 1
+          : Math.max(0, 1 - (lanesScrolled - spotOnUntilLane) / spotFadeOutLanes);
+        mastheadEl.style.setProperty('--spot-a', spotA.toFixed(3));
       }
 
       if (arrow) {
@@ -614,7 +553,6 @@
         const past = -trackTop / Math.max(1, lpTrack.offsetHeight - vh());
         arrow.classList.toggle('in', past > 0.93);
       }
-
     }
 
     let ticking = false;
@@ -628,272 +566,41 @@
     frame();
   }
 
-  // Scroll-progress rail: fills as the reader moves through the onboarding sequence
-  // (masthead -> closing), fades out once the doors section (real site content) is reached.
-  const rail = document.getElementById('progress-rail');
-  const fill = document.getElementById('progress-fill');
-  const mastheadEl = document.querySelector('.masthead');
-  const heroText = document.getElementById('hero-text');
-  const doorsEl = document.getElementById('doors');
-
-  // ---- masthead opening: the box emerges from darkness as you scroll ------------------------
-  // Adopted 2026-07-22 from the comfyui-mcp scroll-opening prototype (art direction approved by
-  // Paul). Two changes from the previous version: the image's zoom is now scroll-driven rather than
-  // an autoplay `ken-burns` timer -- SCROLL IS THE ONLY CLOCK, so nothing moves when the reader
-  // doesn't -- and all three gradient stops open, not just the centre.
-  //
-  // THE DIALS. Every number that decides how this FEELS lives here, so tuning it is editing one
-  // value rather than reading the maths. Same pattern as the --motion-* dials in :root.
-  const OPENING = {
-    // TWO PHASES, not one simultaneous move (Fernando's direction, 2026-07-22): the intent is
-    // "you are opening the box and discovering the letters", and everything happening at once
-    // reads as a crossfade rather than a sequence.
-    //   PHASE 1  0 .. titleClear      the title lifts away. The box is still shut and dark.
-    //   PHASE 2  titleClear .. travel the box opens -- zoom + aperture + brightening together.
-    // The gap between them is what makes it feel like two beats instead of one.
-    // PHASES AS SCROLL DISTANCE, in screens (Fernando: "the linger should be measured in terms of
-    // scroll distance... one full page"). Declared in screens and converted to track fractions
-    // below, because a fraction is meaningless on its own -- that opacity is how `travel` and
-    // `drainStart` both ended up at 0.86, giving the linger ZERO width so it never happened at all.
-    // Keep the sum in step with .masthead-track's height (290vh = 2.9 screens).
-    phases: { title: 0.5, open: 0.8, linger: 1.0, drain: 0.6 },
-    titleClear: 0.22,  // (derived from `phases` at load; the literals here are fallbacks)
-    travel:  0.86,   // ...and the box finishes opening by this one (longer hold = slower discovery)
-    zoom:    0.26,   // how far the photo zooms across phase 2 (1.00 -> 1.26): pushing INTO the box
-    centre:  0.90,   // starting alpha, centre of frame  -> clears completely
-    mid:     0.90,   // starting alpha, mid-field        -> lifts most of the way
-    midHold: 0.68,   // fraction of `mid` that lifts (was a hardcoded 0.80)
-    edge:    0.90,   // starting alpha, frame edge       -> KEEPS some darkness (see edgeHold)
-    // MEASURED, not guessed: at edgeHold 0.38 the surround lifted to ~0.56 alpha, which exposed the
-    // photo's WHITE STUDIO BACKGROUND at the corners -- the box stopped reading as "in shadow" and
-    // started reading as a cutout pasted on a bright ground (the keying problem the prototype's
-    // notes flag). 0.18 keeps the frame edge genuinely dark so the light stays on the box itself.
-    edgeHold: 0.18,  // fraction of `edge` that lifts; the remainder is the moody surround
-    widthFrom: 34, widthTo: 104,   // aperture ellipse width  (%), closed -> open
-    heightFrom: 26, heightTo: 92,  // aperture ellipse height (%), closed -> open
-    // The photo itself lifts as it emerges -- without this the image is held at a FIXED dimming, so
-    // the aperture opens onto a box that never actually brightens (darkness from two sources, only
-    // one of which opens). Deliberately a PARTIAL lift, not to 1.0: this is a box found in storage,
-    // and keeping some murk at full-open reads truer than a hero shot. Expect to re-tune.
-    brightFrom: 0.85, brightTo: 0.95,
-    fadeFrom:   0.92, fadeTo:   0.97,
-    // PHASE 3 — the drain. After the box has been open a beat, the whole frame goes to black so
-    // the letters can rise out of that same darkness instead of appearing against a hard cut.
-    // The act boundary is the seam most likely to look cheap; draining the photo AND the vignette
-    // together (rather than fading one over the other) is what makes it read as one continuous
-    // space. ONE BLACK EVERYWHERE (#0f0d0a) is doing the rest of the work.
-    // THE LINGER (Fernando, 2026-07-22): the box holds open for a full beat before draining, with
-    // a gentle extra lift so the eye is pushed INTO the contents -- the letters and the propped
-    // portrait -- rather than the frame going dark the moment it finishes opening. This is the beat
-    // the whole opening exists to deliver, so it gets its own phase rather than being a gap between
-    // two others.
-    //   0 .. titleClear   title lifts
-    //   titleClear .. travel   box opens (zoom + aperture + brighten)
-    //   travel .. drainStart   LINGER — held open, brightening a touch further
-    //   drainStart .. 1        drain to black
-    lingerLift: 0.06,   // extra brightness added across the linger
-    drainStart: 0.86,   // fraction of the track where the fade to black begins
-  };
-  // Derive the boundaries from the declared phase LENGTHS, so the linger cannot silently collapse:
-  // its width is whatever `phases.linger` says, not the accidental gap between two fractions.
-  (() => {
-    const ph = OPENING.phases, total = ph.title + ph.open + ph.linger + ph.drain;
-    OPENING.titleClear = ph.title / total;
-    OPENING.travel     = (ph.title + ph.open) / total;
-    OPENING.drainStart = (ph.title + ph.open + ph.linger) / total;
-  })();
-  function updateMastheadReveal() {
-    // The reduced-motion media query already pins the resolved state (aperture open, no zoom).
-    // Returning here leaves that CSS untouched rather than fighting it from JS.
-    if (reduceMotion) return;
-    // Progress through the TRACK's own scrollable length (its height minus the sticky stage), so
-    // the reveal is tied to the pinned section rather than to raw page scroll. Falls back to the
-    // viewport if the track is ever absent, so this can't divide by zero.
-    const track = document.getElementById('masthead-track');
-    const runway = track ? Math.max(1, track.offsetHeight - window.innerHeight) : window.innerHeight;
-    const p = Math.max(0, Math.min(1, window.scrollY / runway));   // progress through the track
-    const s = mastheadEl.style;
-
-    // PHASE 1 -- the title lifts away and clears the box before anything opens.
-    const t = Math.min(1, p / OPENING.titleClear);
-    const ease = x => x * x * (3 - 2 * x);                          // smoothstep
-    if (heroText) {
-      heroText.style.transform = `translate3d(0, ${(-34 * ease(t)).toFixed(1)}vh, 0)`;
-      heroText.style.opacity = (1 - ease(t)).toFixed(3);
-    }
-
-    // PHASE 2 -- the box opens. Progress is REMAPPED so 0 starts where the title finished, which is
-    // what makes this read as a second beat rather than a continuation of the first.
-    const o = Math.max(0, Math.min(1,
-      (p - OPENING.titleClear) / Math.max(0.001, OPENING.travel - OPENING.titleClear)));
-    s.setProperty('--zoom',   (1 + OPENING.zoom * o).toFixed(4));
-    s.setProperty('--hole-a', (OPENING.centre * (1 - o)).toFixed(3));
-    s.setProperty('--hole-m', (OPENING.mid    * (1 - OPENING.midHold * o)).toFixed(3));
-    s.setProperty('--hole-o', (OPENING.edge   * (1 - OPENING.edgeHold * o)).toFixed(3));
-    s.setProperty('--hole-w', (OPENING.widthFrom  + (OPENING.widthTo  - OPENING.widthFrom)  * o).toFixed(1) + '%');
-    s.setProperty('--hole-h', (OPENING.heightFrom + (OPENING.heightTo - OPENING.heightFrom) * o).toFixed(1) + '%');
-    // PHASE 3 -- drain to black. Multiplies the resolved look rather than replacing it, so the box
-    // darkens FROM wherever the reveal left it: one continuous move, not a fade layered over a fade.
-    const drain = Math.max(0, Math.min(1,
-      (p - OPENING.drainStart) / Math.max(0.001, 1 - OPENING.drainStart)));
-    const lit = 1 - drain;
-    // The linger's extra lift: 0 while the box is still opening, ramping in across the hold so the
-    // contents keep resolving after the aperture has finished. Multiplied by `lit` like everything
-    // else, so the drain still takes it to black.
-    const linger = Math.max(0, Math.min(1,
-      (p - OPENING.travel) / Math.max(0.001, OPENING.drainStart - OPENING.travel)));
-    s.setProperty('--photo-bright',
-      ((OPENING.brightFrom + (OPENING.brightTo - OPENING.brightFrom) * o
-        + OPENING.lingerLift * linger) * lit).toFixed(3));
-    s.setProperty('--photo-fade',
-      ((OPENING.fadeFrom + (OPENING.fadeTo - OPENING.fadeFrom) * o) * lit).toFixed(3));
-    if (drain > 0) {
-      // Close the aperture back down as it drains, so darkness arrives from every direction at once
-      // instead of the vignette staying open over an already-black photo.
-      s.setProperty('--hole-a', (drain * 0.98).toFixed(3));
-      s.setProperty('--hole-m', (drain * 0.99).toFixed(3));
-      s.setProperty('--hole-o', Math.max(0.738 * (1 - drain) + drain, 0.738).toFixed(3));
-    }
-  }
-
+  // Scroll-progress rail: fills as the reader moves through the onboarding sequence (masthead ->
+  // field), fades out once the doors section (real site content) is reached.
   function updateProgress() {
-    // Progress starts where the OPENING ends, not at the top of the page. The masthead is a pinned
-    // stage, not reading -- measuring from page-top made the rail show ~8% before a word had been
-    // read, because the midpoint bias below now sits inside a 220vh track.
-    const trackEl = document.getElementById('masthead-track');
-    const startY = trackEl ? trackEl.offsetTop + trackEl.offsetHeight - window.innerHeight
-                           : mastheadEl.offsetTop;
+    if (!mastheadEl || !doorsEl || !rail || !fill) return;
+    const startY = mastheadEl.offsetTop;
     const endY = doorsEl.offsetTop;
     const current = window.scrollY + window.innerHeight * 0.5;
     let progress = (current - startY) / (endY - startY);
     progress = Math.max(0, Math.min(1, progress));
     fill.style.height = (progress * 100) + '%';
     rail.classList.toggle('show', progress > 0.02 && progress < 0.98);
-    updateMastheadReveal();
   }
-
   updateProgress();
   window.addEventListener('scroll', updateProgress, { passive: true });
   window.addEventListener('resize', updateProgress);
-  updateProgress();
-
-  // ---- SCROLL DEBUG HUD ----------------------------------------------------------------------
-  // A shared coordinate for tuning tomorrow's art direction: three per-phase readouts, BOX /
-  // LETTERS / CONTENT, each 0-100, so "at LETTERS 85 this should happen" is unambiguous at any
-  // window size. OFF unless the URL has #debug (or `h` is pressed) -- never reaches a visitor.
-  // Also shows the current sub-phase, the nearest beat, live on-screen letter counts, and `c` to
-  // copy the coordinate. Reads geometry from the DOM, so it stays correct as dials change.
-  (function () {
-    const hud = document.getElementById('scroll-hud');
-    if (!hud) return;
-    const phaseEl = document.getElementById('hud-phase');
-    const metricsEl = document.getElementById('hud-metrics');
-    const mt = document.getElementById('masthead-track');
-    const lt = document.getElementById('lp-track');
-    const doors = document.getElementById('doors');
-    // Footer is where CONTENT ends. Fall back to page bottom if the footer isn't found.
-    const footer = document.querySelector('.site-footer');
-
-    // Beat labels (short), keyed by the data-beat the callouts carry.
-    const BEATS = ['discovery', 'the problem', 'the turn', 'what was done', 'what this is'];
-
-    let visible = location.hash.includes('debug');
-    hud.hidden = !visible;
-
-    // The masthead sub-phase boundaries, as track fractions -- READ from OPENING so the HUD can't
-    // drift from the real phase maths.
-    function boxSubPhase(p) {
-      if (p < OPENING.titleClear) return 'title-lift';
-      if (p < OPENING.travel) return 'box-open';
-      if (p < OPENING.drainStart) return 'LINGER';
-      return 'drain';
-    }
-
-    function pct(top, height) {                 // 0-100 through an element's own scroll length
-      const runway = Math.max(1, height - innerHeight);
-      return Math.max(0, Math.min(100, Math.round(-top / runway * 100)));
-    }
-
-    let last = '';
-    function render() {
-      if (!visible) return;
-      const mtTop = mt.getBoundingClientRect().top;
-      const ltTop = lt.getBoundingClientRect().top;
-      const contentTop = doors.getBoundingClientRect().top;
-      const contentEnd = footer ? footer.getBoundingClientRect().bottom
-                                : document.body.getBoundingClientRect().bottom;
-
-      let phase, val, extra = '';
-      if (contentTop > 0) {
-        // still in BOX or LETTERS
-        if (ltTop > 0) {
-          phase = 'BOX'; val = pct(mtTop, mt.offsetHeight);
-          extra = boxSubPhase(Math.max(0, Math.min(1, -mtTop / Math.max(1, mt.offsetHeight - innerHeight))));
-        } else {
-          phase = 'LETTERS'; val = pct(ltTop, lt.offsetHeight);
-          // The two use cases this HUD exists for: "too much space between these beats" and "the
-          // section is too long by X%". Both are answered by the BEAT MAP -- each beat's own
-          // LETTERS coordinate, computed the same way as `val`. Read them straight off:
-          //   "beat 1 at 30, beat 2 at 50 -> 20 apart, too far" · "section runs to 100, trim ~25".
-          // The runway a beat's callout scrolls through is the same lp-track runway `val` uses, so a
-          // callout at scroll position Y maps to (Y - ltStart)/runway. Compute from data-t via the
-          // track's geometry — stable regardless of where you currently are.
-          // A beat's coordinate is FIXED — beat 1 is always at the same place in the field. Compute
-          // it from the beat's own `data-t` and the field geometry (NOT from the live transform,
-          // which is position-relative-to-the-sticky-stage and so changes as you scroll: that gave
-          // "beat 1 @31" then "@1" then "@0" for the same beat). A callout rides the front layer, so
-          // its track-Y is (frontOffset + t) * laneVh * vh/100; as a fraction of the runway that's
-          // its stable coordinate on this same 0-100 scale as `val`.
-          const LP = window.__LP;
-          const runway = Math.max(1, lt.offsetHeight - innerHeight);
-          const frontLayer = [...document.querySelectorAll('.lp-layer')].pop();  // painter order: front last
-          const frontOffset = parseFloat(frontLayer?.dataset.offset || 0);
-          const beatCoord = t =>
-            Math.max(0, Math.min(100, Math.round((frontOffset + t) * LP.laneVh * innerHeight / 100 / runway * 100)));
-          const beatMap = [...document.querySelectorAll('.lp-callout')]
-            .map(c => ({ beat: +c.dataset.beat, at: beatCoord(parseFloat(c.dataset.t)) }))
-            .sort((a, b) => a.beat - b.beat);
-          const nearest = beatMap.reduce((n, b) => Math.abs(b.at - val) < Math.abs(n.at - val) ? b : n, beatMap[0]);
-          const map = beatMap.map(b => `${b.beat}@${b.at}`).join(' ');
-          extra = `near beat ${nearest.beat} (${BEATS[nearest.beat] || '?'})\nbeats  ${map}`;
-        }
-      } else {
-        // CONTENT: from the top of the doors to the bottom of the footer
-        const span = Math.max(1, (contentEnd - contentTop) - innerHeight);
-        val = Math.max(0, Math.min(100, Math.round((-contentTop) / span * 100)));
-        phase = 'CONTENT';
-      }
-
-      phaseEl.textContent = `${phase} ${val}`;
-      metricsEl.textContent = extra;
-      last = `${phase} ${val}` + (extra ? ' · ' + extra.split('\n')[0] : '');
-    }
-
-    // The HUD renders on its OWN rAF loop while visible — not coupled to the parallax frame(). The
-    // coupling was the whole source of the stale counts (0 letters reported while 15 were on
-    // screen): the HUD ran on the scroll event, the parallax ran on a later rAF, so the HUD always
-    // read the PREVIOUS frame's positions. An independent rAF reads current geometry every frame,
-    // and only while the HUD is actually shown, so it costs nothing in production.
-    let rafId = null;
-    function loop() { render(); rafId = visible ? requestAnimationFrame(loop) : null; }
-    function startLoop() { if (visible && rafId === null) loop(); }
-    startLoop();
-    window.addEventListener('resize', render);
-    window.addEventListener('hashchange', () => {
-      visible = location.hash.includes('debug'); hud.hidden = !visible; startLoop();
-    });
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'h') { visible = !visible; hud.hidden = !visible; startLoop(); }
-      if (e.key === 'c' && visible && last) {
-        navigator.clipboard?.writeText(last);
-        phaseEl.textContent = '✓ ' + phaseEl.textContent;   // brief confirm
-        setTimeout(render, 400);
-      }
-    });
-    render();
-  })();
 })();
 </script>
+
+<!-- Optional ambient music (Fernando 2026-07-23). AI-generated (credited in credits.html); off until
+     the reader's first interaction, and this toggle turns it off/on at any time. The player is the
+     shared, portable assets/ambient-audio.js — a page opts in with the config + this markup below. -->
+<button class="ambient-toggle" id="ambient-toggle" type="button" aria-pressed="false"
+        aria-label="Turn music on" data-on="false">
+  <svg class="ambient-toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor" stroke="none"/>
+    <path class="ambient-wave" d="M16 8.5a4 4 0 0 1 0 7"/>
+    <path class="ambient-wave" d="M18.5 6a7 7 0 0 1 0 12"/>
+  </svg>
+  <span class="ambient-toggle-text">Music off</span>
+</button>
+<script>
+  window.AMBIENT_AUDIO = { src: 'assets/ambient-klezmer.mp3', label: 'Music' };
+</script>
+<script src="assets/ambient-audio.js"></script>
 
 </body>
 </html>
