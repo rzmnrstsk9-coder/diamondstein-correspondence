@@ -529,7 +529,10 @@
          aria-label="Music volume">
 </div>
 <script>
-  window.AMBIENT_AUDIO = { src: 'assets/ambient-klezmer.mp3', label: 'Music' };
+  // Starts low (Paul, 2026-07-23) -- below the module's own 0.28 default, page-scoped via the
+  // `volume:` override rather than lowering VOLUME in ambient-audio.js (which would also quiet
+  // it on any other page that reuses the shared module).
+  window.AMBIENT_AUDIO = { src: 'assets/ambient-klezmer.mp3', label: 'Music', volume: 0.12 };
 </script>
 <script src="assets/ambient-audio.js"></script>
 
