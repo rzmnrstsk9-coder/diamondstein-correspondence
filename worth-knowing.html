@@ -15,9 +15,16 @@
 
   /* Jump-nav: sticky strip of anchor chips, one per card -- same "small mono chip, active state
      highlighted" idiom as pictures.html's filmstrip-nav, applied to anchor-jump instead of
-     slide-swap. */
+     slide-swap. Single-row horizontal scroll (not flex-wrap), matching the ACTUAL filmstrip-nav
+     idiom this already claimed to follow: with 15 chips, flex-wrap on a narrow phone screen was
+     wrapping to 5-6 rows and staying stuck there (position: sticky) as the reader scrolled -- a
+     tall sticky block sitting over the article text, not just a nav strip (Paul, 2026-07-25:
+     "the menu items intrude into the text" on mobile). One row, horizontally scrollable, is a
+     fixed known height at every viewport width -- the bug class doesn't exist anymore. */
   .jump-nav-wrap { position: sticky; top: 0; z-index: 20; background: var(--cream); border-bottom: 1px solid var(--line); box-shadow: var(--shadow-rest); }
-  .jump-nav { max-width: 760px; margin: 0 auto; padding: 0.8rem 1.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .jump-nav { max-width: 760px; margin: 0 auto; padding: 0.8rem 1.5rem; display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 0.5rem; }
+  .jump-nav::-webkit-scrollbar { height: 4px; }
+  .jump-nav::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
   .jump-chip { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.02em; color: var(--ink-soft); background: var(--surface); border: 1px solid var(--line); border-radius: 0; padding: 0.35rem 0.8rem; text-decoration: none; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; white-space: nowrap; }
   .jump-chip:hover { border-color: var(--rust); color: var(--rust); }
   .jump-chip.active { background: var(--rust); border-color: var(--rust); color: #fff; }

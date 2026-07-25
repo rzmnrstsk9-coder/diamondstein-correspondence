@@ -9,6 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/components.css">
+<link rel="stylesheet" href="assets/maps/maplibre-gl.css">
 <style>
   :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
 
@@ -108,6 +109,27 @@
   figure.map-figure img:hover { opacity: 0.92; }
   figure.map-figure figcaption { font-size: 0.86rem; color: rgba(26,26,26,0.6); margin-top: 0.9rem; line-height: 1.5; }
   figure.map-figure figcaption b { color: var(--navy); font-family: 'IBM Plex Mono', monospace; font-weight: 600; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; display: block; margin-bottom: 0.35rem; }
+  .map-figure-link { display: inline-block; margin-top: 0.8rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: var(--rust); text-decoration: none; border-bottom: 1px solid var(--rust); padding-bottom: 0.1rem; }
+  .map-figure-link:hover { opacity: 0.75; }
+
+  /* live-map (2026-07-25): the real interactive MapLibre scattering map, embedded inline in the
+     article — same .map-live/.map-live-stage shape journey.html uses (map-render.js targets those
+     class/attribute names regardless of which door mounts it), narrowed to this column's width
+     rather than journey.html's wider 1000px card. */
+  .map-live { margin: 2.2rem 0; background: #fff; border-radius: 0; box-shadow: 0 10px 26px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06); overflow: hidden; }
+  .map-live-stage { position: relative; width: 100%; min-height: 320px; height: 320px; background: var(--cream-dim); }
+  .map-live-stage .maplibregl-map { position: absolute; inset: 0; }
+  .map-live-unavailable::after { content: "Map unavailable in this browser"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--rust); }
+  .map-live .map-section { padding: 1.2rem 1.2rem 1.4rem; }
+  .map-live .map-era { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.5rem; }
+  .map-live .map-title { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.6rem; }
+  .map-live .map-copy { font-size: 0.86rem; line-height: 1.6; color: rgba(26,26,26,0.75); }
+  .map-live-link { display: inline-block; margin-top: 0.8rem; font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: var(--rust); text-decoration: none; border-bottom: 1px solid var(--rust); padding-bottom: 0.1rem; }
+  .map-live-link:hover { opacity: 0.75; }
+  .origin-dot { width: 9px; height: 9px; border-radius: 50%; background: #a8391a; border: 2px solid #fff; box-shadow: 0 0 0 1px #4a3b22; }
+  .waypoint-label-gl { font-family: 'IBM Plex Mono', monospace; font-weight: 600; font-size: 0.68rem; color: #a8391a; white-space: nowrap; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff, 0 0 5px #fff; pointer-events: none; }
+  .waypoint-label-gl.dim { color: #2a4a6a; font-weight: 500; font-size: 0.62rem; }
+  @media (max-width: 640px) { .map-live-stage { min-height: 240px; height: 240px; } }
 
   .cast-inline { display: flex; gap: 1.2rem; align-items: center; background: #fff; border-radius: 0; padding: 1.1rem 1.3rem; margin: 1.6rem 0; border: 1px solid rgba(0,0,0,0.06); cursor: pointer; transition: box-shadow 0.15s ease, transform 0.15s ease; }
   .cast-inline:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.08); transform: translateY(-2px); }
@@ -180,6 +202,17 @@
   .pm-letter-item.pm-more { color: var(--rust); font-weight: 600; }
   .pm-no-letters { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; color: rgba(26,26,26,0.4); }
 
+  /* pm-source (2026-07-25): an optional "source document" section — honest-absent (display:none,
+     set server-side by the shared partial and toggled by modal.js) for every person but the one
+     it's real for. */
+  .pm-source { margin-top: 1.1rem; padding-top: 1.1rem; border-top: 1px solid rgba(0,0,0,0.08); }
+  .pm-source-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(26,26,26,0.45); margin-bottom: 0.5rem; }
+  .pm-source-pages { display: flex; gap: 0.5rem; margin-bottom: 0.6rem; flex-wrap: wrap; }
+  .pm-source-page { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; padding: 0.35rem 0.7rem; border: 1px solid var(--rust); color: var(--rust); background: none; cursor: pointer; border-radius: 0; }
+  .pm-source-page:hover { background: var(--rust); color: #fff; }
+  .pm-source-note { font-size: 0.76rem; font-style: italic; color: rgba(26,26,26,0.5); margin-bottom: 0.6rem; line-height: 1.5; }
+  .pm-source-translation { font-size: 0.85rem; line-height: 1.6; color: rgba(26,26,26,0.8); white-space: pre-wrap; max-height: 220px; overflow-y: auto; padding: 0.8rem; background: var(--fill-sunken); }
+
   #letter-overlay { z-index: 160; }
 
 
@@ -234,7 +267,7 @@
 <div class="head">
   <p class="kicker">A Box of Letters</p>
   <h1 class="display">Read the Story</h1>
-  <p class="sub">The whole arc, every detail &mdash; the numbers behind the wages and the exchange rates, the historical context behind the decisions, and the family history that reaches back before Sam and Dora were even born. Every underlined phrase links straight to the letter or evidence behind it.</p>
+  <p class="sub">The story that emerged from the letters, historical research, the family trees, and living memory. Every underlined phrase links straight to the letter or evidence behind it.</p>
 </div>
 
 <div class="chapter-nav-wrap" id="chapter-nav-wrap">
@@ -257,6 +290,7 @@
 <div class="cast-inline" data-person="person:david-dimantshtein"><img data-field="image" data-media="portrait-david-dimantshtein-real" data-provenance="archival-photo" src="media/portrait-david-dimantshtein-real.jpg" alt="David Dimantshtein"><div><div class="ci-name">David Dimantshtein</div><div class="ci-dates mono">c.1825–1906</div><div class="ci-role">Sam &amp; Dora&#x27;s grandfather</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
 <div class="cast-inline" data-person="person:keila-tsirel"><img data-field="image" data-media="portrait-keila-tsirel-real" data-provenance="archival-photo" src="media/portrait-keila-tsirel-real.jpg" alt="Keila-Tsirel Dimantshtein"><div><div class="ci-name">Keila-Tsirel Dimantshtein</div><div class="ci-dates mono">c.1830–c.1900s</div><div class="ci-role">Sam &amp; Dora&#x27;s grandmother</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
 <p class="para" data-item="chapter:prologue/blk-14" data-field="narrative">Their ten children scattered in almost every direction available to a Litvak family of this era. Zissa stayed in Lithuania and Latvia, dying in Birž in 1932. Tsvi-Hirsh and Zev-Wolf stayed in the Baltic region too, in Riga and Korsovka respectively. Reuven, Mordekhai (&quot;Marks&quot;), Rivka, and Meir all eventually reached London — Reuven becoming Dora&#x27;s father, and simultaneously Sam&#x27;s own uncle. Yeshaya, also known as Solomon, was the one who crossed instead to New York. And Getzel, who died young in Korsovka around 1890, became Sam&#x27;s father — meaning Sam&#x27;s own father never left the shtetl his own father had settled two generations before.</p>
+<div class="map-live" data-item="journey-map:map-the-scattering" data-year="1890"><div class="map-live-stage" data-map="map-the-scattering"></div><div class="map-section"><div class="map-era" data-field="era">Before the Letters &middot; 1880s&ndash;1900s</div><div class="map-title" data-field="title">The Scattering</div><div class="map-copy" data-field="copy">Before there's a "Sam and Dora" story, there's a much bigger one: David and Keila-Tsirel's ten children, scattering out of the Latvian-Lithuanian Pale in every direction &mdash; to Montreal, to London, to South Africa, to Palestine. Sam and Dora's letters are really just the surviving fragment of that much larger diaspora. This map is the reason the correspondence exists at all: once a family scatters this widely, letters stop being a nicety and become the only way anyone stays a family.</div><a class="map-live-link" href="journey.html">See the full journey map &rarr;</a></div></div>
 <p class="para" data-item="chapter:prologue/blk-15" data-field="narrative">Not everyone in this family reached safety. One of David&#x27;s granddaughters, through his daughter Zissa, had three of her own children still living in Korsovka in 1941 — the year the German occupation of Latvia brought the mass killing of Jewish communities across that entire region. The family&#x27;s own tree marks three of them dead that year, in Korsovka, with their children. Two of their cousins, born in the same town a few years earlier, are marked instead as having reached what would become Israel. The same family, within a single generation, split between those who got out in time and those who did not.</p>
 <p class="para" data-item="chapter:prologue/blk-16" data-field="narrative">Sam grew up in Korsovka, in this same world, the son of <span class="person-trigger" role="button" tabindex="0" data-person="person:getzel">Getzel</span> and (per family record, though not fully confirmed) <span class="person-trigger" role="button" tabindex="0" data-person="person:deborah-tomshinsky">Deborah Tomshinsky</span>. He and Dora were cousins, and their families&#x27; paths ran close enough that by the time Sam was a teenager, marrying his cousin was already a plausible, half-expected future — if he ever came back from wherever he was about to go.</p>
 <figure class="inline-figure"><img data-field="image" data-media="hist-gargzdai-market" data-provenance="external-sourced" src="media/hist-gargzdai-market.jpg" alt="A market square in Gargždai, Lithuania, c.1910–1912 — representative of the kind of small Jewish shtetl Sam grew up in, not Korsovka itself." loading="lazy"><figcaption>A market square in Gargždai, Lithuania, c.1910–1912 — representative of the kind of small Jewish shtetl Sam grew up in, not Korsovka itself.</figcaption></figure>
@@ -291,7 +325,7 @@
 <p class="para" data-item="chapter:travelling-years/blk-01" data-field="narrative">Dora and the girls <button class="explain-trigger" type="button" data-target="ex-air">summer at the English seaside</button> for weeks at a stretch — Margate, Ramsgate, Westcliff, Bournemouth — while Sam works London and buys fur on the Continent. Every summer, Dora and the girls went to the coast for a stretch. And on his buying trips Sam was away a few days at a time, and wrote home while he was gone.</p><div class="explain-panel" id="ex-air" data-item="explainer:air"><button class="explain-panel-close" type="button" aria-label="Close">&times;</button><div class="explain-panel-eyebrow">Worth Knowing</div><div class="explain-panel-title">“Change of Air”</div><div class="explain-panel-summary">The real Edwardian medical convention behind sending Dora and the girls to the coast every summer.</div><div class="explain-panel-body" data-field="body">Every summer, Dora and the girls went to the coast for weeks at a time while Sam stayed in London and worked. This wasn&#x27;t just family lore or a class marker — “change of air” was a real medical convention of the period: doctors routinely prescribed extended coastal or country stays for children and convalescents as general health practice, independent of any specific illness.</div></div>
 <figure class="inline-figure"><img data-field="image" data-media="family-sam-with-gladys-and-beatrice-margate" data-provenance="archival-photo" src="media/family-sam-with-gladys-and-beatrice-margate.jpg" alt="Sam walking the promenade at Margate with Gladys and Beatrice, c.1930s — a little later than this chapter&#x27;s own letters, but the same seaside tradition of family holidays the fur trade&#x27;s prosperity made possible." loading="lazy"><figcaption>Sam walking the promenade at Margate with Gladys and Beatrice, c.1930s — a little later than this chapter&#x27;s own letters, but the same seaside tradition of family holidays the fur trade&#x27;s prosperity made possible.</figcaption></figure>
 <p class="para" data-item="chapter:travelling-years/blk-02" data-field="narrative"><span class="letter-trigger" role="button" tabindex="0" data-title="Letter to Gladys and Beaty (Page 1)">One letter that summer is addressed to both daughters by name — Gladys and Beaty — scolding them for upsetting their mother at Ramsgate, on a report relayed by Auntie Sarah.</span></p>
-<div class="cast-inline" data-person="person:beatrice"><img data-field="image" data-media="portrait-beatrice-real" data-provenance="archival-photo" src="media/portrait-beatrice-real.jpg" alt="Beatrice Diamondstein"><div><div class="ci-name">Beatrice Diamondstein</div><div class="ci-dates mono">b. c.1915</div><div class="ci-role">Sam &amp; Dora&#x27;s daughter</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
+<div class="cast-inline" data-person="person:beatrice"><img data-field="image" data-media="portrait-beatrice-real" data-provenance="archival-photo" src="media/portrait-beatrice-real.jpg" alt="Beatrice Diamondstein"><div><div class="ci-name">Beatrice Diamondstein</div><div class="ci-dates mono">c.1915–1990</div><div class="ci-role">Sam &amp; Dora&#x27;s daughter</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
 <figure class="inline-figure"><img data-field="image" data-media="hist-westcliff-on-sea-1930" data-provenance="external-sourced" src="media/hist-westcliff-on-sea-1930.jpg" alt="Marine Drive, Westcliff-on-Sea, 1930 — one of the family&#x27;s own named coastal towns, a few years after their actual 1919–26 summers there. Margate. Ramsgate. Westcliff. Bournemouth. Weeks at a time, summer after summer." loading="lazy"><figcaption>Marine Drive, Westcliff-on-Sea, 1930 — one of the family&#x27;s own named coastal towns, a few years after their actual 1919–26 summers there. Margate. Ramsgate. Westcliff. Bournemouth. Weeks at a time, summer after summer.</figcaption></figure>
 <p class="para" data-item="chapter:travelling-years/blk-05" data-field="narrative">Through these years, Sam&#x27;s letters settle into a steady rhythm: a cheque folded into an envelope, then the same handful of questions about the children, the weather, whether they&#x27;re behaving — asked and answered, week after week, for the better part of a decade.</p>
 <p class="para" data-item="chapter:travelling-years/blk-06" data-field="narrative">The business, meanwhile, becomes genuinely wealthy. By the 1920s Sam is buying pelts by the thousand on <button class="explain-trigger" type="button" data-target="ex-furtrade">regular trips to Paris and Leipzig</button> — ninety stone martens and three thousand dyed moles in a single afternoon, at a steep markup over what he&#x27;d sell them for back home. The boy who once earned twenty-five cents a day in Montreal was, twenty years on, moving more money in an afternoon than most of Montreal ever paid him in a year.</p><div class="explain-panel" id="ex-furtrade" data-item="explainer:furtrade"><button class="explain-panel-close" type="button" aria-label="Close">&times;</button><div class="explain-panel-eyebrow">Worth Knowing</div><div class="explain-panel-title">The Fur Trade, London to the Continent</div><div class="explain-panel-summary">London was the shopfront — the real buying happened on regular trips to Paris, Leipzig, and Berlin.</div><div class="explain-panel-body" data-field="body">By 1916 Sam was running S. Diamondstein &amp; Co., Fur Dealers and Job Buyers, out of Fashion Street in London&#x27;s Brick Lane — but London was the storefront, not the source. The actual buying happened on regular trips to Paris, Leipzig, and Berlin, where he&#x27;d purchase pelts by the thousand — stone martens, dyed moles — at a steep markup over what he&#x27;d sell them for back home; one single day&#x27;s purchase of ninety martens and three thousand moles, at roughly three times cost, works out to something like sixty thousand Canadian dollars today. That&#x27;s why so many letters from the 1919–1926 “Travelling Years” are written on Continental hotel stationery.</div></div>
@@ -354,6 +388,12 @@
     <div class="pm-bio" id="pm-bio"></div>
     <div class="pm-letters-label" id="pm-letters-label"></div>
     <div id="pm-letters-list"></div>
+    <div class="pm-source" id="pm-source" style="display:none">
+      <div class="pm-source-label" id="pm-source-label"></div>
+      <div class="pm-source-pages" id="pm-source-pages"></div>
+      <div class="pm-source-note" id="pm-source-note"></div>
+      <div class="pm-source-translation" id="pm-source-translation"></div>
+    </div>
     <div class="modal-nav-row" id="person-modal-nav-row">
       <button class="nav-btn" id="person-modal-prev" aria-label="Previous person">&larr;</button>
       <div class="modal-position mono" id="person-modal-position"></div>
@@ -729,9 +769,10 @@
       "The Homestead Grant",
       "Mixed Yiddish and English"
     ],
-    "letters_total": 47,
+    "letters_total": 46,
     "letters_page": "letters/by-person/dad-sam-104f4d.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:dear-dora-3e5ca1": {
     "img": "media/portrait-dora-young-real.jpg",
@@ -747,9 +788,10 @@
       "The Homestead Grant",
       "Mixed Yiddish and English"
     ],
-    "letters_total": 78,
+    "letters_total": 77,
     "letters_page": "letters/by-person/dear-dora-3e5ca1.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:reuven": {
     "img": "",
@@ -764,7 +806,8 @@
     ],
     "letters_total": 2,
     "letters_page": "letters/by-person/reuven.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:dora-s-mother-hinde-41248e": {
     "img": "",
@@ -780,7 +823,8 @@
     ],
     "letters_total": 3,
     "letters_page": "letters/by-person/dora-s-mother-hinde-41248e.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:yehuda-leib": {
     "img": "media/portrait-yehuda-leib-real.jpeg",
@@ -792,7 +836,16 @@
     "letters": [],
     "letters_total": 0,
     "letters_page": "letters/by-person/yehuda-leib.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": {
+      "label": "A memorial biography of Yehuda-Leib, written by his son",
+      "translation_note": "A rough, unverified machine translation of a heavily garbled OCR scan of the original — many words are fragmented or uncertain. Bracketed phrases mark the translator&#x27;s own guesses at unclear text; this has not been checked by a Hebrew/Yiddish reader.",
+      "translation": "Yehuda-Leib was raised on the knees of Torah and Hasidism [by] his father...\n\n...to have mercy and to complete/fulfill... [from the young age of 4]... Then Yehuda-Leib carried/continued with his father... the blessing of the forefathers. In the beginning, manual labor/artisan work...\n\n...chosen from the flags of wisdom, [he] stood before the Gaon (genius/rabbinic authority), Rabbi Avigdor [Aptowitzer/Amiel?]. In those years, he... supported Torah societies and various institutions. And all those years, from the day he came to London, he wore a crown of nobility and glory on his head...\n\nFinally, Yehuda-Leib overcame all the obstacles and immigrated to the Land [of Israel] in the year 1925 (or 1929).\n\nUpon arriving in the Land, Yehuda-Leib immediately threw himself into work in Jerusalem. He went from path to path, striving for a single point of perfection: he wanted to earn his living by the sweat of his brow in Jerusalem. Aside from his labor, he prayed every day with the community, and set aside regular times for Torah study.\n\nHowever, he did not get to enjoy his labor for long. A period of economic crisis arrived. During the years of this crisis, 1926–1927, the distress in Yehuda-Leib&#x27;s home reached its peak. His mentor, Rabbi Avigdor, wrote letters to him from London and Johannesburg, offering him financial assets and support. But Yehuda-Leib&#x27;s response was steadfast [in wanting to remain].\n\nUltimately, he took a job at the orphanage of Rabbi [Diskin], of blessed memory. He performed his work with ultimate faithfulness and diligence. Even though his official job was [specific role], he voluntarily took on extra duties...\n\nOn Friday, the 17th of [the month of] Av, during the Arab riots/attacks on the orphanage of Rabbi Diskin in the Givat Shaul neighborhood, Yehuda-Leib was severely wounded. For four days he lay there in mortal agony, until Tuesday, the 21st of Av, [when he passed away].",
+      "pages": [
+        "media/yehuda-leib-bio-p1.jpeg",
+        "media/yehuda-leib-bio-p2.jpeg"
+      ]
+    }
   },
   "person:david-dimantshtein": {
     "img": "media/portrait-david-dimantshtein-real.jpg",
@@ -804,7 +857,8 @@
     "letters": [],
     "letters_total": 0,
     "letters_page": "letters/by-person/david-dimantshtein.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:keila-tsirel": {
     "img": "media/portrait-keila-tsirel-real.jpg",
@@ -816,7 +870,8 @@
     "letters": [],
     "letters_total": 0,
     "letters_page": "letters/by-person/keila-tsirel.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:getzel": {
     "img": "",
@@ -828,7 +883,8 @@
     "letters": [],
     "letters_total": 0,
     "letters_page": "letters/by-person/getzel.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:deborah-tomshinsky": {
     "img": "",
@@ -842,7 +898,8 @@
     ],
     "letters_total": 1,
     "letters_page": "letters/by-person/deborah-tomshinsky.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:john-felkov": {
     "img": "",
@@ -856,11 +913,12 @@
     ],
     "letters_total": 1,
     "letters_page": "letters/by-person/john-felkov.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:beatrice": {
     "img": "media/portrait-beatrice-real.jpg",
-    "dates": "b. c.1915",
+    "dates": "c.1915–1990",
     "role": "Sam &amp; Dora&#x27;s daughter",
     "bio": "Sam &amp; Dora&#x27;s second daughter; born around 1915-1916 (estimate only -- no document gives an exact year). Her own daughter Hilary later became a source of family testimony for this project.",
     "node_id": "person:beatrice",
@@ -874,7 +932,8 @@
     ],
     "letters_total": 10,
     "letters_page": "letters/by-person/beatrice.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:sonia": {
     "img": "",
@@ -889,7 +948,8 @@
     ],
     "letters_total": 2,
     "letters_page": "letters/by-person/sonia.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:gladys": {
     "img": "media/portrait-gladys-real.jpg",
@@ -907,7 +967,8 @@
     ],
     "letters_total": 14,
     "letters_page": "letters/by-person/gladys.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:cynthia": {
     "img": "media/portrait-cynthia-real.jpg",
@@ -922,7 +983,8 @@
     ],
     "letters_total": 2,
     "letters_page": "letters/by-person/cynthia.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   },
   "person:auntie-sarah-c4173d": {
     "img": "media/portrait-sarah-nygate-real.jpg",
@@ -940,7 +1002,8 @@
     ],
     "letters_total": 8,
     "letters_page": "letters/by-person/auntie-sarah-c4173d.html",
-    "silhouette": null
+    "silhouette": null,
+    "source_doc": null
   }
  };
 </script>
@@ -1172,6 +1235,12 @@
 
 <button class="back-to-top" id="back-to-top" type="button">&uarr; Top</button>
 <script src="assets/back-to-top.js"></script>
+
+<script src="assets/maps/maplibre-gl.js"></script>
+<script src="assets/maps/pmtiles.js"></script>
+<script src="assets/maps/maplibre-gl-dates.js"></script>
+<script>window.JOURNEY_MAPS = [{"map": "map-the-scattering", "year": 1890, "zoom": 2, "min_zoom": null, "max_zoom": null, "tile_source": "live", "center": {"lat": 56.78, "lon": 27.68}, "waypoints": [{"label": "THE PALE", "place_ref": "place:city-korsovka", "lat": 56.78, "lon": 27.68}, {"label": "MONTREAL", "place_ref": "place:city-montreal", "lat": 45.5, "lon": -73.57}, {"label": "LONDON", "place_ref": "place:city-london", "lat": 51.51, "lon": -0.13}, {"label": "SOUTH AFRICA", "place_ref": "place:city-cape-town", "lat": -33.92, "lon": 18.42}, {"label": "PALESTINE", "place_ref": "place:city-jerusalem", "lat": 31.78, "lon": 35.22}], "routes": [{"from": {"lat": 56.78, "lon": 27.68}, "to": {"lat": 45.5, "lon": -73.57}, "animated": true}, {"from": {"lat": 56.78, "lon": 27.68}, "to": {"lat": 51.51, "lon": -0.13}, "animated": true}, {"from": {"lat": 56.78, "lon": 27.68}, "to": {"lat": -33.92, "lon": 18.42}, "animated": true}, {"from": {"lat": 56.78, "lon": 27.68}, "to": {"lat": 31.78, "lon": 35.22}, "animated": true}]}];</script>
+<script src="assets/maps/map-render.js"></script>
 
 </body>
 </html>

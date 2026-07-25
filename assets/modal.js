@@ -195,6 +195,27 @@
         btn.addEventListener('click', () => openLetterModal(btn.dataset.title));
       });
     }
+    // source_doc (2026-07-25): honest-absent for everyone but the one person it's real for —
+    // p.source_doc is undefined/null for every other node, so the section just stays hidden.
+    // label/translation_note/translation are pre-escaped server-side (modal_island.py), same
+    // innerHTML sink as p.bio/p.role above — NOT .textContent (that would show the raw
+    // entities, e.g. "&#39;", literally).
+    const sourceEl = document.getElementById('pm-source');
+    if (p.source_doc) {
+      document.getElementById('pm-source-label').innerHTML = p.source_doc.label;
+      document.getElementById('pm-source-note').innerHTML = p.source_doc.translation_note;
+      document.getElementById('pm-source-translation').innerHTML = p.source_doc.translation;
+      const pagesEl = document.getElementById('pm-source-pages');
+      pagesEl.innerHTML = p.source_doc.pages.map((src, i) =>
+        `<button type="button" class="pm-source-page" data-src="${src}" data-alt="${esc(p.canonical)} — page ${i + 1}">Page ${i + 1}</button>`
+      ).join('');
+      pagesEl.querySelectorAll('.pm-source-page').forEach(btn => {
+        btn.addEventListener('click', () => openZoom(btn.dataset.src, btn.dataset.alt));
+      });
+      sourceEl.style.display = '';
+    } else {
+      sourceEl.style.display = 'none';
+    }
     if (CONFIG.personPrevNext) {
       document.getElementById('person-modal-position').textContent = `${personIdx + 1} / ${personOrder.length}`;
     }
