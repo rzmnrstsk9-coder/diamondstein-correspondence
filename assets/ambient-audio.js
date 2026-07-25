@@ -144,8 +144,13 @@
     const wrap = toggle.closest('.ambient-audio') || toggle;
     wrap.dataset.on = playing ? 'true' : 'false';
     toggle.dataset.on = playing ? 'true' : 'false';   // kept for pages using the older markup
+    // Visible text now matches the aria-label's ACTION phrasing (Paul, 2026-07-25) --
+    // it used to show cfg.label ("Music") while playing and a bare status ("Music off")
+    // otherwise, an inconsistent mix of "what's playing" and "what state it's in" that
+    // didn't say what clicking DOES. Both states now read as an instruction, like the
+    // aria-label already did.
     const t = toggle.querySelector('.ambient-toggle-text');
-    if (t) t.textContent = playing ? (cfg.label || 'Music') : 'Music off';
+    if (t) t.textContent = playing ? 'Turn Music Off' : 'Turn Music On';
   }
 
   if (toggle) {

@@ -142,3 +142,11 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
   letter-spacing:0.06em; text-transform:uppercase; text-align:center; padding:0 var(--space-4); }
 .slider-placeholder.unresolved .slider-banner { color:var(--rust); }
 .slider-placeholder.no-photo .slider-banner { color:var(--navy-on-dark); }
+
+/* Back-to-top (originally worth-knowing.html-only; graduated here 2026-07-25 once every
+   scrolling door wanted the same button -- shared JS is assets/back-to-top.js). */
+.back-to-top { position: fixed; right: 1.5rem; bottom: 1.5rem; z-index: 20; font-family: var(--font-mono);
+  font-size: var(--text-xs); letter-spacing: 0.04em; color: #fff; background: var(--ink); border: none;
+  border-radius: 0; padding: 0.6rem 1.1rem; cursor: pointer; box-shadow: var(--shadow-hover);
+  opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
+.back-to-top.visible { opacity: 1; pointer-events: auto; }
