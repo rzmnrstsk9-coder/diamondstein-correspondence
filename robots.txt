@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /_provisional/
+Disallow: /letters/by-person/
+
+Sitemap: https://aboxofletters.com/sitemap.xml
