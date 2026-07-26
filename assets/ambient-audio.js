@@ -4,11 +4,13 @@
 // = { src, label } and including the toggle markup (a <button id="ambient-toggle">), BEFORE this
 // file loads. Any page can add the bed with those two lines -- it is not index-specific.
 //
-// Design (agreed with Fernando 2026-07-23):
-//   - The music is AI-generated and OPTIONAL. It is off until the reader's first interaction, and a
-//     visible toggle turns it off (or back on) at any time. It is never a surprise blast of sound.
-//   - Browsers block autoplay WITH sound until the user interacts, so we do not even try: the first
-//     scroll / click / key press is what starts it (and only if the reader hasn't chosen "off").
+// Design (agreed with Fernando 2026-07-23; default flipped to off, Paul 2026-07-26):
+//   - The music is AI-generated and OPTIONAL, and defaults to OFF for a first-time visitor — it never
+//     starts on its own. A visible toggle turns it on, and it stays on (persisted) across pages/visits
+//     once the reader has explicitly chosen that. It is never a surprise blast of sound.
+//   - Browsers block autoplay WITH sound until the user interacts. For a returning visitor who has
+//     explicitly turned it on before, the first scroll / click / key press on a fresh page load is what
+//     resumes it (satisfying that autoplay policy) — but nothing plays before an explicit opt-in.
 //   - It LOOPS, and it PERSISTS ACROSS PAGES: the on/off choice and the rough playback position are
 //     kept in localStorage, so navigating between pages continues the bed instead of restarting it.
 //   - prefers-reduced-motion is NOT wired to this. Reduced MOTION is not reduced SOUND; conflating
@@ -89,9 +91,11 @@
     set(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* ignore */ } },
   };
 
-  // The reader has explicitly turned it OFF if the stored choice says so. Absent = not-yet-chosen,
-  // which means "may start on first interaction" (the default-on-after-interaction behaviour).
-  let mutedByUser = store.get(KEY_ON) === 'off';
+  // Muted unless the reader has explicitly turned it ON before. Absent (first-time visitor) now
+  // defaults to muted — no autoplay-on-interaction until they've opted in at least once (Paul,
+  // 2026-07-26). A stored 'on' is what re-arms the first-interaction listener below, so a returning
+  // visitor's choice still resumes across page loads within the browser's autoplay-gesture rule.
+  let mutedByUser = store.get(KEY_ON) !== 'on';
 
   // The live target volume: the reader's remembered slider setting if they've moved it, else the
   // page/module default. Every fade aims at THIS, so a mid-playback slider move takes effect at once.
