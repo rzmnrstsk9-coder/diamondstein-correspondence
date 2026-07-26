@@ -55,23 +55,25 @@
     text-align: center; padding: 3rem 1.5rem; overflow: hidden; background: #0f0d0a;
     --box-a: 0;
   }
-  /* The box layer (Fernando, 2026-07-24): a cut-out WITH a hand-painted grounding shadow, on
-     transparency, so it reads as a real object sitting on the dark stage rather than a full-bleed
-     photo the spotlight carves a box out of. `contain` (was `cover`) keeps the whole box + its
-     shadow in frame -- `cover` would crop the shadow padding that makes it convincing. The image is
-     black-at-varying-alpha, so it composites onto the near-black ground as darkness, no white plate.
-     Still on var(--box-a) + ken-burns, so the existing scroll-fade JS (line ~528) needs no change. */
-  /* The box layer (Fernando, 2026-07-24, v2): the box photo with BOTH a grounding shadow AND a warm
-     ambient glow baked into the image itself -- a complete, fully-OPAQUE scene, no transparency. So
-     the CSS `.box-floor` pool that the earlier cut-out needed is GONE (removed, not just hidden): the
-     lit surround is in the pixels now, and a CSS pool on top would double it. Full-bleed `cover`
-     (like the original JPEG), not object-sizing -- an opaque 1:1 scene under `contain` would letterbox
-     with bars of #0f0d0a. Being opaque + full-bleed, it also covers the parallax sprites at the frame
-     edges on its own, so the "letters peeking in" problem is handled here too (the t_offset push-down
-     stays as belt-and-braces). Still on var(--box-a) + ken-burns, so the scroll-fade JS is unchanged. */
+  /* The box layer (Fernando, 2026-07-24, v2; format corrected 2026-07-26): the box photo with BOTH a
+     grounding shadow AND a warm ambient glow baked into the image itself -- a complete, fully-OPAQUE
+     scene, no transparency. So the CSS `.box-floor` pool that the earlier cut-out needed is GONE
+     (removed, not just hidden): the lit surround is in the pixels now, and a CSS pool on top would
+     double it. Full-bleed `cover` (like the original JPEG), not object-sizing -- an opaque 1:1 scene
+     under `contain` would letterbox with bars of #0f0d0a. Being opaque + full-bleed, it also covers
+     the parallax sprites at the frame edges on its own, so the "letters peeking in" problem is handled
+     here too (the t_offset push-down stays as belt-and-braces). Still on var(--box-a) + ken-burns, so
+     the scroll-fade JS is unchanged.
+     FORMAT (2026-07-26): this is a .jpeg, not a .png. It was a PNG while v1 was a cut-out needing an
+     alpha channel; v2 baked the scene in and the file was verified `mode=RGB` -- no alpha channel at
+     all -- so PNG was paying lossless cost for a photographic gradient with zero transparency benefit.
+     Re-encoded through the project's own derive_image at WEB_MAX_EDGE/WEB_QUALITY: 553KB -> 41KB
+     (-93%), same 1024x1024, measured mean delta 0.7/255 (RMSE 1.1; 0.06% of pixels differ by >8/255).
+     A v1 comment describing the transparent cut-out survived here until now and contradicted v2 --
+     removed (caught by Paul's Claude). */
   .masthead::before {
     content: ''; position: absolute; inset: 0; z-index: 5;
-    background-image: url('assets/box-of-letters-shadow.png');
+    background-image: url('assets/box-of-letters-shadow.jpeg');
     background-size: cover; background-position: center 42%; background-repeat: no-repeat;
     opacity: var(--box-a);
     transition: opacity 0.7s ease-out;
