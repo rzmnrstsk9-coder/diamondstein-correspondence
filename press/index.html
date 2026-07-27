@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Journalists &amp; Media — A Box of Letters</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a;
+    --ink-body: rgba(26,26,26,0.72); --ink-soft: rgba(26,26,26,0.55); --ink-faint: rgba(26,26,26,0.40);
+    --text-uncertain: rgba(26,26,26,0.50);
+    --font-display: 'Bricolage Grotesque', sans-serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: var(--font-body); color: var(--ink); background: var(--cream); line-height: 1.5; }
+  img { max-width: 100%; display: block; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+
+  /* ---- hero ---- */
+  .hero {
+    color: #fff; padding: 4.5rem 0 3.5rem; position: relative; overflow: hidden;
+    background:
+      linear-gradient(rgba(15,13,10,0.88), rgba(15,13,10,0.88)),
+      url('media/background.jpg');
+    background-size: cover; background-position: center;
+  }
+  .hero-eyebrow { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-bottom: 1.1rem; }
+  .hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(2rem, 5vw, 3.1rem); line-height: 1.14; max-width: 780px; margin-bottom: 1.3rem; }
+  .hero .sub { font-size: 1.08rem; line-height: 1.6; color: rgba(255,255,255,0.78); max-width: 640px; margin-bottom: 2.2rem; }
+  .cta-row { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; letter-spacing: 0.02em; text-decoration: none; padding: 0.85rem 1.5rem; border-radius: 0; transition: transform 0.15s ease, background 0.15s ease; }
+  .btn-primary { background: var(--rust); color: #fff; }
+  .btn-primary:hover { background: #a83c17; transform: translateY(-1px); }
+  .btn-ghost { border: 1px solid rgba(255,255,255,0.3); color: #fff; }
+  .btn-ghost:hover { border-color: #fff; }
+  .hero-scan { margin-top: 3rem; border: 1px solid rgba(255,255,255,0.14); box-shadow: 0 30px 70px rgba(0,0,0,0.4); max-width: 480px; }
+  .hero-scan img { border-bottom: 1px solid rgba(255,255,255,0.1); }
+  .hero-scan-cap { font-family: var(--font-mono); font-size: 0.7rem; color: rgba(255,255,255,0.5); padding: 0.7rem 1rem; }
+
+  /* ---- stat bar ---- */
+  .stats { background: var(--cream-dim); border-bottom: 1px solid rgba(0,0,0,0.08); padding: 2rem 0; }
+  .stats-row { display: flex; flex-wrap: wrap; gap: 2.2rem 3rem; }
+  .stat-num { font-family: var(--font-display); font-weight: 700; font-size: 1.6rem; color: var(--rust); display: block; }
+  .stat-label { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint); }
+
+  /* ---- sections ---- */
+  section.block { padding: 4rem 0; border-bottom: 1px solid rgba(0,0,0,0.07); }
+  section.block:last-of-type { border-bottom: none; }
+  .eyebrow { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.9rem; }
+  h2 { font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; line-height: 1.25; margin-bottom: 1.2rem; max-width: 640px; }
+  .lede { font-size: 1.05rem; line-height: 1.65; color: var(--ink-body); max-width: 640px; }
+  .lede + .lede { margin-top: 1rem; }
+
+  .two-col { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 3rem; align-items: center; }
+  .two-col img { border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 14px 34px rgba(0,0,0,0.1); cursor: zoom-in; }
+  .img-cap { font-family: var(--font-mono); font-size: 0.7rem; color: var(--ink-faint); margin-top: 0.6rem; line-height: 1.5; }
+  @media (max-width: 760px) { .two-col { grid-template-columns: 1fr; } .two-col .img-col { order: -1; } }
+
+  /* ---- key stories ---- */
+  .key-story { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 3rem; align-items: center; margin-bottom: 3.2rem; }
+  .key-story:last-child { margin-bottom: 0; }
+  .key-story.reverse { grid-template-columns: 1.1fr 0.9fr; }
+  .key-story.reverse .img-col { order: 2; }
+  .key-story img { border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 14px 34px rgba(0,0,0,0.1); cursor: zoom-in; }
+  .key-story .story-date { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.5rem; display: block; }
+  .key-story h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; margin-bottom: 0.8rem; }
+  .key-story p { font-size: 0.95rem; line-height: 1.65; color: var(--ink-body); margin-bottom: 0.8rem; }
+  .key-story p:last-child { margin-bottom: 0; }
+  @media (max-width: 760px) { .key-story, .key-story.reverse { grid-template-columns: 1fr; } .key-story .img-col, .key-story.reverse .img-col { order: -1; } }
+
+  /* ---- honesty demo ---- */
+  .demo-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 14px 34px rgba(0,0,0,0.07); margin-top: 2.2rem; overflow: hidden; }
+  .demo-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; }
+  .demo-grid img { height: 100%; object-fit: cover; }
+  .demo-text { padding: 2rem 2.2rem; }
+  .demo-label { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.8rem; }
+  .demo-quote { font-family: var(--font-display); font-size: 1.05rem; line-height: 1.6; color: var(--ink); }
+  .demo-note { font-size: 0.86rem; color: var(--ink-soft); margin-top: 1.2rem; line-height: 1.55; }
+  @media (max-width: 700px) { .demo-grid { grid-template-columns: 1fr; } .demo-grid img { max-height: 220px; } }
+
+  /* the ACTUAL honesty-marker styling, lifted verbatim from the live site's components.css
+     (.conf-low) — this should look exactly like the real UI, not a mockup of it. */
+  .conf-low { color: var(--text-uncertain); cursor: help; border-bottom: 1px dashed var(--text-uncertain); transition: background .12s, color .12s; }
+  .conf-low:hover { background: rgba(193,72,31,0.14); color: var(--ink); }
+
+  /* ---- discoveries ---- */
+  .arc-steps { counter-reset: arc; margin: 1.8rem 0 0.5rem; max-width: 700px; display: grid; gap: 0.9rem; }
+  .arc-steps li { list-style: none; counter-increment: arc; display: flex; gap: 1rem; align-items: baseline; }
+  .arc-steps li::before { content: counter(arc); font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: #fff; background: var(--rust); width: 1.5rem; height: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex: 0 0 auto; }
+  .arc-steps li span { font-size: 0.98rem; line-height: 1.5; color: var(--ink-body); }
+  .arc-steps li strong { color: var(--ink); }
+
+  /* ---- for journalists ---- */
+  .journo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-top: 1.5rem; }
+  .journo-box { background: #fff; border: 1px solid rgba(0,0,0,0.08); padding: 1.8rem 2rem; }
+  .journo-box h3 { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.9rem; }
+  .journo-box p { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
+
+  /* ---- angle picker (different beats, same page) ---- */
+  .angle-intro { font-size: 0.92rem; color: var(--ink-soft); max-width: 640px; margin: 1.2rem 0 1.6rem; }
+  .angle-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 2rem; }
+  .angle-nav a {
+    font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; text-decoration: none;
+    color: var(--navy); border: 1px solid rgba(42,74,106,0.3); padding: 0.5rem 1rem;
+    border-radius: 999px; transition: all 0.15s ease;
+  }
+  .angle-nav a:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .angle-box { background: #fff; border-left: 3px solid var(--navy); padding: 1.8rem 2rem; margin-bottom: 1.4rem; scroll-margin-top: 1rem; }
+  .angle-box h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--ink); }
+  .angle-box .angle-for { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.9rem; display: block; }
+  .angle-box p { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
+  .angle-box .angle-quote { margin-top: 1rem; padding-left: 0.9rem; border-left: 2px solid rgba(0,0,0,0.12); font-style: italic; color: var(--ink); }
+  .contact-row { margin-top: 2rem; padding-top: 1.6rem; border-top: 1px solid rgba(0,0,0,0.08); font-family: var(--font-mono); font-size: 0.88rem; }
+  .contact-row a { color: var(--rust); }
+  .faq-a a { color: var(--rust); }
+
+  /* ---- lightbox (click-to-enlarge scans) ---- */
+  .js-zoomable { cursor: zoom-in; }
+  .lightbox-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 1000; padding: 2rem; cursor: zoom-out; }
+  .lightbox-overlay.open { display: flex; }
+  .lightbox-overlay img { max-width: 95vw; max-height: 95vh; box-shadow: 0 30px 80px rgba(0,0,0,0.5); border: none; }
+
+  /* ---- faq ---- */
+  .faq-item { padding: 1.4rem 0; border-top: 1px solid rgba(0,0,0,0.08); }
+  .faq-item:first-child { border-top: none; }
+  .faq-q { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; margin-bottom: 0.5rem; }
+  .faq-a { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
+
+  footer { padding: 3rem 0 4rem; text-align: center; }
+  footer p { font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-faint); }
+  footer a { color: var(--rust); }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="wrap">
+    <p class="hero-eyebrow">For Journalists &amp; Media</p>
+    <h1>What do you do with a box of 100-year-old family letters when half of them are in a language nobody left can read?</h1>
+    <p class="sub">Over 100 surviving letters, written between 1900 and 1926, roughly half in Yiddish. AI scanned, transcribed, translated and organized them — then helped weave them, together with historical research and family-tree records, into a detailed narrative of two people's lives across nearly three decades: emigration from Latvia to England, a flirtation with life in Canada and the U.S. in the 1910s, and the fur-trade business and family Sam and Dora Diamondstein built once they settled in England for good.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="https://aboxofletters.com">Visit aboxofletters.com &nearr;</a>
+      <a class="btn btn-ghost" href="#journalists">For journalists &darr;</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ STATS ============ -->
+<div class="stats">
+  <div class="wrap stats-row">
+    <div><span class="stat-num">100+</span><span class="stat-label">Surviving Letters</span></div>
+    <div><span class="stat-num">~3</span><span class="stat-label">Decades Covered</span></div>
+    <div><span class="stat-num">16</span><span class="stat-label">People Documented</span></div>
+    <div><span class="stat-num">6</span><span class="stat-label">Chapters</span></div>
+    <div><span class="stat-num">½</span><span class="stat-label">Roughly Half in Yiddish</span></div>
+  </div>
+</div>
+
+<!-- ============ THE DISCOVERY ============ -->
+<section class="block">
+  <div class="wrap two-col">
+    <div>
+      <p class="eyebrow">The Discovery</p>
+      <h2>A box of heirlooms nobody could actually read.</h2>
+      <p class="lede">In the early 1990s, a relative in England passed a box of over 100 family letters to my brother, who was researching our family's history. They sat there for decades — passed around as heirlooms, half of them in Yiddish, a language no one left in the family could read. I found them again recently, going through his old files in storage in Vancouver.</p>
+      <p class="lede">Most are the handwriting of one man, Sam Diamondstein — my great-grandfather, a London fur dealer — writing to his wife Dora, my great-grandmother, between 1900 and 1926, across decades of travel between Latvia, England, Canada and beyond.</p>
+      <p class="lede">It was only with how far AI had come recently that it finally felt possible to actually get at the story these letters had been holding onto all along.</p>
+    </div>
+    <div class="img-col">
+      <img src="media/sam-and-dora.jpg" alt="Sam and Dora Diamondstein, together">
+      <p class="img-cap">Sam and Dora Diamondstein — the two people whose letters built this whole archive.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT AI MADE POSSIBLE ============ -->
+<section class="block">
+  <div class="wrap two-col">
+    <div>
+      <p class="eyebrow">What AI Made Possible</p>
+      <h2>Not just translation — a full narrative, rebuilt from fragments.</h2>
+      <p class="lede">AI scanned, transcribed, translated and organized all of the letters — work that would otherwise have needed a fluent Yiddish reader the family didn't have. But translation alone is just individual letters made readable. The bigger step was feeding in historical research and family-tree records alongside the letters themselves, and using that combination to reconstruct a detailed narrative of my great-grandparents' lives across nearly three decades: their emigration from Latvia to England, a period flirting with life in Canada and the United States through the 1910s, and their eventual return to settle permanently in England, where Sam built a fur-trade business and the family grew.</p>
+      <p class="lede">None of that arc was written down anywhere in one place. It's assembled from a box of individual letters, plus the research and genealogy layered on top — which is exactly why every claim on the site still links back to the letter or record it came from.</p>
+    </div>
+    <div class="img-col">
+      <img class="js-zoomable" src="media/scan-61-yiddish-letter.jpeg" alt="A real handwritten Yiddish letter from the archive">
+      <p class="img-cap">One of over 100 — a real Yiddish letter from the archive, undated.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT DID YOU DISCOVER ============ -->
+<section class="block">
+  <div class="wrap">
+    <p class="eyebrow">What Did You Discover?</p>
+    <h2>So, what actually turned up?</h2>
+    <p class="lede">Most of the archive is routine — money, weather, who's visiting whom. But reconstructing it in order surfaced the shape of a whole life no one in the family had put together before:</p>
+    <ol class="arc-steps">
+      <li><span><strong>Sam's emigration from Latvia</strong> — young, alone, and starting over in Montreal.</span></li>
+      <li><span><strong>Sam trying to do business in Canada and the U.S. and put down roots</strong> during a real economic crisis — Chicago, Minnesota, and a Canadian homestead grant were all seriously weighed during the Panic of 1907.</span></li>
+      <li><span><strong>Sam eventually settling in the UK</strong> for good after failing to prosper in Canada — his future wife had to send him the boat fare to return to England.</span></li>
+      <li><span><strong>Sam marrying</strong> his cousin Dora — her father's &pound;50 dowry likely became the seed money behind the fur-trade business Sam went on to build.</span></li>
+      <li><span><strong>Sam developing a fur-trade business</strong> in London, buying pelts on regular trips across the Continent to Paris and Leipzig.</span></li>
+      <li><span><strong>Sam and Dora starting a family</strong> — three daughters, with letters the one constant thread while Sam worked and travelled from London and the family summered at the English seaside.</span></li>
+    </ol>
+  </div>
+</section>
+
+<!-- ============ KEY STORIES ============ -->
+<section class="block">
+  <div class="wrap">
+    <p class="eyebrow">Stories From the Letters</p>
+    <h2>The moments that turned a box of paper into a narrative.</h2>
+
+    <div class="key-story">
+      <div class="img-col">
+        <img class="js-zoomable" src="media/austrian-christian.jpeg" alt="Sam's 1901 letter describing passing as an Austrian Christian">
+        <p class="img-cap">Sam's letter to Dora, Montreal, 11 June 1901.</p>
+      </div>
+      <div>
+        <span class="story-date">1901 &middot; Montreal</span>
+        <h3>Turned away for being a Jew &mdash; so he lied about it.</h3>
+        <p>Sam had only just arrived in Montreal, taking whatever labouring work he could find, when an employer turned him down flat: the job "wouldn't take any Jews." His solution, in his own words: <strong>"So I said I was an Austrian Christian &mdash; and they took me."</strong></p>
+        <p>It's one of the earliest letters in the whole archive, and it doesn't stop there. Once he actually saw the contract they wanted him to sign, Sam realized the terms themselves were exploitative &mdash; and walked away from the job anyway, on his own judgment, regardless of what it had taken to get it.</p>
+      </div>
+    </div>
+
+    <div class="key-story reverse">
+      <div class="img-col">
+        <img class="js-zoomable" src="media/panic-1907.jpeg" alt="A 1907 letter describing the financial panic in Montreal">
+        <p class="img-cap">Sam writing to friends the Falkovs and Alice, Montreal, 1907.</p>
+      </div>
+      <div>
+        <span class="story-date">1907 &middot; Montreal</span>
+        <h3>A documented financial crisis, landing on one family directly.</h3>
+        <p>The Panic of 1907 was a real, historically documented financial crisis &mdash; and Sam's own letters show it happening to him personally, not as background: <strong>"The crisis has thrown people out of work by the hundreds, and I am one of them."</strong></p>
+        <p>What follows in the letters isn't abstract hardship &mdash; it's Sam seriously weighing whether to try Chicago, a Canadian homestead grant, or Winnipeg, before finally deciding to give up on Canada and return to London for good. He was so broke by then that Dora, still his fiancée, had to send him the money for his own return ticket.</p>
+      </div>
+    </div>
+
+    <div class="key-story">
+      <div class="img-col">
+        <img class="js-zoomable" src="media/zeppelin.jpeg" alt="Sam's September 1916 letter mentioning the Cuffley Zeppelin">
+        <p class="img-cap">Sam's letter home, London, 3 September 1916, on his own fur-dealer letterhead.</p>
+      </div>
+      <div>
+        <span class="story-date">1916 &middot; London</span>
+        <h3>A Zeppelin shot down over the city, mentioned in passing.</h3>
+        <p>By September 1916, Sam is established enough to be writing home on his own fur-dealer letterhead. In the middle of an otherwise ordinary letter, he mentions watching the Cuffley Zeppelin &mdash; a real German airship shot down over London, a genuine wartime event &mdash; go down: <strong>"No doubt you have heard we brought down a Zeppelin. It was a fine sight."</strong></p>
+        <p>Then he goes straight back to ordinary business news in the same paragraph, asking after the kids at the seaside. World-historical events and the most routine domestic questions sit side by side, in the same breath, on the same page.</p>
+      </div>
+    </div>
+
+    <div class="key-story reverse">
+      <div class="img-col">
+        <img class="js-zoomable" src="media/fur-deal-paris.jpeg" alt="Sam's letter from the Hôtel Montréal, Paris, describing a fur purchase">
+        <p class="img-cap">Sam writing from the H&ocirc;tel Montr&eacute;al, Paris, on a fur-buying trip.</p>
+      </div>
+      <div>
+        <span class="story-date">1920s &middot; Paris</span>
+        <h3>Ninety stone martens, three thousand dyed moles &mdash; one day's purchase.</h3>
+        <p>By the 1920s, the man who'd been turned away from a Montreal labouring job for being Jewish was running a fur-trade business substantial enough to buy pelts by the thousand on regular trips to the Continent: <strong>"I bought today about 90 cheap stone martens and 3,000 dyed moles; they are much better than the last lot I had."</strong></p>
+        <p>It's a completely ordinary line in the letter &mdash; buried between family news and travel logistics, exactly like every other business update he sent home. The scale only becomes visible when you read it against where he started.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOR JOURNALISTS ============ -->
+<section class="block" id="journalists">
+  <div class="wrap">
+    <p class="eyebrow">For Journalists</p>
+    <h2>Boilerplate, quotes, and how to reach us.</h2>
+    <p class="angle-intro">Same underlying story, different entry points depending on your beat &mdash; pick whichever fits, the rest of the page still applies.</p>
+    <div class="angle-nav">
+      <a href="#angle-general">General interest</a>
+      <a href="#angle-jewish">Jewish &amp; Yiddish culture</a>
+      <a href="#angle-ai">AI &amp; digital archives</a>
+    </div>
+
+    <div class="angle-box" id="angle-jewish">
+      <span class="angle-for">For Jewish &amp; Yiddish culture outlets</span>
+      <h3>Starts in the Pale of Settlement, not Vancouver.</h3>
+      <p>Sam's own story starts before emigration, in Latvia, in the Pale of Settlement. One of the
+      very first letters in the whole archive, from 1901, has him admit outright that a Montreal job
+      &ldquo;wouldn't take any Jews&rdquo; &mdash; so he lied and said he was an Austrian Christian to
+      get hired. He eventually settled for good in London's Jewish East End, on Fashion Street near
+      Brick Lane, where he built a fur-trade business from nothing and raised a family with Dora. Every
+      Yiddish original is on the site alongside its translation, not just the English reading.</p>
+      <p class="angle-quote">&ldquo;So I said I was an Austrian Christian &mdash; and they took me.&rdquo;</p>
+    </div>
+
+    <div class="angle-box" id="angle-ai">
+      <span class="angle-for">For AI, digital humanities &amp; archives writers</span>
+      <h3>The interesting part isn't the transcription &mdash; it's what happens when the model isn't sure.</h3>
+      <p>Yiddish pages go through Transkribus for handwriting recognition first, then a language model
+      translates the whole letter and self-flags anything it isn't confident about &mdash; those spans
+      stay marked rather than smoothed into plausible prose. A human review pass wins over the
+      machine's reading, but the machine's original attempt is never deleted, so the correction is an
+      audit trail, not a silent fix. Every fact the site states is stored with a source and a
+      confidence tier &mdash; a birth year with two disagreeing sources (a marriage certificate says
+      1912, a family chart says 1913) stays recorded as both, not resolved to one answer. One amount in
+      a 1920 letter is recorded as permanently unresolved &mdash; the page is abraded at the exact
+      digit and the original no longer exists to re-check &mdash; because an honest &ldquo;we don't
+      know&rdquo; outlives a confident guess.</p>
+    </div>
+
+    <div class="journo-grid" id="angle-general">
+      <div class="journo-box">
+        <h3>Short version</h3>
+        <p>A Box of Letters is an interactive archive built from over 100 real family letters &mdash; about half of them in Yiddish, unreadable to the family for decades. AI helped transcribe, translate and organize them, then combined them with historical research and family-tree records to reconstruct a detailed narrative of the letter-writers' lives across nearly three decades: emigration from Latvia to England, a flirtation with Canada and the U.S., and the fur-trade business and family they built once they settled for good.</p>
+      </div>
+      <div class="journo-box">
+        <h3>Long version</h3>
+        <p>In the early 1990s, a relative in England passed a box of handwritten family letters to the author's brother, who was researching the family's history. The letters sat there for decades, passed around as heirlooms &mdash; about half of them in Yiddish, a language no one left in the family could read &mdash; until the author rediscovered them recently, going through his brother's old files in storage in Vancouver. A Box of Letters is what came out of opening that box: over 100 letters, written between 1900 and 1926 by Sam Diamondstein, a fur dealer, to his wife Dora, across their emigration from Latvia to England, a period flirting with life in Canada and the United States through the 1910s, and their eventual return to settle permanently in England, where Sam built a fur-trade business and the family grew. AI assisted with transcription, translation, historical research, and stitching the letters and records together into that narrative &mdash; and every uncertain reading stays marked as uncertain rather than smoothed over.</p>
+      </div>
+    </div>
+    <div class="contact-row">
+      Press contact: <a href="#" class="js-email" data-u="aboxofletters" data-d="icloud.com">(enable JavaScript to view email)</a> &middot; High-resolution images available on request.
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="block">
+  <div class="wrap">
+    <p class="eyebrow">FAQ</p>
+    <h2>The obvious questions, answered directly.</h2>
+    <div class="faq-item">
+      <p class="faq-q">What is A Box of Letters?</p>
+      <p class="faq-a">An interactive online archive built from over 100 real family letters, written between 1900 and 1926 &mdash; the original scans, their transcriptions and translations, and a narrative history woven from them, alongside genealogy and historical research. You can read it chapter by chapter, browse the letters themselves, or explore by person, place, or map.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How did the project start?</p>
+      <p class="faq-a">We found a box of letters &mdash; passed down through the family for decades, half of them in Yiddish, and unread by anyone still living. No one thought there was any real hope of translating, organizing, and actually understanding them, so for generations they were just kept as keepsakes. That box, and that assumption, are the whole reason this exists &mdash; AI is what finally made translating and organizing them possible.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How was it built?</p>
+      <p class="faq-a">The physical letters were scanned, then AI handled the handwriting recognition and Yiddish-to-English translation &mdash; work that would otherwise have needed a fluent Yiddish reader the family didn't have. Uncertain readings were flagged rather than silently resolved. Historical research and family-tree records were then layered on top, and the whole thing was assembled into a browsable site: letters, chapters, people, places, and maps, all cross-linked. The full process is laid out on the site's <a href="https://aboxofletters.com/how-made.html">"How This Was Made"</a> page.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Who built this project?</p>
+      <p class="faq-a"><strong>Paul Levine</strong> &mdash; Sam and Dora's great-grandson, a retired graphic designer, and the project's originator and design lead &mdash; supplied the letters and family testimony, reviews and approves every reading, and personally designed the site. <strong>Fernando Medrano</strong>, a Vancouver-based systems architect, built the pipeline that turns the scans into a structured, honest, searchable archive. Full bios, and the technical process, are on the site's <a href="https://aboxofletters.com/how-made.html">"How This Was Made"</a> page.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How is this different from a typical family history project?</p>
+      <p class="faq-a">Most family history projects end up as a static family tree, a scanned photo album, or a self-published book. This one is built directly from the primary-source letters, keeps the AI's uncertainty visible in the published text instead of polishing it away, and is a living, explorable site rather than a fixed document &mdash; searchable by person, place, and date, with every claim linked back to its source.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Is this AI-generated?</p>
+      <p class="faq-a">The site is built from real, physical letters. AI helped transcribe and translate the handwriting and assisted with the historical research &mdash; every AI-assisted claim is marked, sourced, and checked against the original.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">How do you know what's accurate?</p>
+      <p class="faq-a">We don't claim to, everywhere. Uncertain readings stay marked as uncertain instead of being smoothed into confident prose &mdash; see "How This Was Made" on the site for the full process.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Who were Sam and Dora Diamondstein?</p>
+      <p class="faq-a">Sam was born in Latvia and emigrated as a young man, eventually settling in London as a fur dealer. Dora was his wife. Most of the letters are the two of them writing to each other across Sam's years of travel; together they raised three daughters in London. They're the author's great-grandparents.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Do you still have the original letters?</p>
+      <p class="faq-a">Yes &mdash; they remain with the author's family, in the same box they were rediscovered in. High-resolution scans of every letter are on the site alongside the transcription and translation.</p>
+    </div>
+    <div class="faq-item">
+      <p class="faq-q">Why make a private family archive public?</p>
+      <p class="faq-a">What started as one family's letters turned out to hold up as real, textured history &mdash; Jewish emigration, the fur trade, a marriage carried on mostly by post. AI is what made it possible to actually read, organize, and share for the first time.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>A Box of Letters &middot; <a href="#" class="js-email" data-u="aboxofletters" data-d="icloud.com">(enable JavaScript to view email)</a></p>
+</footer>
+
+<div class="lightbox-overlay" id="lightbox"><img id="lightbox-img" src="" alt=""></div>
+<script>
+  document.querySelectorAll('.js-email').forEach(function (a) {
+    var addr = a.dataset.u + '@' + a.dataset.d;
+    a.href = 'mailto:' + addr;
+    a.textContent = addr;
+  });
+
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightbox-img');
+  document.querySelectorAll('.js-zoomable').forEach(function (img) {
+    img.addEventListener('click', function () {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('open');
+    });
+  });
+  lightbox.addEventListener('click', function () { lightbox.classList.remove('open'); });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') lightbox.classList.remove('open');
+  });
+</script>
+</body>
+</html>
