@@ -240,6 +240,30 @@
   .chapter-nav .cn-item.active { background: var(--rust); border-color: var(--rust); color: #fff; }
   .chapter-nav .cn-num { opacity: 0.6; font-size: 0.94em; }
 
+  /* At-a-glance summary (2026-07-27): collapsed-by-default, sits above the chapter nav. */
+  .glance { max-width: 720px; margin: 0 auto 2.5rem; padding: 0 1.5rem; }
+  .glance-box { border: 1px solid rgba(26,26,26,0.12); background: rgba(255,255,255,0.5); padding: 1.1rem 1.8rem; }
+  .glance-box[open] { padding-bottom: 1.4rem; }
+  .glance-label {
+    font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--rust); cursor: pointer; list-style: none; padding: 0.5rem 0;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .glance-label::-webkit-details-marker { display: none; }
+  .glance-label::before { content: '+'; font-size: 1rem; line-height: 1; width: 1em; }
+  .glance-box[open] .glance-label::before { content: '\2212'; }
+  .glance-box[open] .glance-label { margin-bottom: 0.9rem; border-bottom: 1px solid rgba(26,26,26,0.1); padding-bottom: 0.9rem; }
+  .glance-list { display: grid; gap: 0.9rem; margin: 0; padding: 0; list-style: none; }
+  .glance-list li { display: flex; gap: 0.9rem; align-items: baseline; }
+  .glance-list li::before {
+    content: ''; flex: 0 0 auto; width: 0.4rem; height: 0.4rem; border-radius: 50%;
+    background: var(--rust); transform: translateY(-0.15em);
+  }
+  .glance-list a { color: var(--ink); text-decoration: none; }
+  .glance-list a:hover .glance-thesis { color: var(--rust); }
+  .glance-era { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: rgba(26,26,26,0.4); margin-bottom: 0.15rem; }
+  .glance-thesis { font-size: 0.94rem; line-height: 1.5; transition: color 0.15s ease; }
+
 </style>
   <script data-goatcounter="https://aboxofletters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <meta name="description" content="The complete telling of Sam and Dora&#x27;s story, drawn from their own letters and the research around them — about a thirty-minute read.">
@@ -269,6 +293,8 @@
   <h1 class="display">Read the Story</h1>
   <p class="sub">The story that emerged from the letters, historical research, the family trees, and living memory. Every underlined phrase links straight to the letter or evidence behind it.</p>
 </div>
+
+<div class="glance"><details class="glance-box"><summary class="glance-label">The One-Minute Version</summary><ul class="glance-list"><li><a href="#ch-prologue"><span class="glance-era">Latvia, before emigration &middot; pre-1901</span><span class="glance-thesis">Sam and Dora as first cousins in the Litvak shtetl of Korsovka; a father&#x27;s 1890 death, a mother who never emigrated, and Sam&#x27;s solo crossing to Montreal — the world the correspondence begins after.</span></a></li><li><a href="#ch-courtship"><span class="glance-era">The Courtship &middot; c. 1900–1911</span><span class="glance-thesis">Sam shuttles for fur-trade work between Montreal and London, courting Dora (his cousin) almost entirely by letter across the ocean; forks toward Minnesota, Winnipeg, a homestead and Chicago are weighed and abandoned before he commits to return to London, and Dora sends £3 for the ticket.</span></a></li><li><a href="#ch-war-years"><span class="glance-era">The War Years &middot; 1916</span><span class="glance-thesis">By September 1916 Sam and Dora are married with children, running S. Diamondstein &amp; Co., Fur Dealers, out of Brick Lane; the courtship-at-a-distance voice gives way to the provider-from-a-distance voice that defines the next decade.</span></a></li><li><a href="#ch-travelling-years"><span class="glance-era">The Travelling Years &middot; 1919–1926</span><span class="glance-thesis">The largest, most repetitive stretch of the corpus: Dora and the girls sent to the coast for weeks while Sam works in London and on fur-buying trips to Paris and Leipzig, writing a weekly cheque and the same anxious questions — the repetition itself the finding, the exceptional letters the ones that break the pattern.</span></a></li><li><a href="#ch-what-the-letters-dont-say"><span class="glance-era">What the Letters Don&#x27;t Say &middot; the silences + after</span><span class="glance-thesis">The most telling parts of this story are in what the letters omit — Dora&#x27;s absent voice, the silence over German politics, the post-1926 paper trail — and in what happened after the letters stop, which survives only as family testimony.</span></a></li><li><a href="#ch-afterword"><span class="glance-era">Afterword</span><span class="glance-thesis">The family&#x27;s name never stopped quietly changing shape, and none of this survived to become a project by anything like a straight line.</span></a></li></ul></details></div>
 
 <div class="chapter-nav-wrap" id="chapter-nav-wrap">
 <nav class="chapter-nav" id="chapter-nav" aria-label="Jump to chapter"><a href="#ch-prologue" class="cn-item" data-target="ch-prologue"><span class="cn-label">Latvia, before emigration</span></a><a href="#ch-courtship" class="cn-item" data-target="ch-courtship"><span class="cn-num mono">1</span><span class="cn-label">The Courtship</span></a><a href="#ch-war-years" class="cn-item" data-target="ch-war-years"><span class="cn-num mono">2</span><span class="cn-label">The War Years</span></a><a href="#ch-travelling-years" class="cn-item" data-target="ch-travelling-years"><span class="cn-num mono">3</span><span class="cn-label">The Travelling Years</span></a><a href="#ch-what-the-letters-dont-say" class="cn-item" data-target="ch-what-the-letters-dont-say"><span class="cn-label">What the Letters Don&#x27;t Say</span></a><a href="#ch-afterword" class="cn-item" data-target="ch-afterword"><span class="cn-label">Afterword</span></a><a href="#" class="cn-item cn-top" id="cn-top"><span class="cn-num mono">&uarr;</span><span class="cn-label">Back to top</span></a></nav>
@@ -1150,6 +1176,16 @@
     syncNavHeight();
     window.addEventListener('resize', syncNavHeight);
   }
+
+  // At-a-glance links: same smooth-scroll pattern as the chapter nav below, kept as its own
+  // small handler rather than folded into that one's scoped query (2026-07-27).
+  document.querySelectorAll('.glance-list a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const target = document.getElementById(a.getAttribute('href').slice(1));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
 
   // Chapter nav: scrollspy + smooth-scroll on click (identical to story-excerpt.html).
   const navEl = document.getElementById('chapter-nav');
