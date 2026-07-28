@@ -199,7 +199,8 @@
     <div>
       <p class="eyebrow">What AI Made Possible</p>
       <h2>Not just translation — a full narrative, rebuilt from fragments.</h2>
-      <p class="lede">AI scanned, transcribed, translated and organized all of the letters — work that would otherwise have needed a fluent Yiddish reader the family didn't have. But translation alone is just individual letters made readable. The bigger step was feeding in historical research and family-tree records alongside the letters themselves, and using that combination to reconstruct a detailed narrative of my great-grandparents' lives across nearly three decades: their emigration from Latvia to England, a period flirting with life in Canada and the United States through the 1910s, and their eventual return to settle permanently in England, where Sam built a fur-trade business and the family grew.</p>
+      <p class="lede">Two tools did the work a fluent Yiddish reader would otherwise have had to do, and they did different jobs. <strong>Transkribus</strong> — handwriting recognition trained on real early-twentieth-century Yiddish script — turned the strokes on each scan into text; it is the only tool trusted to read the Yiddish, because it was measured against pages we already knew. <strong>Claude</strong> did the interpretive work on top of that — translating, drawing out themes, shaping the narrative — and also wrote the software that runs all of it: the pipeline, the honesty checks, and this archive itself. A second model, Gemini, translated independently as a cross-check, and was never permitted to quietly overrule the primary reading.</p>
+      <p class="lede">But translation alone is just individual letters made readable. The bigger step was feeding in historical research and family-tree records alongside the letters themselves, and using that combination to reconstruct a detailed narrative of my great-grandparents' lives across nearly three decades: their emigration from Latvia to England, a period flirting with life in Canada and the United States through the 1910s, and their eventual return to settle permanently in England, where Sam built a fur-trade business and the family grew.</p>
       <p class="lede">None of that arc was written down anywhere in one place. It's assembled from a box of individual letters, plus the research and genealogy layered on top, into the site's own <a href="https://aboxofletters.com/long-read.html">Read the Story</a> — every claim there still links back to the letter or record it came from.</p>
     </div>
     <div class="img-col">
@@ -247,13 +248,13 @@
 
     <div class="key-story reverse">
       <div class="img-col">
-        <img class="js-zoomable" src="media/panic-1907.jpeg" alt="A 1907 letter describing the financial panic in Montreal">
-        <p class="img-cap">Sam writing to friends the Falkovs and Alice, Montreal, 1907.</p>
+        <img class="js-zoomable" src="media/panic-1907.jpeg" alt="An undated letter describing the financial panic in Montreal">
+        <p class="img-cap">Sam writing to friends the Falkovs and Alice, Montreal &mdash; undated, c. 1907&ndash;1908.</p>
       </div>
       <div>
-        <span class="story-date">1907 &middot; Montreal</span>
+        <span class="story-date">c. 1907&ndash;1908 &middot; Montreal</span>
         <h3>A documented financial crisis, landing on one family directly.</h3>
-        <p>The Panic of 1907 was a real, historically documented financial crisis &mdash; and Sam's own letters show it happening to him personally, not as background: <strong>"The crisis has thrown people out of work by the hundreds, and I am one of them."</strong></p>
+        <p>The Panic of 1907 was a real, historically documented financial crisis, and its unemployment ran into 1908 &mdash; the window this letter falls in. Sam writes it as something happening to him personally, not as background: <strong>"The crisis has thrown people out of work by the hundreds, and I am one of them."</strong> The letter carries no dateline, so the archive dates it by its contents rather than claiming a year it can't prove.</p>
         <p>What follows in the letters isn't abstract hardship &mdash; it's Sam seriously weighing whether to try Chicago, a Canadian homestead grant, or Winnipeg, before finally deciding to give up on Canada and return to London for good. He was so broke by then that Dora, still his fiancée, had to send him the money for his own return ticket.</p>
       </div>
     </div>
@@ -300,7 +301,7 @@
 
     <div class="angle-box" id="angle-jewish">
       <span class="angle-for">For Jewish &amp; Yiddish culture outlets</span>
-      <h3>Starts in the Pale of Settlement, not Vancouver.</h3>
+      <h3>The story starts in the Pale of Settlement, not Vancouver.</h3>
       <p>Sam's own story starts before emigration, in Latvia, in the Pale of Settlement. One of the
       very first letters in the whole archive, from 1901, has him admit outright that a Montreal job
       &ldquo;wouldn't take any Jews&rdquo; &mdash; so he lied and said he was an Austrian Christian to
@@ -312,7 +313,7 @@
 
     <div class="angle-box" id="angle-ai">
       <span class="angle-for">For AI, digital humanities &amp; archives writers</span>
-      <h3>The interesting part isn't the transcription &mdash; it's what happens when the model isn't sure.</h3>
+      <h3>The interesting part isn't the transcription &mdash; it's what happens when the AI model isn't sure.</h3>
       <p>Yiddish pages go through Transkribus for handwriting recognition first, then a language model
       translates the whole letter and self-flags anything it isn't confident about &mdash; those spans
       stay marked rather than smoothed into plausible prose. A human review pass wins over the
@@ -360,7 +361,7 @@
     </div>
     <div class="faq-item">
       <p class="faq-q">Who built this project?</p>
-      <p class="faq-a"><strong>Paul Levine</strong> &mdash; Sam and Dora's great-grandson, a retired graphic designer, and the project's originator and design lead &mdash; supplied the letters and family testimony, reviews and approves every reading, and personally designed the site. <strong>Fernando Medrano</strong>, a Vancouver-based systems architect, built the pipeline that turns the scans into a structured, honest, searchable archive. Full bios, and the technical process, are on the site's <a href="https://aboxofletters.com/how-made.html">"How This Was Made"</a> page.</p>
+      <p class="faq-a"><strong>Paul Levine</strong> &mdash; Sam and Dora's great-grandson, a retired graphic designer, and the project's originator and design lead &mdash; supplied the letters and family testimony, reviews and approves every reading, and personally designed the site. <strong>Fernando Medrano</strong>, a Vancouver-based creative technologist, created the architecture and machinery that turns the scans into a structured, honest, searchable archive. Full bios, and the technical process, are on the site's <a href="https://aboxofletters.com/how-made.html">"How This Was Made"</a> page.</p>
     </div>
     <div class="faq-item">
       <p class="faq-q">How is this different from a typical family history project?</p>
