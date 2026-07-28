@@ -105,6 +105,33 @@
   figure.inline-figure figcaption { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: rgba(26,26,26,0.5); text-align: center; margin-top: 0.6rem; padding: 0 1rem; }
 
   figure.map-figure { margin: 2.2rem 0; background: #fff; border-radius: 0; padding: 1.2rem; box-shadow: 0 10px 26px rgba(0,0,0,0.06); border: 1px solid rgba(0,0,0,0.06); }
+
+  /* PREVIEW-ONLY (2026-07-28): hotel-gallery, same stage+filmstrip mechanism as pictures.html's
+     "Couple in Pictures" slider (prev/next arrows, thumbnail nav below) -- not a scrollbar. */
+  .hg-wrap { max-width: 760px; margin: 2.2rem auto; }
+  .hg-card { background: var(--surface-dark); border-radius: 0; overflow: hidden; box-shadow: 0 10px 26px rgba(0,0,0,0.18); }
+  .hg-stage { position: relative; height: 320px; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; background: var(--surface-darker); }
+  .hg-img-wrap { position: absolute; inset: 0; overflow: hidden; }
+  .hg-slide-el { position: absolute; inset: 0; transition: transform 0.55s cubic-bezier(0.65,0,0.35,1); }
+  .hg-slide-el img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; cursor: zoom-in; }
+  @media (prefers-reduced-motion: reduce) { .hg-slide-el { transition: none; } }
+  .hg-nav-btn { position: absolute; top: 50%; transform: translateY(-50%); z-index: 10; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.25); background: rgba(10,9,8,0.55); backdrop-filter: blur(6px); color: #fff; font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s ease; }
+  .hg-nav-btn:hover { background: var(--rust); }
+  .hg-nav-btn.hg-prev { left: 1rem; }
+  .hg-nav-btn.hg-next { right: 1rem; }
+  .hg-caption-panel { background: var(--surface-dark); border-top: 1px solid rgba(255,255,255,0.08); padding: 1.2rem 1.4rem; }
+  .hg-cap-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem; }
+  .hg-cap-num { font-size: 0.7rem; color: var(--rust); letter-spacing: 0.06em; text-transform: uppercase; }
+  .hg-cap-year { font-size: 0.72rem; font-weight: 600; color: var(--gold); background: rgba(232,201,138,0.12); border: 1px solid rgba(232,201,138,0.3); padding: 0.15rem 0.55rem; }
+  .hg-cap-label { font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 1.25rem; line-height: 1.3; color: #fff; margin-bottom: 0.3rem; }
+  .hg-cap-para { font-size: 0.85rem; color: var(--ink-on-dark-soft, rgba(255,255,255,0.55)); }
+  .hg-filmstrip { display: flex; gap: 0.5rem; padding: 0.6rem 1rem 0.8rem; overflow-x: auto; background: var(--surface-darker); }
+  .hg-filmstrip::-webkit-scrollbar { height: 4px; }
+  .hg-filmstrip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); }
+  .hg-thumb-el { position: relative; flex-shrink: 0; width: 60px; height: 44px; overflow: hidden; cursor: pointer; opacity: 0.45; border: 2px solid transparent; transition: opacity 0.15s ease, border-color 0.15s ease; }
+  .hg-thumb-el.active { opacity: 1; border-color: var(--rust); }
+  .hg-thumb-el img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .hg-position-crumb { font-family: 'IBM Plex Mono', monospace; font-size: 0.74rem; color: rgba(26,26,26,0.4); text-align: center; margin: 0.6rem 0 0; }
   figure.map-figure img { width: 100%; border-radius: 0; display: block; cursor: zoom-in; transition: opacity 0.15s ease; }
   figure.map-figure img:hover { opacity: 0.92; }
   figure.map-figure figcaption { font-size: 0.86rem; color: rgba(26,26,26,0.6); margin-top: 0.9rem; line-height: 1.5; }
@@ -359,6 +386,7 @@
 <figure class="inline-figure"><img data-field="image" data-media="hist-leipzig-bruhl-furtrade" data-provenance="external-sourced" src="media/hist-leipzig-bruhl-furtrade.jpg" alt="Leipzig&#x27;s Brühl district, the real centre of Europe&#x27;s fur trade, c.1923 — period fur-trade shop signage visible in the original. Ninety stone martens. Three thousand dyed moles. One day&#x27;s purchase." loading="lazy"><figcaption>Leipzig&#x27;s Brühl district, the real centre of Europe&#x27;s fur trade, c.1923 — period fur-trade shop signage visible in the original. Ninety stone martens. Three thousand dyed moles. One day&#x27;s purchase.</figcaption></figure>
 <p class="para" data-item="chapter:travelling-years/blk-08" data-field="narrative">Not every trip was just business. In January 1923, Sam&#x27;s sister <span class="person-trigger" role="button" tabindex="0" data-person="person:sonia">Sonia</span> was hospitalized for an operation in Leipzig while he happened to be there buying stock — one of the few moments in the archive where family and trade share the same page. A letter from that same visit, from Sonia to Dora and the children back home, catches the mood exactly: <span class="letter-trigger" role="button" tabindex="0" data-title="My Sister&#x27;s Operation">&quot;It pains me that the loveliest time of my life should pass so fast.&quot;</span></p>
 <div class="cast-inline" data-person="person:sonia"><div class="ci-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><path d="M50,12 C66,12 76,26 74,42 C73,48 70,52 67,55 L67,58 C78,62 88,72 88,96 L12,96 C12,72 22,62 33,58 L33,55 C30,52 27,48 26,42 C24,26 34,12 50,12 Z" fill="#1a1a1a"/></svg></div><div><div class="ci-name">Sonia Diamondstein</div><div class="ci-dates mono">c.1893–1986</div><div class="ci-role">Sam&#x27;s sister</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
+<div class="hg-wrap"><div class="hg-card"><div class="hg-stage" id="hg-stage"><div class="hg-img-wrap" id="hg-img-wrap"></div><button class="hg-nav-btn hg-prev" id="hg-prev" aria-label="Previous letterhead">&larr;</button><button class="hg-nav-btn hg-next" id="hg-next" aria-label="Next letterhead">&rarr;</button></div><div class="hg-caption-panel"><div class="hg-caption"><div class="hg-cap-top-row"><div class="hg-cap-num mono" id="hg-cap-num"></div><div class="hg-cap-year mono" id="hg-cap-year"></div></div><div class="hg-cap-label" id="hg-cap-label"></div><div class="hg-cap-para" id="hg-cap-para"></div></div></div><div class="hg-filmstrip" id="hg-filmstrip"></div></div><p class="hg-position-crumb mono" id="hg-position-crumb"></p></div><div id="hg-engine-panels" hidden><div class="hg-slide"><img src="images/1921-03-16-letter-from-grandhotel.jpeg" alt="Grand Hôtel du Pavillon"><span class="hg-cn">Paris &middot; Sept 1921</span><span class="hg-cl">Grand Hôtel du Pavillon</span><span class="hg-cp">&quot;Paris is a fine place; I have been to a Turkish bath this afternoon.&quot; The same hotel photographed above, housing YMCA servicemen in 1917.</span></div><div class="hg-slide"><img src="images/1923-01-03-hotel-der-kaiserhof-leipzig-letter.jpeg" alt="Hotel der Kaiserhof"><span class="hg-cn">Leipzig &middot; Jan 1923</span><span class="hg-cl">Hotel der Kaiserhof</span><span class="hg-cp">The letterhead of the very letter quoted above — Sonia&#x27;s &quot;the loveliest time of my life,&quot; written on this hotel&#x27;s own paper during her operation.</span></div><div class="hg-slide"><img src="images/1925-park-hotel-leipzig-letter.jpeg" alt="Park Hotel"><span class="hg-cn">Leipzig &middot; 1925</span><span class="hg-cl">Park Hotel</span><span class="hg-cp">Written after a rough Channel crossing: &quot;The crossing was very bad — it was a very bad storm. I am feeling A-1 and having plenty of German sausages.&quot;</span></div><div class="hg-slide"><img src="images/1926-02-25-hotel-astra-paris-letter.jpeg" alt="Hotel Astra"><span class="hg-cn">Paris &middot; Feb 1926</span><span class="hg-cl">Hotel Astra</span><span class="hg-cp">Business as usual mid-trip — detailed instructions for John on trading skins: &quot;Tell John he can offer about 20,000 rat at 45/-.&quot;</span></div></div><div id="hg-engine-thumbs" hidden><div class="hg-thumb"><img src="images/1921-03-16-letter-from-grandhotel.jpeg" alt="Grand Hôtel du Pavillon"><span class="hg-thumb-label">Paris</span></div><div class="hg-thumb"><img src="images/1923-01-03-hotel-der-kaiserhof-leipzig-letter.jpeg" alt="Hotel der Kaiserhof"><span class="hg-thumb-label">Leipzig</span></div><div class="hg-thumb"><img src="images/1925-park-hotel-leipzig-letter.jpeg" alt="Park Hotel"><span class="hg-thumb-label">Leipzig</span></div><div class="hg-thumb"><img src="images/1926-02-25-hotel-astra-paris-letter.jpeg" alt="Hotel Astra"><span class="hg-thumb-label">Paris</span></div></div>
 <p class="para" data-item="chapter:travelling-years/blk-11" data-field="narrative">The daughters, meanwhile, grow into correspondents of their own. <span class="letter-trigger" role="button" tabindex="0" data-title="Pontoon at Bournemouth">From a Bournemouth boarding house in December 1923, one of them writes home about a card game, needling her father for a promised five-pound note</span> — one of the only letters in this whole archive written in a child&#x27;s own voice, not Sam&#x27;s.</p>
 <figure class="inline-figure"><img data-field="image" data-media="hist-southend-pier-1922" data-provenance="external-sourced" src="media/hist-southend-pier-1922.jpg" alt="A 1922 postcard of Southend-on-Sea&#x27;s pier — not Bournemouth itself, but the same kind of English seaside pier the letter describes, from the same years. “But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each.”" loading="lazy"><figcaption>A 1922 postcard of Southend-on-Sea&#x27;s pier — not Bournemouth itself, but the same kind of English seaside pier the letter describes, from the same years. “But you know Mummy — she kept arguing until they let her have them for one shilling and threepence each.”</figcaption></figure>
 <div class="cast-inline" data-person="person:gladys"><img data-field="image" data-media="portrait-gladys-real" data-provenance="archival-photo" src="media/portrait-gladys-real.jpg" alt="Gladys Diamondstein"><div><div class="ci-name">Gladys Diamondstein</div><div class="ci-dates mono">c.1912–1951</div><div class="ci-role">Sam &amp; Dora&#x27;s daughter</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
@@ -1186,6 +1214,97 @@
     syncNavHeight();
     window.addEventListener('resize', syncNavHeight);
   }
+
+  // PREVIEW-ONLY (2026-07-28): hotel-gallery slider -- same stage+filmstrip mechanism as
+  // pictures.html's Couple in Pictures slideshow, adapted (no quote/letters fields, this data
+  // has none). Server-rendered #hg-engine-panels/#hg-engine-thumbs ARE the data, same DOM-is-
+  // the-data convention pictures.html uses.
+  (function() {
+    const stage = document.getElementById('hg-stage');
+    if (!stage) return;   // block not present on this build -- nothing to wire up
+    const panelEls = Array.from(document.querySelectorAll('#hg-engine-panels .hg-slide'));
+    const thumbEls = Array.from(document.querySelectorAll('#hg-engine-thumbs .hg-thumb'));
+    const panels = panelEls.map((el) => ({
+      img: el.querySelector('img').getAttribute('src'),
+      alt: el.querySelector('img').getAttribute('alt'),
+      location: el.querySelector('.hg-cn').textContent,
+      label: el.querySelector('.hg-cl').textContent,
+      caption: el.querySelector('.hg-cp').textContent,
+    }));
+
+    let idx = 0;
+    const imgWrap = document.getElementById('hg-img-wrap');
+    const filmstrip = document.getElementById('hg-filmstrip');
+    const positionCrumb = document.getElementById('hg-position-crumb');
+
+    thumbEls.forEach((t, i) => {
+      const thumb = document.createElement('div');
+      thumb.className = 'hg-thumb-el';
+      thumb.innerHTML = t.innerHTML;
+      thumb.addEventListener('click', () => go(i));
+      filmstrip.appendChild(thumb);
+    });
+    const thumbNodes = Array.from(filmstrip.querySelectorAll('.hg-thumb-el'));
+
+    let currentSlideEl = null;
+    function slideImage(p, direction) {
+      const slide = document.createElement('div');
+      slide.className = 'hg-slide-el';
+      slide.innerHTML = `<img src="${p.img}" alt="${p.alt}">`;
+      const slideImg = slide.querySelector('img');
+      slideImg.addEventListener('click', () => window.openZoom(slideImg.src, slideImg.alt));
+      const enterX = direction === 'init' ? '0' : (direction === 'prev' ? '-100%' : '100%');
+      slide.style.transform = `translateX(${enterX})`;
+      imgWrap.appendChild(slide);
+      void slide.offsetWidth;
+      requestAnimationFrame(() => { slide.style.transform = 'translateX(0)'; });
+      if (currentSlideEl) {
+        const exitX = direction === 'prev' ? '100%' : '-100%';
+        const old = currentSlideEl;
+        requestAnimationFrame(() => { old.style.transform = `translateX(${exitX})`; });
+        setTimeout(() => old.remove(), 600);
+      }
+      currentSlideEl = slide;
+    }
+
+    function render(direction) {
+      const p = panels[idx];
+      slideImage(p, direction || 'next');
+      document.getElementById('hg-cap-num').textContent = `Letterhead ${idx + 1} of ${panels.length}`;
+      document.getElementById('hg-cap-year').textContent = p.location;
+      document.getElementById('hg-cap-label').textContent = p.label;
+      document.getElementById('hg-cap-para').textContent = p.caption;
+      positionCrumb.textContent = `${idx + 1} / ${panels.length}`;
+      thumbNodes.forEach((el, i) => el.classList.toggle('active', i === idx));
+      const activeThumb = filmstrip.querySelector('.hg-thumb-el.active');
+      if (activeThumb) {
+        const target = activeThumb.offsetLeft - (filmstrip.clientWidth - activeThumb.offsetWidth) / 2;
+        filmstrip.scrollTo({ left: target, behavior: 'smooth' });
+      }
+    }
+
+    function go(i) {
+      const newIdx = (i + panels.length) % panels.length;
+      const direction = newIdx > idx || (idx === panels.length - 1 && newIdx === 0) ? 'next' : 'prev';
+      idx = newIdx;
+      render(direction);
+    }
+
+    document.getElementById('hg-prev').addEventListener('click', () => go(idx - 1));
+    document.getElementById('hg-next').addEventListener('click', () => go(idx + 1));
+
+    let touchStartX = null;
+    stage.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+    stage.addEventListener('touchend', (e) => {
+      if (touchStartX === null) return;
+      const dx = e.changedTouches[0].clientX - touchStartX;
+      if (dx > 50) go(idx - 1);
+      else if (dx < -50) go(idx + 1);
+      touchStartX = null;
+    });
+
+    render('init');
+  })();
 
   // At-a-glance links: same smooth-scroll pattern as the chapter nav below, kept as its own
   // small handler rather than folded into that one's scoped query (2026-07-27).
