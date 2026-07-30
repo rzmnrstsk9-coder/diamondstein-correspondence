@@ -22,7 +22,7 @@
   --fill-sunken:rgba(0,0,0,0.04); --scrim:rgba(10,8,6,0.72); --scrim-deep:rgba(10,8,6,0.85);
 
   /* Type — families */
-  --font-display:'Bricolage Grotesque',sans-serif; --font-body:'Inter',sans-serif;
+  --font-display:'Satoshi',sans-serif; --font-body:'Inter',sans-serif;
   --font-mono:'IBM Plex Mono',monospace;
 
   /* Type — scale (collapses ~27 -> 8) */
