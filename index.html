@@ -196,6 +196,24 @@
   @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
   @keyframes cue-fade-in { to { opacity: 1; } }
 
+  /* A manual escape hatch (Paul, 2026-07-30) for the 830vh letter-parallax field below: on an
+     older/underpowered device the per-frame filter recalculation can jank badly enough that
+     scrolling feels stuck, well before prefers-reduced-motion would ever be on. This link works
+     with no JS at all (a plain #doors anchor); the onclick jumps instantly (behavior:'auto', not
+     'smooth') specifically so it does NOT re-trigger a long animated scroll through the same heavy
+     per-frame work it exists to let someone skip. Dimmer than .scroll-cue on purpose -- secondary
+     action, not the primary visual cue -- but a real ~44px touch target for mobile. */
+  .skip-intro {
+    display: inline-block; margin-top: 1.1rem; padding: 0.5rem 0.4rem;
+    font-family: 'IBM Plex Mono', monospace; font-size: clamp(0.72rem, 1.9vw, 0.82rem);
+    color: rgba(255,255,255,0.62); letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9);
+    opacity: 0; animation: cue-fade-in var(--motion-fade-quick) ease-out 1.15s forwards;
+  }
+  .skip-intro:hover, .skip-intro:focus-visible { color: rgba(255,255,255,0.9); text-decoration-color: rgba(255,255,255,0.6); }
+  @media (prefers-reduced-motion: reduce) { .skip-intro { animation: none; opacity: 1; } }
+
   /* ---- kinetic title reveal: kicker -> title settle in on load, staggered, with a slight
      blur-to-sharp focus pull rather than a plain fade -- the "considered opening" beat.
      .scroll-cue gets its own fade-only entrance (below, near its existing rule) since it already
@@ -224,6 +242,11 @@
   .lp-callout {
     position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center;
     text-align: center; padding: 0 1.5rem; will-change: opacity, filter, transform;
+    /* Read-only narrative text, never interactive -- but at the same z-index as .hero-text and
+       LATER in DOM order, so without this it silently sits on top of and swallows every click in
+       the hero, including the "Skip intro" link, even while fully transparent (Paul, 2026-07-30 --
+       found while diagnosing a "skip button doesn't work" report). */
+    pointer-events: none;
   }
   .lp-callout-text {
     max-width: 760px; font-size: clamp(1.8rem, 4.6vw, 2.45rem); line-height: 1.45; color: #fff;
@@ -381,6 +404,7 @@
       <h1 class="hero-title display">A Box of Letters</h1>
       <p class="hero-kicker">A Family Archive, 1900&ndash;1926</p>
       <p class="scroll-cue">Scroll to begin &darr;</p>
+      <a href="#doors" class="skip-intro">Skip intro</a>
     </div>
 <div class="lp-callout" data-t="0.3"><p class="lp-callout-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p></div>
 <div class="lp-callout" data-t="3.175"><p class="lp-callout-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p></div>
@@ -607,14 +631,55 @@
     }
 
     let lpTicking = false;
+    let suppressLpScroll = false;   // true only while skipIntroTo's own animation is running
     const lpOnScroll = () => {
-      if (lpTicking) return;
+      if (suppressLpScroll || lpTicking) return;
       lpTicking = true;
       requestAnimationFrame(() => { lpFrame(); lpTicking = false; });
     };
     window.addEventListener('scroll', lpOnScroll, { passive: true });
     window.addEventListener('resize', lpOnScroll);
     lpFrame();
+
+    // "Skip intro" (Paul, 2026-07-30): a real, visible scroll down the page -- not an instant
+    // teleport -- but WITHOUT letting the native scroll (or the CSS `scroll-behavior: smooth` the
+    // page sets globally) drive it, because that would re-run lpFrame()'s per-frame filter
+    // recalculation continuously for the ~800vh distance -- the exact cost this button exists to
+    // let a struggling device avoid. So: a small self-contained rAF animation that moves scrollY
+    // directly, with lpOnScroll suppressed for its duration (one lpFrame() call at the very end
+    // to sync final state, not one every frame).
+    const skipIntroEl = document.querySelector('.skip-intro');
+    if (skipIntroEl) {
+      skipIntroEl.addEventListener('click', (e) => {
+        e.preventDefault();
+        const startY = window.scrollY;
+        const targetY = startY + doorsEl.getBoundingClientRect().top;
+        const distance = targetY - startY;
+        if (distance <= 0) { skipIntroEl.blur(); return; }
+        const duration = 700;
+        const startTime = performance.now();
+        suppressLpScroll = true;
+        // Each scrollTo call below is a single INSTANT jump to that frame's position -- the
+        // easing is entirely ours, done by choosing where to jump to each frame. Without this
+        // override, plain `scrollTo(0, y)` also inherits the page's global `scroll-behavior:
+        // smooth`, so every one of these per-frame calls would launch its OWN competing smooth
+        // animation on top of this loop's -- found by testing, not assumed (the same trap as the
+        // scrollIntoView version this replaced).
+        const scrollBehaviorProp = document.documentElement.style;
+        const prevScrollBehavior = scrollBehaviorProp.scrollBehavior;
+        scrollBehaviorProp.scrollBehavior = 'auto';
+        (function step(now) {
+          const t = Math.min(1, (now - startTime) / duration);
+          const eased = 1 - Math.pow(1 - t, 3);   // ease-out cubic -- fast start, gentle landing
+          window.scrollTo(0, startY + distance * eased);
+          if (t < 1) { requestAnimationFrame(step); return; }
+          scrollBehaviorProp.scrollBehavior = prevScrollBehavior;
+          suppressLpScroll = false;
+          lpFrame();   // one real sync at the landed position, not a per-frame cost
+          skipIntroEl.blur();
+        })(startTime);
+      });
+    }
   }
 
   function updateProgress() {
