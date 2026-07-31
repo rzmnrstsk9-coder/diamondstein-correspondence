@@ -199,20 +199,45 @@
   /* A manual escape hatch (Paul, 2026-07-30) for the 830vh letter-parallax field below: on an
      older/underpowered device the per-frame filter recalculation can jank badly enough that
      scrolling feels stuck, well before prefers-reduced-motion would ever be on. This link works
-     with no JS at all (a plain #doors anchor); the onclick jumps instantly (behavior:'auto', not
-     'smooth') specifically so it does NOT re-trigger a long animated scroll through the same heavy
-     per-frame work it exists to let someone skip. Dimmer than .scroll-cue on purpose -- secondary
-     action, not the primary visual cue -- but a real ~44px touch target for mobile. */
+     with no JS at all (a plain #doors anchor); the click handler (wired up below, near lpFrame)
+     animates the jump itself so it does NOT hand the scroll to the browser's own smooth-scroll,
+     which would re-trigger the same heavy per-frame work it exists to let someone skip.
+     FIXED position, not inside .hero-text (Paul, 2026-07-30): .hero-text fades out within the
+     first ~22vh of scroll (heroFadeLanes), so a link living inside it would vanish just as someone
+     starts scrolling -- gone by the time a stuck scroll would actually need it. Hidden at rest,
+     fades in once scrolling begins and stays up throughout the field, fades out once the doors
+     section is basically reached -- reuses .progress-rail's own show/hide window (`updateProgress`)
+     rather than a second, separately-tuned threshold. Deliberately NOT `display:none` on mobile
+     the way .progress-rail is -- older tablets/phones are exactly who this is for. */
   .skip-intro {
-    display: inline-block; margin-top: 1.1rem; padding: 0.5rem 0.4rem;
+    position: fixed; left: 50%; bottom: 1.6rem; transform: translateX(-50%); z-index: 150;
+    display: inline-block; padding: 0.55rem 0.9rem;
     font-family: 'IBM Plex Mono', monospace; font-size: clamp(0.72rem, 1.9vw, 0.82rem);
-    color: rgba(255,255,255,0.62); letter-spacing: 0.1em; text-transform: uppercase;
-    text-decoration: underline; text-decoration-color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.75); letter-spacing: 0.1em; text-transform: uppercase;
+    text-decoration: underline; text-decoration-color: rgba(255,255,255,0.35);
     text-shadow: 0 2px 20px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9);
-    opacity: 0; animation: cue-fade-in var(--motion-fade-quick) ease-out 1.15s forwards;
+    background: rgba(15,13,10,0.35); border-radius: 999px; backdrop-filter: blur(2px);
+    border: 1px solid rgba(255,255,255,0.55);
+    opacity: 0; transition: opacity 0.4s ease; pointer-events: none;
   }
-  .skip-intro:hover, .skip-intro:focus-visible { color: rgba(255,255,255,0.9); text-decoration-color: rgba(255,255,255,0.6); }
-  @media (prefers-reduced-motion: reduce) { .skip-intro { animation: none; opacity: 1; } }
+  .skip-intro.show { opacity: 1; pointer-events: auto; }
+  .skip-intro:hover, .skip-intro:focus-visible { color: #fff; text-decoration-color: rgba(255,255,255,0.7); }
+  @media (prefers-reduced-motion: reduce) { .skip-intro { display: none; } }
+
+  /* The ambient-music toggle stays hidden until the doors section (Paul, 2026-07-30) -- it's
+     controls for something playing over the archive imagery, not the onboarding sequence, so it
+     doesn't need to compete for attention during the hero. `.ambient-audio`'s own CSS lives in the
+     shared `assets/ambient-audio.js` (injected at runtime, index.html is its only current user, but
+     it's written to be reusable elsewhere) -- overriding opacity/pointer-events here rather than
+     editing that shared file keeps this page-specific choice out of a component other pages may
+     later opt into with different needs. `!important` because the shared file injects its own
+     <style> at runtime and this page's own stylesheet load order shouldn't have to race it.
+     Opacity + pointer-events, not display:none, matching that file's own stated intent to keep the
+     control always in the DOM and tab-reachable. Toggled by the same `updateProgress` that hides
+     the skip-intro pill and progress rail, inverted -- visible once progress essentially reaches
+     the doors section. */
+  .ambient-audio { opacity: 0 !important; pointer-events: none !important; transition: opacity 0.4s ease; }
+  .ambient-audio.show { opacity: 1 !important; pointer-events: auto !important; }
 
   /* ---- kinetic title reveal: kicker -> title settle in on load, staggered, with a slight
      blur-to-sharp focus pull rather than a plain fade -- the "considered opening" beat.
@@ -389,6 +414,7 @@
 <div class="progress-rail" id="progress-rail">
   <div class="progress-fill" id="progress-fill"></div>
 </div>
+<a href="#doors" class="skip-intro" id="skip-intro">Skip intro</a>
 
 <!-- The masthead's background is the letter-parallax field (Paul, 2026-07-23, porting the archived
      `index-hero-2026-07-23` masthead-with-letters prototype back in as the shipped design) -- real
@@ -404,7 +430,6 @@
       <h1 class="hero-title display">A Box of Letters</h1>
       <p class="hero-kicker">A Family Archive, 1900&ndash;1926</p>
       <p class="scroll-cue">Scroll to begin &darr;</p>
-      <a href="#doors" class="skip-intro">Skip intro</a>
     </div>
 <div class="lp-callout" data-t="0.3"><p class="lp-callout-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p></div>
 <div class="lp-callout" data-t="3.175"><p class="lp-callout-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p></div>
@@ -518,6 +543,11 @@
   // (masthead -> closing), fades out once the doors section (real site content) is reached.
   const rail = document.getElementById('progress-rail');
   const fill = document.getElementById('progress-fill');
+  const skipIntroVisEl = document.getElementById('skip-intro');
+  // NOT cached at parse time (Paul, 2026-07-30, found by testing): .ambient-audio sits LATER in
+  // the DOM than this script block, so document.querySelector here would return null forever --
+  // this script runs synchronously as the parser reaches it, before that element exists yet.
+  // Queried fresh inside updateProgress() instead.
   const mastheadEl = document.querySelector('.masthead');
   const doorsEl = document.getElementById('doors');
 
@@ -691,6 +721,14 @@
     progress = Math.max(0, Math.min(1, progress));
     fill.style.height = (progress * 100) + '%';
     rail.classList.toggle('show', progress > 0.02 && progress < 0.98);
+    // Visible from the very first frame, before any scrolling (Paul, 2026-07-30 -- revised same
+    // day: tried gating this behind window.scrollY>10 so it wouldn't clutter the pristine title
+    // view, but Paul wants it available immediately, not only once someone starts scrolling).
+    // Still fades out once doors is essentially reached, since it's not needed once real content
+    // starts.
+    if (skipIntroVisEl) skipIntroVisEl.classList.toggle('show', progress < 0.98);
+    const ambientAudioEl = document.querySelector('.ambient-audio');
+    if (ambientAudioEl) ambientAudioEl.classList.toggle('show', progress >= 0.98);
   }
 
   updateProgress();
