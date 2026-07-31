@@ -90,6 +90,58 @@
     // right field — Yiddish shows the transcription, English shows the translation.
     if (lang === 'yi') { body.setAttribute('dir', 'rtl'); body.setAttribute('data-field', 'transcription'); body.innerHTML = formatBody(l.yiddish); }
     else { body.setAttribute('dir', 'ltr'); body.setAttribute('data-field', 'translation'); body.innerHTML = formatBody(l.translation); }
+    setNotice(lang === 'yi', l);
+  }
+
+  // The Yiddish-only transcription notice. Rides the SAME switch as data-field above rather
+  // than a parallel condition: the claim is about machine handwriting recognition, so it is
+  // true of the transcription and false of the translation.
+  function setNotice(show, l) {
+    const notice = document.getElementById('lm-notice');
+    if (!notice) return;                                 // door built before this shipped
+    notice.hidden = !show;
+    if (!show) return;
+    const btn = document.getElementById('lm-notice-btn');
+    if (!btn) return;
+    // Address assembled at runtime from data-u/data-d — never plain text in the source.
+    const addr = btn.dataset.u + '@' + btn.dataset.d;
+    const id = l.item_id || '';
+    // TITLE first, id second. `item_id` is an internal manifest path
+    // (`manifest:letter/<slug>`) and this subject line lands in a stranger's inbox —
+    // integrity rule #6 (no internal jargon in reader-facing text) applies to outbound
+    // mail too. We still need the id to route the correction, so it rides along in
+    // parentheses rather than being the whole subject.
+    const subject = encodeURIComponent(
+      'Correction: ' + (l.title || 'a letter') + (id ? ' (' + id + ')' : ''));
+    // Deep link via `?jump=<title>` — the route this file ALREADY implements at load
+    // (see the jumpTitle handler at the bottom). Verified before use: there is no hash
+    // route here, and linking to one would produce a URL nothing consumes, landing the
+    // reader on the index with no letter open. A link that silently does nothing is worse
+    // than no link, and it would be us shipping the exact "quietly wrong" failure the
+    // notice above apologises for.
+    //
+    // ⚠️ SWITCH THIS when per-letter permalinks ship. `docs/research/incoming/
+    // 2026-07-29-pinterest-plan.md` records Paul's decided fork: every published letter
+    // gets a real crawlable page (`/letters/<slug>.html`, naming TBD), and `?jump=` is
+    // named there as what it supersedes for sharing — it reopens the whole index with a
+    // modal on top and carries no per-letter metadata. Harmless for a correction email
+    // (the recipient is us and it does land on the right letter), but this is the line to
+    // update, and nothing else would point at it.
+    const link = l.title
+      ? location.origin + location.pathname + '?jump=' + encodeURIComponent(l.title)
+      : location.origin + location.pathname;
+    // encodeURIComponent, NOT URLSearchParams: mailto: is RFC 6068 and needs %20 for a
+    // space, while URLSearchParams form-encodes it as '+' and the subject arrives literal.
+    // (Same bug the outreach tool hit in s88 — fixed there, so do not reintroduce it here.)
+    const body = encodeURIComponent(
+      (l.title ? l.title + '\n' : '') +
+      (l.date ? l.date + '\n' : '') +
+      link + '\n\n' +
+      'What the transcription currently says:\n\n\n' +
+      'What it should say:\n\n\n' +
+      'Anything else worth knowing (optional):\n\n\n' +
+      '--\nReference (please keep): ' + id + '\n');
+    btn.href = 'mailto:' + addr + '?subject=' + subject + '&body=' + body;
   }
 
   function _matchesImgPath(img) {

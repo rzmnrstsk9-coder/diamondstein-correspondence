@@ -166,6 +166,24 @@
       <button class="lm-lang-btn on" data-lang="en" id="lm-lang-en">English</button>
       <button class="lm-lang-btn" data-lang="yi" id="lm-lang-yi">ייִדיש</button>
     </div>
+    <!-- Yiddish-only transcription notice + correction invitation. Hidden by default and
+         shown by modal.js ONLY when the Yiddish original is on screen: the claim is about
+         machine HANDWRITING RECOGNITION, so it would be false advertising on the English
+         translation, which has a different provenance. The mailto: is assembled at runtime
+         from data-u/data-d (same anti-scraper convention as the footers, Paul's ask
+         2026-07-16) — the address never appears as plain text in the built HTML.
+
+         ⚠️ ABOVE the body on purpose. Placed after it first, and measured: the notice landed
+         1704px down a 1910px card, so the reader met the caveat only after scrolling past the
+         whole transcription — if at all. A disclaimer nobody reaches is not a disclaimer. Here
+         it frames the text you are about to read, which is what it is for. -->
+    <div class="lm-notice" id="lm-notice" hidden>
+      <p class="lm-notice-text">Notice: Machine transcription is ongoing and partially verified.
+        AI handwriting recognition makes mistakes&mdash;always rely on the original photograph.
+        Corrections are welcome!</p>
+      <a class="lm-notice-btn" id="lm-notice-btn" href="#"
+         data-u="aboxofletters" data-d="icloud.com">Suggest a correction</a>
+    </div>
     <div class="lm-body" id="lm-body"></div>
     <div class="modal-nav-row" id="modal-nav-row">
       <button class="nav-btn" id="modal-prev" aria-label="Previous letter">&larr;</button>
