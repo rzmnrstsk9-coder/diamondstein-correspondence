@@ -155,8 +155,11 @@
      2026-07-23) -- the callouts then take over as the reader keeps scrolling. */
   .hero-text { position: relative; z-index: 10; will-change: opacity; }
   /* Same dark halo as .lp-callout-text (Paul, 2026-07-23) -- the box photo has its own texture
-     (crumpled cardboard, handwriting on the propped letters) directly behind this text too. */
-  .hero-title, .scroll-cue {
+     (crumpled cardboard, handwriting on the propped letters) directly behind this text too.
+     .scroll-cue dropped from this rule (Paul, 2026-07-30): it's a solid gold pill button now, not
+     transparent text over the photo, so the dark-halo treatment no longer applies -- it just needs
+     its own z-index, set alongside its other button styling below. */
+  .hero-title {
     position: relative; z-index: 10;
     text-shadow: 0 2px 20px rgba(0,0,0,0.85), 0 1px 4px rgba(0,0,0,0.9);
   }
@@ -186,13 +189,22 @@
      `var(--ink-on-dark-soft)` -- this page links no tokens.css, so that token silently resolved to
      nothing (same trap as the kicker). Brighter than the old 0.55 soft value so the cue holds up
      against the lit cardboard it now sits on. */
+  /* Was static "Scroll to begin" cue text; now the click-through sequence's first button (Paul,
+     2026-07-30). Same gold-pill treatment as .callout-next -- it's the same kind of action, just
+     the first one -- keeping the bob+fade-in entrance since that was already doing useful work
+     (drawing the eye once the title's settled). */
   .scroll-cue {
-    margin-top: 14vh; font-family: 'IBM Plex Mono', monospace;
+    position: relative; z-index: 10;
+    margin-top: 14vh; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace;
     font-size: clamp(0.82rem, 2.2vw, 0.95rem); font-weight: 600;
-    color: rgba(255,255,255,0.92);
+    color: #1a1a1a; background: #e8c98a; border: none; border-radius: 999px;
+    padding: 0.7rem 1.7rem; box-shadow: 0 2px 20px rgba(0,0,0,0.5);
     letter-spacing: 0.12em; text-transform: uppercase; opacity: 0;
     animation: bob 2s ease-in-out infinite, cue-fade-in var(--motion-fade-quick) ease-out 1.15s forwards;
+    transition: transform 0.15s ease, background 0.15s ease;
   }
+  .scroll-cue:hover, .scroll-cue:focus-visible { background: #f0d9a3; }
   @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
   @keyframes cue-fade-in { to { opacity: 1; } }
 
@@ -265,14 +277,33 @@
      opacity/blur/transform are scroll-driven, in `lpFrame()` below. z-index 10 (same as
      hero-text) keeps them clearly in front of the vignette (z-index 6). */
   .lp-callout {
-    position: absolute; inset: 0; z-index: 10; display: flex; align-items: center; justify-content: center;
+    position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 1.6rem;
     text-align: center; padding: 0 1.5rem; will-change: opacity, filter, transform;
     /* Read-only narrative text, never interactive -- but at the same z-index as .hero-text and
        LATER in DOM order, so without this it silently sits on top of and swallows every click in
        the hero, including the "Skip intro" link, even while fully transparent (Paul, 2026-07-30 --
-       found while diagnosing a "skip button doesn't work" report). */
+       found while diagnosing a "skip button doesn't work" report). The Next/Begin button (below)
+       overrides this back to auto on itself -- a child CAN re-enable pointer events under a
+       pointer-events:none parent, it's only the callout's own background/text that stays inert. */
     pointer-events: none;
   }
+  /* Click-through onboarding (Paul, 2026-07-30): a Next/Begin button rides inside each callout, a
+     sibling of .lp-callout-text so it inherits the SAME opacity/filter/transform the JS already
+     animates on .lp-callout itself -- appears and disappears with its callout for free, no separate
+     visibility logic. Gold accent (matches .lp-callout-text em and .hero-experiment a) marks these
+     as the PRIMARY way through the sequence now, distinct from the dimmer, secondary skip-intro
+     pill. */
+  .callout-next {
+    pointer-events: auto; cursor: pointer;
+    font-family: 'IBM Plex Mono', monospace; font-size: clamp(0.82rem, 2.2vw, 0.95rem);
+    font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+    color: #1a1a1a; background: #e8c98a; border: none; border-radius: 999px;
+    padding: 0.7rem 1.7rem;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.5);
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .callout-next:hover, .callout-next:focus-visible { background: #f0d9a3; transform: translateY(-1px); }
   .lp-callout-text {
     max-width: 760px; font-size: clamp(1.8rem, 4.6vw, 2.45rem); line-height: 1.45; color: #fff;
     font-family: 'Satoshi', sans-serif; font-weight: 500;
@@ -429,13 +460,13 @@
     <div class="hero-text" id="hero-text">
       <h1 class="hero-title display">A Box of Letters</h1>
       <p class="hero-kicker">A Family Archive, 1900&ndash;1926</p>
-      <p class="scroll-cue">Scroll to begin &darr;</p>
+      <button type="button" class="scroll-cue" id="click-to-begin">Click to Begin</button>
     </div>
-<div class="lp-callout" data-t="0.3"><p class="lp-callout-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p></div>
-<div class="lp-callout" data-t="3.175"><p class="lp-callout-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p></div>
-<div class="lp-callout" data-t="6.05"><p class="lp-callout-text">They turned out to be <em>Sam and Dora Diamondstein&rsquo;s</em> &mdash; great-grandparents of one of this site&rsquo;s creators, writing to each other in the early 1900s.</p></div>
-<div class="lp-callout" data-t="8.925"><p class="lp-callout-text"><em>AI</em> translated and transcribed every one, then helped rebuild the story from family trees, research, and memory.</p></div>
-<div class="lp-callout" data-t="11.8"><p class="lp-callout-text">This web site is what resulted &mdash; a real experiment in using AI to do genealogical research <em>honestly</em>.</p></div>
+<div class="lp-callout" data-t="0.3"><p class="lp-callout-text">A box of over <em>100 letters</em> was found in storage in Vancouver.</p><button type="button" class="callout-next" data-kind="next">Next</button></div>
+<div class="lp-callout" data-t="3.175"><p class="lp-callout-text">Half in English cursive. Half in <em>Yiddish</em> &mdash; that no one left in the family could read.</p><button type="button" class="callout-next" data-kind="next">Next</button></div>
+<div class="lp-callout" data-t="6.05"><p class="lp-callout-text">They turned out to be <em>Sam and Dora Diamondstein&rsquo;s</em> &mdash; great-grandparents of one of this site&rsquo;s creators, writing to each other in the early 1900s.</p><button type="button" class="callout-next" data-kind="next">Next</button></div>
+<div class="lp-callout" data-t="8.925"><p class="lp-callout-text"><em>AI</em> translated and transcribed every one, then helped rebuild the story from family trees, research, and memory.</p><button type="button" class="callout-next" data-kind="next">Next</button></div>
+<div class="lp-callout" data-t="11.8"><p class="lp-callout-text">This web site is what resulted &mdash; a real experiment in using AI to do genealogical research <em>honestly</em>.</p><button type="button" class="callout-next" data-kind="begin">Next</button></div>
   </div>
 </div>
 
@@ -657,6 +688,19 @@
         c.style.filter = `blur(${(eText * 6).toFixed(1)}px)`;
         const riseY = (signedDist < 0 ? eText : -eText) * calloutRisePx;
         c.style.transform = `translateY(${riseY.toFixed(1)}px)`;
+        // Every .lp-callout is position:absolute;inset:0 -- all five sit at the EXACT SAME screen
+        // position, differentiated only by which one is opaque right now. Their buttons all have
+        // pointer-events:auto unconditionally (needed to override the callout's own
+        // pointer-events:none), so without this a real click's hit-testing always resolves to
+        // whichever callout is LAST in DOM order (paints on top at equal z-index) -- the final
+        // callout's button -- REGARDLESS of which one is actually visible. Found from Paul's report
+        // (both "click to begin lands on doors" and "the third Next goes to the wrong callout" were
+        // this same bug, since .click() in my own earlier tests bypasses real hit-testing entirely
+        // and never would have caught it). Gate the button's own pointer-events on that callout
+        // being the substantially-visible one, so only the one the reader can actually see is ever
+        // clickable.
+        const btn = c.querySelector('.callout-next');
+        if (btn) btn.style.pointerEvents = eText < 0.3 ? 'auto' : 'none';
       }
     }
 
@@ -671,45 +715,102 @@
     window.addEventListener('resize', lpOnScroll);
     lpFrame();
 
-    // "Skip intro" (Paul, 2026-07-30): a real, visible scroll down the page -- not an instant
-    // teleport -- but WITHOUT letting the native scroll (or the CSS `scroll-behavior: smooth` the
-    // page sets globally) drive it, because that would re-run lpFrame()'s per-frame filter
-    // recalculation continuously for the ~800vh distance -- the exact cost this button exists to
-    // let a struggling device avoid. So: a small self-contained rAF animation that moves scrollY
-    // directly, with lpOnScroll suppressed for its duration (one lpFrame() call at the very end
-    // to sync final state, not one every frame).
+    // Shared animated jump (Paul, 2026-07-30 -- factored out of the original "Skip intro" handler
+    // once the click-through Next/Begin/Click-to-begin buttons needed the exact same trick): a
+    // real, visible scroll -- not an instant teleport -- but WITHOUT letting the native scroll (or
+    // the CSS `scroll-behavior: smooth` the page sets globally) drive it, because that would
+    // re-run lpFrame()'s per-frame filter recalculation continuously across whatever distance is
+    // covered -- the exact cost these buttons exist to let a struggling device avoid. A small
+    // self-contained rAF animation moves scrollY directly, with lpOnScroll suppressed for its
+    // duration (one lpFrame() call at the very end to sync final state, not one every frame).
+    function animatedScrollTo(targetY, onDone) {
+      const startY = window.scrollY;
+      const distance = targetY - startY;
+      if (Math.abs(distance) < 2) { if (onDone) onDone(); return; }
+      // Slow, visible slide (Paul, 2026-07-30 -- revised same day): the reader should SEE the
+      // letters/background move as the page carries them down, not have the screen freeze for the
+      // duration and then snap. 1.8s reads as a deliberate slide, not a jump; 700ms (this
+      // function's first version) was closer to a teleport with a fade.
+      const duration = 1800;
+      const startTime = performance.now();
+      suppressLpScroll = true;   // stop lpOnScroll's OWN rAF scheduling from double-running lpFrame
+                                  // alongside the explicit call this loop already makes every frame
+      // Each scrollTo call below is a single INSTANT jump to that frame's position -- the easing
+      // is entirely ours, done by choosing where to jump to each frame. Without this override,
+      // plain `scrollTo(0, y)` also inherits the page's global `scroll-behavior: smooth`, so every
+      // one of these per-frame calls would launch its OWN competing smooth animation on top of
+      // this loop's -- found by testing, not assumed (the same trap as an earlier scrollIntoView
+      // version had).
+      const scrollBehaviorProp = document.documentElement.style;
+      const prevScrollBehavior = scrollBehaviorProp.scrollBehavior;
+      scrollBehaviorProp.scrollBehavior = 'auto';
+      (function step(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = 1 - Math.pow(1 - t, 3);   // ease-out cubic -- fast start, gentle landing
+        window.scrollTo(0, startY + distance * eased);
+        // Every frame now, not just a sync at the end (Paul, 2026-07-30): this is what actually
+        // makes the letters/callouts visibly slide past during the animation, at the cost of the
+        // same per-frame filter recalculation the original "Skip intro" fix suppressed entirely.
+        // Justified here because every jump this drives is BOUNDED (one callout's distance from
+        // the next, or the whole intro at most) rather than the raw, unbounded 830vh a struggling
+        // device previously had to sustain on its own touch gesture -- a controlled ~1.8s loop over
+        // a known distance is a very different cost than an open-ended scroll a device might stall
+        // partway through.
+        lpFrame();
+        if (t < 1) { requestAnimationFrame(step); return; }
+        scrollBehaviorProp.scrollBehavior = prevScrollBehavior;
+        suppressLpScroll = false;
+        if (onDone) onDone();
+      })(startTime);
+    }
+
+    // The document Y that lands a given callout dead-centre: the inverse of lpFrame()'s own
+    // `lanesScrolled` -> centreLane math, run backwards. lpTrack's own document-top offset is
+    // measured live (getBoundingClientRect + current scrollY) rather than cached, since it's a
+    // one-off computation per click, not a per-frame cost.
+    function laneToScrollY(lane) {
+      const trackDocTop = lpTrack.getBoundingClientRect().top + window.scrollY;
+      return trackDocTop + lane * (LP.laneVh / 100) * vh();
+    }
+    function calloutCentreLane(calloutEl) {
+      return LP.leadIn + parseFloat(calloutEl.dataset.t) + 0.5;
+    }
+
+    // "Skip intro" (Paul, 2026-07-30): jump straight past the whole sequence to #doors.
     const skipIntroEl = document.querySelector('.skip-intro');
     if (skipIntroEl) {
       skipIntroEl.addEventListener('click', (e) => {
         e.preventDefault();
-        const startY = window.scrollY;
-        const targetY = startY + doorsEl.getBoundingClientRect().top;
-        const distance = targetY - startY;
-        if (distance <= 0) { skipIntroEl.blur(); return; }
-        const duration = 700;
-        const startTime = performance.now();
-        suppressLpScroll = true;
-        // Each scrollTo call below is a single INSTANT jump to that frame's position -- the
-        // easing is entirely ours, done by choosing where to jump to each frame. Without this
-        // override, plain `scrollTo(0, y)` also inherits the page's global `scroll-behavior:
-        // smooth`, so every one of these per-frame calls would launch its OWN competing smooth
-        // animation on top of this loop's -- found by testing, not assumed (the same trap as the
-        // scrollIntoView version this replaced).
-        const scrollBehaviorProp = document.documentElement.style;
-        const prevScrollBehavior = scrollBehaviorProp.scrollBehavior;
-        scrollBehaviorProp.scrollBehavior = 'auto';
-        (function step(now) {
-          const t = Math.min(1, (now - startTime) / duration);
-          const eased = 1 - Math.pow(1 - t, 3);   // ease-out cubic -- fast start, gentle landing
-          window.scrollTo(0, startY + distance * eased);
-          if (t < 1) { requestAnimationFrame(step); return; }
-          scrollBehaviorProp.scrollBehavior = prevScrollBehavior;
-          suppressLpScroll = false;
-          lpFrame();   // one real sync at the landed position, not a per-frame cost
-          skipIntroEl.blur();
-        })(startTime);
+        animatedScrollTo(window.scrollY + doorsEl.getBoundingClientRect().top, () => skipIntroEl.blur());
       });
     }
+
+    // Click-through onboarding (Paul, 2026-07-30): "Click to Begin" jumps to the first callout;
+    // each callout's own "Next" jumps to the following one, found by DOM order over `callouts`
+    // (already built above for the rise/fade loop) rather than a second lookup; the last
+    // callout's button is "Begin" (data-kind="begin", from letter_parallax.py) and goes to #doors
+    // instead. Manual scrolling still works throughout -- these are an ADDED way through, not a
+    // replacement (Paul's explicit call).
+    const clickToBeginEl = document.getElementById('click-to-begin');
+    if (clickToBeginEl && callouts.length) {
+      clickToBeginEl.addEventListener('click', (e) => {
+        e.preventDefault();
+        animatedScrollTo(laneToScrollY(calloutCentreLane(callouts[0])), () => clickToBeginEl.blur());
+      });
+    }
+    callouts.forEach((c, i) => {
+      const btn = c.querySelector('.callout-next');
+      if (!btn) return;
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (btn.dataset.kind === 'begin') {
+          animatedScrollTo(window.scrollY + doorsEl.getBoundingClientRect().top, () => btn.blur());
+        } else {
+          const next = callouts[i + 1];
+          if (next) animatedScrollTo(laneToScrollY(calloutCentreLane(next)), () => btn.blur());
+        }
+      });
+    });
   }
 
   function updateProgress() {
