@@ -54,6 +54,11 @@
 
   function formatBody(text) {
     let h = esc(text);
+    // [note]...[/note]: a standalone editorial/provenance aside, collapsed by default (native
+    // <details>, no JS state needed). Distinct from [low-confidence] below, which stays inline —
+    // a note is a paragraph-length aside, never a phrase inside a sentence.
+    h = h.replace(/\[note\]([\s\S]*?)\[\/note\]/g,
+      (_, inner) => `<details class="editorial-note"><summary>Editorial note</summary>${inner}</details>`);
     h = h.replace(/\[low-confidence\]([\s\S]*?)\[\/low-confidence\]/g,
       (_, inner) => `<span class="conf-low tip" data-tip="Low confidence translation">${inner}</span>`);
     h = h.replace(/\[(illegible|unclear|uncertain)\]/g, (m, kind) =>

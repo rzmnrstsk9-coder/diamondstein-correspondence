@@ -69,6 +69,12 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
 .tip { position:relative; }
 .tip::after { content:attr(data-tip); position:absolute; left:50%; bottom:100%; transform:translate(-50%,-6px); background:var(--ink); color:var(--cream); font-family:var(--font-mono); font-size:var(--text-xs); white-space:nowrap; padding:0.3rem 0.55rem; border-radius: 0; opacity:0; pointer-events:none; transition:opacity .12s; z-index:5; box-shadow:0 4px 14px rgba(0,0,0,0.25); }
 .tip:hover::after { opacity:1; }
+.editorial-note { display:block; margin:var(--space-3) 0; padding:0.5rem 0.8rem; border-left:2px solid var(--line-strong); background:rgba(42,74,106,0.05); font-size:var(--text-sm); color:var(--ink-soft); }
+.editorial-note summary { cursor:pointer; font-family:var(--font-mono); font-size:var(--text-xs); color:var(--navy); list-style:none; }
+.editorial-note summary::-webkit-details-marker { display:none; }
+.editorial-note summary::before { content:"▸ "; }
+.editorial-note[open] summary::before { content:"▾ "; }
+.editorial-note[open] summary { margin-bottom:0.4rem; }
 .modal-nav-row { display:flex; align-items:center; justify-content:space-between; margin-top:var(--space-5); padding:var(--space-4) 0 var(--space-6); border-top:1px solid var(--line); position:sticky; bottom:0; background:var(--cream); box-shadow:0 -6px 10px -6px rgba(0,0,0,0.18); }
 .modal-nav-row::before { content:""; position:absolute; left:0; right:0; top:-1.6rem; height:1.6rem; background:linear-gradient(to bottom, transparent, var(--cream)); pointer-events:none; }
 .modal-position { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--ink-faint); }
