@@ -164,3 +164,19 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
   border-radius: 0; padding: 0.6rem 1.1rem; cursor: pointer; box-shadow: var(--shadow-hover);
   opacity: 0; pointer-events: none; transition: opacity 0.2s ease; }
 .back-to-top.visible { opacity: 1; pointer-events: auto; }
+
+/* Editorial-page section bodies (light path). The body renders ESCAPED into a div — a deliberate
+   honesty posture, not an oversight — so blank lines have no structural meaning without this rule.
+   `pre-wrap` restores paragraph breaks while keeping the escaping intact. Without it a long
+   article renders as one unbroken block and NOTHING errors: the page is served, styled, and
+   unreadable. Measured on the first article payload. */
+.editorial-section-body { white-space: pre-wrap; max-width: 68ch; line-height: 1.62;
+  color: var(--ink); font-size: var(--text-base); }
+.editorial-section-heading { max-width: 68ch; margin-top: var(--space-5); }
+.editorial-section figure { margin: var(--space-4) 0; max-width: 68ch; }
+.editorial-section figure img { width: 100%; height: auto; display: block; }
+.editorial-section figcaption { font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--ink-soft); margin-top: 0.4rem; }
+/* Run-in labels: a paragraph-leading phrase that names what the paragraph is about. Promoted by
+   the renderer from already-escaped text, so it adds structure without weakening the escaping. */
+.editorial-section-body strong { font-weight: 600; color: var(--ink); }

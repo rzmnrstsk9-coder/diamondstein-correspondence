@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What We Measured, and What Broke &mdash; The Sam and Dora Letters</title>
+<link rel="stylesheet" href="../assets/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<style>
+  .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
+    --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  .editorial-section { margin-bottom: var(--page-density); }
+  .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
+    color: var(--page-accent); margin-bottom: 0.5rem; }
+  .editorial-section-body { font-size: 0.95rem; line-height: 1.6; color: var(--ink-body); }
+  .editorial-section-img { max-width: 100%; border-radius: 0; margin: 0.6rem 0; }
+  .editorial-page {
+  --page-accent: var(--rust);
+}
+</style>
+  <script data-goatcounter="https://aboxofletters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<meta name="robots" content="noindex,follow">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body>
+<main class="editorial-page">
+  <h1>What We Measured, and What Broke</h1>
+  <section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading"></h2><div class="editorial-section-body" data-field="sections[id=opening].body">This is the technical companion to a piece about running a family&#x27;s Yiddish letter archive through AI. That article makes an argument. This one is the lab notebook: what we measured, what the numbers were, and — more usefully — the seven approaches that didn&#x27;t work and the instruments that lied to us about their own results.
+
+I&#x27;m writing the failures down in detail because nobody publishes them, and they cost us more than the successes did. If you are building something similar, the dead ends are the part you can actually use.
+
+The setup: ~150 letters, 1900–1942, mostly handwritten Yiddish, some English. No Yiddish reader in the family. The whole project is five weeks old — first commit 30 June, this written 3 August — which is worth stating up front, because the compression is part of the story: everything below happened inside a month. Handwriting recognition to get text off the page, a language model to translate, a static site to publish scans beside text. Every claim traceable to a photographed page.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">The structural flaw that made everything else possible</h2><div class="editorial-section-body" data-field="sections[id=the-structural-flaw-that-made-everything-else-po].body">Before any of the interesting failures, one design error set them up.
+
+We had two independent English translations of each letter and treated their agreement as corroboration. It wasn&#x27;t. Both translators were reading the same single Yiddish string. Neither had ever seen the handwriting. Two readers of one corrupt source can only ever agree with each other.
+
+Their agreement was measuring translation stability, not transcription accuracy — and we were reporting it as though it meant the reading was sound. Every downstream check inherited that error, because every downstream check was ultimately looking at one machine&#x27;s opinion about what the ink said.
+
+The lesson generalises past this project: if you have redundancy, check where it sits. Two checks downstream of a single point of failure are one check wearing a disguise.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">Seven dead ends, in order encountered</h2><div class="editorial-section-body" data-field="sections[id=seven-dead-ends-in-order-encountered].body">• General-purpose vision model on Yiddish bodies — verdict: &lt;5% of body text read; two runs disagreed on the recipient&#x27;s name
+• Off-the-shelf synthetic-trained HTR model — verdict: Out-of-distribution on 1908 cursive — predicted by a survey before we tested it
+• Rarity-based error detection — verdict: Measured, never built: 77% of the corpus is hapax (words appearing once)
+• Vision model as a line-by-line checker — verdict: 5 lines, 5 fabrications; confidence scores not reproducible at temperature 0
+• A second HTR model as an automatic checker — verdict: Uniform garbling — but it produced the study&#x27;s central criterion
+• Entity-anchored error detection — verdict: Built, measured, does not work
+• Phonetic normalisation instead of glyph comparison — verdict: 35.5% collapse that rescues nothing; merges in / a / and / when
+
+Each has a tell — the thing that would have saved us the time.
+
+<strong>The two vision approaches, tried in the first days.</strong> A general vision model reads printed text well and cursive Yiddish essentially not at all. Tell: if two runs of the same tool on the same image disagree about a proper noun, you have a random number generator, not a reading. The synthetic-trained HTR model failed for a reason a published survey had already stated: it was trained on a distribution that doesn&#x27;t include a fast personal hand from 1908. Tell: check whether anyone has evaluated the tool on your century and your handwriting before spending anything.
+
+<strong>Rarity-based detection.</strong> The idea: rare words are more likely to be misreadings. Sound in principle. Measured against the corpus first — and 77% of tokens appear exactly once, which is what happens with personal letters, names, and inconsistent historical spelling. A rarity filter would have flagged three quarters of the archive. Tell: measure the base rate before building the detector.
+
+<strong>A vision model as checker.</strong> We showed a model a line crop and the transcription and asked it to score agreement. It produced fluent, specific, confident assessments of five lines. All five were fabrications — it was describing handwriting it could not read. Worse, the scores weren&#x27;t reproducible at temperature 0, which should be impossible and meant the mechanism was not what we thought it was. Tell: run your checker twice on identical input before trusting it once.
+
+<strong>A second handwriting model as checker.</strong> It disagreed with the primary everywhere, uniformly: mean character-similarity 0.84, zero lines under 0.50. Useless as a checker — but the reason it was useless became the criterion that made the whole later study work — see &quot;The criterion that came out of a failed checker&quot; below.
+
+<strong>Entity-anchored detection.</strong> The idea: names and places recur, so a misreading of a known entity should stand out. Built it. Measured it. It doesn&#x27;t work, because the entities are exactly what the model gets wrong most often — there is no anchor if the anchor moves.
+
+<strong>Phonetic normalisation.</strong> Instead of comparing letter shapes, compare how words sound — collapse spelling variation and see what&#x27;s left. Collapsed 35.5% of distinctions and rescued nothing real, while merging genuinely different common words (in, a, and, when) into one another. Tell: a normalisation that collapses your most frequent words is destroying signal, not noise. The pattern across three of these: the property that made each approach attractive was the property that made it fail. Rarity detection needs rare words to be unusual — they aren&#x27;t. Entity anchoring needs anchors to be stable — they aren&#x27;t. Phonetic collapse needs sound to distinguish meaning — it doesn&#x27;t, in a language with this much orthographic variation.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">What actually worked: independent readings, compared</h2><img class="editorial-section-img" src="img/L08.jpg" alt="What actually worked: independent readings, compared" loading="lazy"><div class="editorial-section-body" data-field="sections[id=what-actually-worked-independent-readings-compar].body"><strong>The thing that worked was unglamorous.</strong> Get more than one genuinely independent reading of the handwriting — not two opinions about one transcription — and compare them.
+
+Two Yiddish HTR models trained on family letters (rather than the play manuscripts our original was largely trained on) were suggested by a stranger on Facebook. Criteria were fixed in writing before any credit was spent, specifically so the analysis couldn&#x27;t drift to fit whatever came back.
+
+On the one line in the corpus with external ground truth — three corrections reported by a Yiddish specialist who had never seen these models — both new models independently reproduced her corrections. Including a character-substitution class whose evidence had been sitting unnoticed in her own email.
+
+Scaled to the full corpus, every Yiddish letter read by all three:
+
+• 62% — comparable tokens: 11,655
+• 49% — comparable tokens: 10,712
+• 49% — comparable tokens: 10,625
+
+The original transcription — the one the entire site was built on — is the outlier of the three.
+
+Across the corpus there are 1,126 single-character substitutions where both new models agree against the original, spanning 206 distinct character pairs.
+
+<strong>This measures machine-vs-machine disagreement.</strong> It localises doubt; it never establishes correctness. Two models trained on overlapping Hebrew-script data can agree and both be wrong, and where both misread alike the method is silent. That limitation is not a footnote — it bounds every number above.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">The criterion that came out of a failed checker</h2><div class="editorial-section-body" data-field="sections[id=the-criterion-that-came-out-of-a-failed-checker].body">The rejected second handwriting model produced the most useful idea in the project.
+
+<strong>The rejected checker disagreed with everything, uniformly.</strong> When we later evaluated two candidate models that also disagreed a great deal — 48% of tokens differing, not one line identical — the pre-registered rule said reject, and the ground-truth test said adopt.
+
+Resolving that honestly meant asking what the rule had been reaching for, rather than what it said. Three measurements separated the good candidates from the rejected one:
+• Near-misses, not garble. Mean character-similarity of differing tokens 0.65; 72–79% of differing tokens at least 0.6 similar. They were reading the same ink and differing by a letter.
+• Clustered, not flat. Per-line disagreement 0.12 → 1.00, standard deviation 0.22. The rejected checker had zero lines under 0.50 — no structure anywhere.
+• Directionally better where checkable. Their disagreements turned non-words into real words. The uniformity that condemned the bad checker was uniformity of KIND, not amount. Our pre-registered rule had conflated how much disagreement with what sort, and only the second distinguishes a useful checker from a worthless one. A checker must fail selectively. One that fails everywhere carries no information, however loudly it fails.
+
+This is recorded as a correction to the criterion rather than a rationalisation of it: the rule as written would have rejected the models that turned out to work.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">The instruments that lied</h2><div class="editorial-section-body" data-field="sections[id=the-instruments-that-lied].body">This is the section I most wanted to write, because these are the failures that don&#x27;t appear in papers.
+
+<strong>An instrument that invented 20% of its own evidence.</strong> A character-confusion matrix, built to show which letter shapes get confused, manufactured 108 phantom observations from an ambiguity that was documented as a known limitation in the same file whose code produced them. Writing the blind spot down did not make the code respect it.
+
+<strong>A fix that wasn&#x27;t a fix.</strong> Two models produced byte-identical output across 19 letters. That reads as a finding — the models agree perfectly! — and it was a bug: the fetch didn&#x27;t pin which model&#x27;s transcript it was retrieving, so the second model&#x27;s request returned the first&#x27;s text. The exact hazard had been fixed two days earlier by adding an optional parameter to the underlying function. The caller never passed it. A fix that adds an optional parameter is not a fix until every caller passes it.
+
+And the test written to prevent precisely this passed throughout, because the fake client in the test returned a constant regardless of which model was requested. It asserted which label got written, never which text arrived.
+
+<strong>Guards that pass the defect they exist to prevent.</strong> More than once, we wrote a check, mutation- tested it in both directions, watched it fail on a broken version and pass on a correct one — and it still let through the exact defect it was written for. The reason: every mutation broke the code the guard reads, never the state the guard protects. Mutate the property, not the plumbing. A guard whose mutations only ever edit source files is untested.
+
+<strong>A check that could not fail correctly.</strong> Re-checking for the byte-identical bug above, a script reported 30 of 30 letters identical — catastrophe, apparently recurred. It hadn&#x27;t. The script read the wrong field name and was comparing empty strings, which are equal. What exposed it was a second script contradicting the first, not the check itself. This is worse than a false alarm. Had the bug been real, the same broken check would have reported &quot;identical&quot; and confirmed it for a reason having nothing to do with the bug. A check that cannot fail correctly cannot pass correctly either.
+
+<strong>Ranking by the property that doesn&#x27;t discriminate.</strong> Asked which character pairs were most contentious, we ranked by frequency. The top results were ordinary Yiddish spelling variation — the same word spelled two acceptable ways — not misreadings at all. The character pairs an expert had actually reported ranked fifth and sixth. Filtering instead on does this substitution turn a non-word into a real word inverted the ranking entirely and surfaced four pairs nobody had named. Frequency could not separate a misread from a spelling variant, and we had ranked the whole class by it. The system already excluded two characters by design for exactly this reason; the frequency ranking silently readmitted what an existing guard existed to keep out.
+
+<strong>An API whose fields lie.</strong> Our transcription credits reported active: true and a non-zero balance on a package that had expired days earlier and returned HTTP 402 on any real job. A check computing sum(balance where active) — the obvious implementation — would have reported credits available while every job failed. Only the expiry date told the truth.
+
+In one working day we shipped four checks that were green for reasons unrelated to what they claimed to test. Not four bugs — four verification tools that verified nothing. That ratio is the single most useful number in this article.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">The measurement that confirmed its own incompleteness</h2><div class="editorial-section-body" data-field="sections[id=the-measurement-that-confirmed-its-own-incomplet].body">The subtlest failure deserves its own section.
+
+For days, three separate documents stated that one specialist&#x27;s two corrected lines were &quot;the only external ground truth in the corpus.&quot; It was checked against the data. It was false.
+
+A volunteer had read an entire letter from the scan and recovered a passage our reconstruction had marked unrecoverable — real 1923 history, with names and places, where the archive held only &quot;a fond, teasing remark.&quot; That reading also exposed a person in our database who did not exist, confirmed on a single mention at a line our own text had flagged as low-confidence.
+
+Why did the false claim survive a check against the data? Because the volunteer&#x27;s reading had never been entered into the corpus. It existed as prose in a project log. The statement was true of the database — and the database was missing the thing. A measurement over an incomplete store confirms the incompleteness rather than exposing it.
+
+The project&#x27;s single most valuable human document sat in a handoff log because the schema had no field for &quot;a human read this from the scan.&quot; Build the place to put the good input before you go looking for it.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">Provenance is data, and ours was in the wrong place</h2><div class="editorial-section-body" data-field="sections[id=provenance-is-data-and-ours-was-in-the-wrong-pla].body">Late in the work we needed to know something about our own process: which letters had received real human editorial attention, and which had merely been skimmed.
+
+<strong>We had a marker for exactly this.</strong> It was nearly backwards. The [reviewed: no changes needed] tag appeared on 35 letters — identical text every time — and marked the ones that had been skimmed. The two letters that had received the most careful human editing didn&#x27;t carry it at all.
+
+<strong>The real record was in git.</strong> Five commits, all one day, with messages naming what had been done: one letter, then one, then three, then two, with per-letter edit volume collapsing from ten lines to two, and then stopping. Seven of 147 letters ever received a human approval pass.
+
+That curve — visible only in commit messages — turned out to matter enormously, because the two confirmed meaning-reversing errors in the archive are both in the first two of those commits. Version control was the only complete record of what a human had decided. Not as backup: as data. Commit messages written a month earlier, documenting reasoning at the time, answered a question no file in the project could.
+
+Write commit messages as though someone will need to reconstruct what a human was thinking much later. On this project &quot;much later&quot; turned out to be four weeks. In a project involving AI-generated content, the commit log may be the only place the human judgement is recorded at all.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">What this cost, and what it bought</h2><div class="editorial-section-body" data-field="sections[id=what-this-cost-and-what-it-bought].body">The measurement work runs on a credit system: one page, one model, one credit, verified against real spend rather than estimated. A full corpus pass with two models was 100 credits, well inside one consumer subscription.
+
+<strong>Our own pre-run estimate was wrong by 2× in the pessimistic direction.</strong> A pessimistic estimate silently halves how much evidence a budget buys, and nobody questions an estimate that turns out generous.
+
+What it bought: doubt localised to 62 of 75 letters, two confirmed and corrected meaning-reversing errors in published text, four newly-identified character-confusion classes, and a defensible claim about which of our readings is least reliable. What it did not buy: certainty about any single line. That still requires a human who reads Yiddish, and we have had two.</div></section><section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading">If you take one thing</h2><div class="editorial-section-body" data-field="sections[id=if-you-take-one-thing].body">Every failure in this article is the same failure: an instrument answering a narrower question than the one being asked.
+
+Two translators agreeing measured translation stability, not transcription accuracy. Frequency ranking measured how often characters differ, not whether the difference was a mistake. A guard mutation-tested against its own source measured whether the code parsed, not whether the data was sound. A ground-truth claim checked against the database measured the database, not the world.
+
+<strong>None of these were sloppy.</strong> Each was a reasonable measurement, correctly implemented, answering something adjacent to the actual question. That is what makes the class dangerous: the output looks like an answer, arrives with a number attached, and is wrong in a direction nobody thinks to check.
+
+The only defence we found that reliably worked was running two different instruments and noticing when they disagreed. Both of the worst errors in this article were caught that way, and neither was caught by the check that was supposed to catch it.</div></section>
+</main>
+</body>
+</html>

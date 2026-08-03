@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Genealogy in the Age of AI &mdash; The Sam and Dora Letters</title>
+<link rel="stylesheet" href="../assets/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<style>
+  .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
+    --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  .editorial-section { margin-bottom: var(--page-density); }
+  .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
+    color: var(--page-accent); margin-bottom: 0.5rem; }
+  .editorial-section-body { font-size: 0.95rem; line-height: 1.6; color: var(--ink-body); }
+  .editorial-section-img { max-width: 100%; border-radius: 0; margin: 0.6rem 0; }
+  .editorial-page {
+  --page-accent: var(--rust);
+}
+</style>
+  <script data-goatcounter="https://aboxofletters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<meta name="robots" content="noindex,follow">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body>
+<main class="editorial-page">
+  <h1>Genealogy in the Age of AI</h1>
+  <section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading"></h2><div class="editorial-section-body" data-field="sections[id=opening].body">My family has about a hundred and fifty letters, mostly handwritten in Yiddish, sent between 1900 and 1942. A man named Sam wrote most of them to his wife Dora — from Montreal, from London, from hotel rooms in Leipzig and Paris, across four decades of a marriage conducted substantially by post.
+
+Nobody in the family reads Yiddish.
+
+<strong>That is the whole problem, and it is a common one.</strong> The letters had been in a box for the better part of a century, and the people who could have read them died before anyone thought to ask. So we did what a lot of people are now doing: we ran them through artificial intelligence. A handwriting recognition model trained on Yiddish script to get the words off the page, a large language model to turn those words into English, and a website to put the results somewhere the family could actually read them.
+
+<strong>All of this took about five weeks, start to finish, working evenings.</strong> That number matters later.
+
+<strong>We tried to be careful about it.</strong> Every transcription is labelled as AI work. Every letter sits next to a photograph of the original page, so you can always look at the thing itself. Where the software couldn&#x27;t read a word, the site says so — there are thousands of those marks — and where two models disagreed, we kept both readings instead of quietly picking one.
+
+Then we emailed a Yiddish cultural institution asking about their work, and a specialist there wrote back: &quot;I&#x27;m curious to hear more about your process, particularly your reliance on AI to transcribe and translate these. I just took a look at your site and saw that there are many errors in the Yiddish transcription. It didn&#x27;t surprise me, since there is a consensus in our field that machine-learning tools are not at the level to reliably transcribe and translate Yiddish. Moreover, Yiddish handwriting is infamously difficult even for humans to decipher.&quot;
+
+<strong>If you spend time in genealogy forums, you already know this argument.</strong> Someone posts about the remarkable thing an AI just did with their great-grandmother&#x27;s letters, and someone else — usually someone who actually reads the language — points out that the AI is confidently producing text that isn&#x27;t there. The enthusiasts think the skeptics are gatekeeping. The skeptics think the enthusiasts are filling family histories with plausible fiction.
+
+<strong>The skeptics are right.</strong> I want to say that early, because what follows is not a rebuttal. She was right, and she was right about considerably more than she claimed — we went and checked, and it was worse than her email said.
+
+<strong>But the useful part of this story isn&#x27;t that the AI made mistakes.</strong> Everyone expects that. The useful part is where the mistakes turned out to be, which was not where we had built our defences, and — this is the part I did not see coming — not the AI&#x27;s fault at all.
+
+<strong>She had pointed at two specific words in one letter.</strong> One of them was Dora&#x27;s own name: the software had read the first letter of Dora as a different Hebrew character, turning it into a word that means nothing. A small thing. The kind of error you&#x27;d expect, and shrug at.
+
+<strong>So we checked whether it was small.</strong> If the machine confused those two characters once, it would have confused them elsewhere — the same shapes, the same hand, the same pen. We searched the rest of the archive for the same substitution.
+
+<strong>Fifty-nine more, across twenty-five letters.</strong> In some of the commonest words in the language.
+
+<strong>Her two lines had not been an anecdote.</strong> They were a sample — and we had been reading them as a complaint to be answered rather than as data. That reframing is the only reason any of the rest happened.
+
+Here is what that turned into, eventually: every Yiddish letter in the archive has now been read by four different AI systems instead of one. When we compare them, the two newest agree with each other about 62% of the time, and each agrees with our original transcription — the one the entire site was built on — only 49% of the time.
+
+<strong>Our foundation is the outlier of the three.</strong> We could not have known that a fortnight ago, because we had only ever had one reading, and a single reading always looks certain.</div></section><section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading">What &quot;many errors&quot; means, and why we couldn&#x27;t see them</h2><div class="editorial-section-body" data-field="sections[id=what-many-errors-means-and-why-we-couldn-t-see-t].body"><strong>Our site was covered in admissions of uncertainty.</strong> Thousands of them. Every place the handwriting recognition returned something it couldn&#x27;t resolve, the page says so, in the text, where a reader will trip over it.
+
+Not one of those marks said the thing that mattered.
+
+They all said, in effect: the machine could not read this. None of them said: the machine read this perfectly well, and got it wrong.
+
+Those are different failures, and we had built instruments for only the first. It is easy to detect a model that produces gibberish — the gibberish is right there. It is very hard to detect a model that produces a real word, in the right grammatical place, that happens to be the wrong word. The first looks uncertain. The second looks like a sentence.
+
+<strong>Everything we had built measured legibility.</strong> Nothing measured correctness. And because the archive was so visibly honest about the first kind of failure, it felt rigorous — which made the second kind harder to look for, not easier.</div></section><section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading">The first turn: fluency is the danger</h2><div class="editorial-section-body" data-field="sections[id=the-first-turn-fluency-is-the-danger].body"><strong>A system that fails obviously is safe.</strong> You can see it fail.
+
+A system that fails fluently hands you something that reads like a memory.
+
+Earlier this year, a local paper in Alaska ran a piece about a man who had done roughly what we did. He fed his family&#x27;s letters to an AI tool and got back a coherent, readable family history. It was, by his account, remarkable — and mostly right.
+
+<strong>He noticed one problem.</strong> The history contained not a word about California, and he knew the family had moved there. So he went looking, and found the gap.
+
+<strong>I want to be careful here, because he did nothing wrong.</strong> He did the obvious thing, and the obvious thing is genuinely useful. But look at how he caught the error: he already knew the answer. The gap was visible to him because he could compare the output against something he independently knew to be true.
+
+Now consider every part of that history covering something he didn&#x27;t already know. Which is the entire reason to do this in the first place. On those parts, nothing would have told him. The output would have read exactly as smooth, exactly as plausible, and exactly as authoritative.
+
+<strong>That is the failure mode.</strong> Not wrong output — unfalsifiable output. An answer you have no way to check is not a weaker version of an answer you can check. It is a different kind of object.</div></section><section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading">The second turn: and then it wasn&#x27;t the AI</h2><img class="editorial-section-img" src="img/L08.jpg" alt="The second turn: and then it wasn&#x27;t the AI" loading="lazy"><div class="editorial-section-body" data-field="sections[id=the-second-turn-and-then-it-wasn-t-the-ai].body">A few weeks ago a volunteer — a Yiddish reader who found the site and started sending corrections, unpaid, for no reason other than that he could — pointed at a line in a letter from 1907.
+
+Our published translation had Sam writing that he and Dora &quot;walk around like two young people.&quot;
+
+What the letter actually says is that they walk around like two decrepit, worn-out old people.
+
+<strong>Not a shade of meaning.</strong> The opposite — and a small, sharp piece of a marriage: a man in his thirties, making a joke to his wife about how old they both feel. We had published the reverse of it.
+
+<strong>Here is the part that stopped me.</strong> No AI system anywhere in our pipeline ever produced the word &quot;young.&quot; Three separate handwriting models have now read that line, and they garble it three different ways — none of which is that word. The translation step, working from mangled input, had correctly flagged the passage as uncertain.
+
+Then a human being removed the uncertainty mark and wrote &quot;young.&quot;
+
+<strong>It wasn&#x27;t carelessness.</strong> It was the opposite: it was someone reading a damaged passage, understanding the surrounding context, and doing what any good editor does — producing a clean sentence. The context supported it. It just wasn&#x27;t what the letter said.
+
+The second case is worse, because it is the first letter in the archive and it changes a man&#x27;s character. Our version has Sam, newly arrived and broke, taking a job under an exploitative contract, realising what it is, and going back to the office to take his papers and walk away. Decisive. It reads well.
+
+The Yiddish underneath that passage is unreadable — two of the key words aren&#x27;t words at all in the original transcription. The two newest systems both read them the same way, and a human reader independently agrees: other people talked him out of going.
+
+<strong>He didn&#x27;t see through it himself.</strong> He was persuaded by others. Our version made him more discerning than he was, at the opening beat of the entire story, and nobody invented anything to get there. A translator filled a gap from context — which is what filling a gap from context does.
+
+A translator filling a gap does not know they are filling a gap.</div></section><section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading">The uncomfortable part</h2><img class="editorial-section-img" src="img/1900.jpeg" alt="The uncomfortable part" loading="lazy"><div class="editorial-section-body" data-field="sections[id=the-uncomfortable-part].body">So: where in a hundred and fifty letters would you expect those two errors to be?
+
+They are in the two letters that received the most human attention.
+
+That is not a coincidence, and the causation runs backwards from how it looks. This particular failure requires a person confident enough to overrule a machine&#x27;s hedge. AI does not make this mistake — AI is the thing that flagged the uncertainty in the first place. It is the signature of someone doing the work carefully.
+
+<strong>The person doing that editing was my collaborator Paul.</strong> He went through the earliest letters line by line, resolving uncertain passages by hand. Then he stopped. After a handful of letters he concluded that his guesses were no better than the machine&#x27;s, and left the remaining hundred and forty alone.
+
+<strong>At the time that looked like giving up.</strong> It wasn&#x27;t. Both of the confirmed, meaning-reversing errors in this archive come from exactly the passes where he was overriding the machine. He had correctly identified that his intuitions about a language he doesn&#x27;t read were not adding information — and the evidence we gathered a month later says he was right to trust that judgement.
+
+<strong>Which leaves the other hundred and forty letters.</strong> It would be convenient to describe them as clean. They are not clean. They are unexamined. They cannot contain this particular error only because nobody was ever confident enough to introduce it.
+
+And so the sentence &quot;we found two errors&quot; is not the reassurance it sounds like. We found two errors in the most scrutinised corner of the archive. We have no idea what is in the rest, and neither does anyone else.</div></section><section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading">What trustworthy would actually look like</h2><div class="editorial-section-body" data-field="sections[id=what-trustworthy-would-actually-look-like].body">Not &quot;AI bad.&quot; Not &quot;AI is fine now.&quot; Both are postures rather than positions, and neither can be argued with.
+
+The useful question is narrower: what would let a reader check you?
+
+<strong>Every claim sits next to its evidence.</strong> On our site that means the photograph of the page is always one click from the text, because the scan is the only thing in the system that cannot be wrong.
+
+<strong>Uncertainty survives all the way to the reader.</strong> Not a confidence score in a database — a visible mark, in the sentence, that a person reading casually will notice.
+
+<strong>Disagreement is preserved rather than resolved.</strong> When two systems read a line differently, that is information, and averaging it away destroys the only signal you have about where to look.
+
+<strong>There&#x27;s a claim in there worth being careful about.</strong> Pairing a narrative with citations back to primary sources is not new — that is what a scholarly critical edition has always been, and there are magnificent ones. What is unusual is the combination: a private family archive, built by the family itself in five weeks rather than the decades a scholarly edition takes, at consumer-software cost, that kept the machines&#x27; disagreement instead of smoothing it away. Every critical edition resolves textual uncertainty by editorial judgement. That is what editorial judgement is for, and the people doing it are qualified in ways we are not.
+
+<strong>That last part is why the five weeks cut both ways.</strong> It is the reason this was possible at all, and it is the reason to distrust the result — an edition that takes twenty years takes twenty years partly because someone is checking.
+
+This piece is an argument for showing the uncertainty instead — and the evidence for it is the two places where we smoothed, and were wrong.</div></section><section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading">If you want to do this yourself</h2><div class="editorial-section-body" data-field="sections[id=if-you-want-to-do-this-yourself].body"><strong>You should.</strong> The alternative is that the letters stay unread, which is not a more honest outcome — it is just a quieter one. But here is what I would tell someone starting today, including the parts that didn&#x27;t work.
+
+<strong>The rough sequence.</strong> Photograph everything at high resolution before you do anything else; the scan is your ground truth forever and everything else is disposable. Get the text off the page with a handwriting model trained on your actual language and script — not a general-purpose one. Translate in a separate step, from the transcription, so you can tell a reading error from a translation error. Publish the scan beside the text.
+
+<strong>The dead ends, and their tells.</strong> We tried a general-purpose vision model for the Yiddish first: it read under 5% of the body text and two runs disagreed about the recipient&#x27;s name. Tell: if two runs of the same tool disagree, you have a random number generator, not a reading. We tried a general-purpose handwriting model: out-of-distribution on 1908 cursive, which a survey had predicted before we spent anything. Tell: check whether anyone has evaluated the tool on your century and your hand. We tried using a second model as an automatic checker, twice; the first fabricated whole letters, the second garbled everything uniformly. Tell: a checker that fails everywhere is worthless, because it cannot discriminate — you need one that fails selectively.
+
+Then the principles, which matter more than the sequence:
+
+<strong>Keep the scan next to every claim.</strong> Not in an appendix. Adjacent, always, so that checking is easier than trusting.
+
+Never let a later step silently resolve an earlier step&#x27;s uncertainty. This is the one that cost us both real errors. If your transcription says &quot;unclear&quot; and your translation says something definite, you have manufactured confidence out of nothing. Make the uncertainty structurally impossible to drop.
+
+<strong>Get a second machine reading before you get a human one.</strong> People who read your language are the scarcest resource you have. Two machines disagreeing tells you where to look, cheaply, and then you can spend a human&#x27;s attention on the twenty lines that matter instead of the two thousand that don&#x27;t.
+
+<strong>Expect your checks to be wrong.</strong> In one day of building verification tools, we shipped four that passed for reasons unrelated to what they claimed to test. One of them reported a catastrophic bug that didn&#x27;t exist, because it was reading the wrong field — and if the bug had been real, it would have &quot;confirmed&quot; it for the wrong reason. A check that cannot fail correctly cannot pass correctly either.
+
+<strong>Never invent.</strong> A faithful garble beats a beautiful fabrication. We rejected one model outright because it produced elegant, complete, entirely fictional letters — which is worse than useless, because it is undetectable without the original.
+
+<strong>On tools.</strong> The AI is the obvious star: none of this exists without it, and the honest position is that the transcription quality is genuinely remarkable compared to nothing. But the framing that actually helped was: the model is very good at generating candidates and very bad at knowing when it is wrong. Build accordingly.
+
+The unsung hero is git — ordinary version control, the thing programmers use to track changes. Not for backups. Because it turned out to be the only complete record of what a human had decided. Twice, we needed to know something about our own editorial history that no file in the project could answer — who had reviewed what, and how carefully — and the answer was in commit messages written weeks earlier by someone documenting their reasoning as they went. The marker we had designed to record editorial review turned out to be nearly backwards: it appeared mostly on the letters that had been skimmed. The commit log was right where our own metadata was wrong.
+
+So: write commit messages as though someone will need to reconstruct what you were thinking six months from now. Someone will — and on this project it took five weeks. It will be you.</div></section><section class="editorial-section" data-item="editorial-page:articles/genealogy-in-the-age-of-ai"><h2 class="editorial-section-heading">Where this actually stands</h2><div class="editorial-section-body" data-field="sections[id=where-this-actually-stands].body"><strong>Two errors found and fixed.</strong> A hundred and forty letters that no human has examined. A sheet of questions currently sitting with a volunteer who owes us nothing, which may come back with answers and may not come back at all.
+
+<strong>That is not a satisfying ending, and I&#x27;ve decided not to give it one.</strong> The archive is more honest than it was a month ago, and considerably less certain. Both of those are improvements.
+
+But I want to be careful not to overcorrect into a different kind of dishonesty, because the exercise was not a failure and saying so would be false modesty.
+
+<strong>The overall story is very probably right.</strong> That is a claim about structure rather than about any individual sentence, and it rests on things that are checkable: half the archive — seventy-six of the hundred and fifty letters — is in English, read straight off the page, with no Yiddish transcription standing between the reader and the words. The narrative we built cites people, places, dates and photographs, and those are corroborated by the English letters, by documents, and by ordinary genealogical records. Both of the errors we confirmed were reversals inside a sentence — a word, an attribution of agency. Neither moved a person, a date, or a place. Sam still crossed the Atlantic in the year we say he did, still worked the jobs we say he worked, still wrote to Dora with the frequency we describe.
+
+What is uncertain is the texture: the specific phrasing, the jokes, the exact register of a man&#x27;s voice in a language none of his descendants can read. That is precisely what the letters were worth having for, which is why the uncertainty matters. But it is not the same as the history being wrong.
+
+And the family has something now that it did not have five weeks ago: a hundred and fifty letters photographed at archival resolution, organised, dated, indexed by who appears in them, and readable by anyone in the family on a phone. That part is not provisional. Even if every English word we generated were thrown out tomorrow, the scans remain, catalogued and legible, instead of decaying in a box that nobody under eighty could open.
+
+<strong>The AI did not give us certainty.</strong> It gave us a way in — and then a way to find out where we were wrong, which is more than the box was offering.
+
+The one thing that has actually caught errors — not the confidence scores, not the cross-checking, not any of the tooling we built — is the invitation on every page asking readers who know Yiddish to tell us where we&#x27;re wrong. Two strangers have now done that. Everything else in this article is downstream of those two emails.
+
+<strong>If you build one of these, put that invitation on it.</strong> And when someone takes you up on it, treat what they send you as data rather than as criticism. That distinction is the only reason we found anything at all.</div></section>
+</main>
+</body>
+</html>
