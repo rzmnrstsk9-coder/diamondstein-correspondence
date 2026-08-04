@@ -115,20 +115,6 @@
   .journo-box h3 { font-family: var(--font-mono); font-size: 0.76rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.9rem; }
   .journo-box p { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
 
-  /* ---- angle picker (different beats, same page) ---- */
-  .angle-intro { font-size: 0.92rem; color: var(--ink-soft); max-width: 640px; margin: 1.2rem 0 1.6rem; }
-  .angle-nav { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 2rem; }
-  .angle-nav a {
-    font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; text-decoration: none;
-    color: var(--navy); border: 1px solid rgba(42,74,106,0.3); padding: 0.5rem 1rem;
-    border-radius: 999px; transition: all 0.15s ease;
-  }
-  .angle-nav a:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
-  .angle-box { background: #fff; border-left: 3px solid var(--navy); padding: 1.8rem 2rem; margin-bottom: 1.4rem; scroll-margin-top: 1rem; }
-  .angle-box h3 { font-family: var(--font-display); font-weight: 700; font-size: 1.1rem; margin-bottom: 0.4rem; color: var(--ink); }
-  .angle-box .angle-for { font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.9rem; display: block; }
-  .angle-box p { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
-  .angle-box .angle-quote { margin-top: 1rem; padding-left: 0.9rem; border-left: 2px solid rgba(0,0,0,0.12); font-style: italic; color: var(--ink); }
   .contact-row { margin-top: 2rem; padding-top: 1.6rem; border-top: 1px solid rgba(0,0,0,0.08); font-family: var(--font-mono); font-size: 0.88rem; }
   .contact-row a { color: var(--rust); }
   .faq-a a { color: var(--rust); }
@@ -144,6 +130,18 @@
   .faq-item:first-child { border-top: none; }
   .faq-q { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; margin-bottom: 0.5rem; }
   .faq-a { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
+
+  /* ---- who made this ---- */
+  .people { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
+  .person-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); padding: 1.8rem 2rem; }
+  .person-head { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; }
+  .person-avatar { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: #fff; }
+  .person-avatar.paul { background: var(--rust); }
+  .person-avatar.fernando { background: var(--navy); }
+  .person-name { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--ink); }
+  .person-role { font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-soft); margin-top: 0.2rem; }
+  .person-bio { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
+  @media (max-width: 760px) { .people { grid-template-columns: 1fr; } }
 
   footer { padding: 3rem 0 4rem; text-align: center; }
   footer p { font-family: var(--font-mono); font-size: 0.76rem; color: var(--ink-faint); }
@@ -292,41 +290,7 @@
   <div class="wrap">
     <p class="eyebrow">For Journalists &amp; Content Creators</p>
     <h2>Boilerplate, quotes, and how to reach us.</h2>
-    <p class="angle-intro">Same underlying story, different entry points depending on your beat &mdash; pick whichever fits, the rest of the page still applies.</p>
-    <div class="angle-nav">
-      <a href="#angle-general">General interest</a>
-      <a href="#angle-jewish">Jewish &amp; Yiddish culture</a>
-      <a href="#angle-ai">AI &amp; digital archives</a>
-    </div>
-
-    <div class="angle-box" id="angle-jewish">
-      <span class="angle-for">For Jewish &amp; Yiddish culture outlets</span>
-      <h3>The story starts in the Pale of Settlement, not Vancouver.</h3>
-      <p>Sam's own story starts before emigration, in Latvia, in the Pale of Settlement. One of the
-      very first letters in the whole archive, from 1901, has him admit outright that a Montreal job
-      &ldquo;wouldn't take any Jews&rdquo; &mdash; so he lied and said he was an Austrian Christian to
-      get hired. He eventually settled for good in London's Jewish East End, on Fashion Street near
-      Brick Lane, where he built a fur-trade business from nothing and raised a family with Dora. Every
-      Yiddish original is on the site alongside its translation, not just the English reading.</p>
-      <p class="angle-quote">&ldquo;So I said I was an Austrian Christian &mdash; and they took me.&rdquo;</p>
-    </div>
-
-    <div class="angle-box" id="angle-ai">
-      <span class="angle-for">For AI, digital humanities &amp; archives writers</span>
-      <h3>The interesting part isn't the transcription &mdash; it's what happens when the AI model isn't sure.</h3>
-      <p>Yiddish pages go through Transkribus for handwriting recognition first, then a language model
-      translates the whole letter and self-flags anything it isn't confident about &mdash; those spans
-      stay marked rather than smoothed into plausible prose. A human review pass wins over the
-      machine's reading, but the machine's original attempt is never deleted, so the correction is an
-      audit trail, not a silent fix. Every fact the site states is stored with a source and a
-      confidence tier &mdash; a birth year with two disagreeing sources (a marriage certificate says
-      1912, a family chart says 1913) stays recorded as both, not resolved to one answer. One amount in
-      a 1920 letter is recorded as permanently unresolved &mdash; the page is abraded at the exact
-      digit and the original no longer exists to re-check &mdash; because an honest &ldquo;we don't
-      know&rdquo; outlives a confident guess.</p>
-    </div>
-
-    <div class="journo-grid" id="angle-general">
+    <div class="journo-grid">
       <div class="journo-box">
         <h3>Short version</h3>
         <p>A Box of Letters is an interactive archive built from over 100 real family letters &mdash; about half of them in Yiddish, unreadable to the family for decades. AI helped transcribe, translate and organize them, then combined them with historical research and family-tree records to reconstruct a detailed narrative of the letter-writers' lives across nearly three decades: emigration from Latvia to England, a flirtation with Canada and the U.S., and the fur-trade business and family they built once they settled for good.</p>
@@ -338,6 +302,36 @@
     </div>
     <div class="contact-row">
       Press contact: <a href="#" class="js-email" data-u="aboxofletters" data-d="icloud.com">(enable JavaScript to view email)</a> &middot; High-resolution images available on request.
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHO MADE THIS ============ -->
+<section class="block">
+  <div class="wrap">
+    <p class="eyebrow">Who Made This</p>
+    <h2>Two people, not an institution.</h2>
+    <div class="people">
+      <div class="person-card">
+        <div class="person-head">
+          <div class="person-avatar paul">PL</div>
+          <div>
+            <div class="person-name">Paul Levine</div>
+            <div class="person-role">Project originator &middot; family archivist &middot; design lead</div>
+          </div>
+        </div>
+        <p class="person-bio">A retired graphic designer who ran Tangent Design. Two earlier projects share a thread with this one &mdash; <i>Barbed Wire</i>, a beloved 1990s Vancouver webzine, and <i>Raising the Dead</i> (2002), a Canada Council&ndash;funded interactive memorial for his brother Richard &mdash; whose files, decades later, turned out to hold the box of letters this whole project is built from. On this project: supplied the letters and family testimony, reviews and approves every reading, holds final editorial authority, and personally designed this entire site.</p>
+      </div>
+      <div class="person-card">
+        <div class="person-head">
+          <div class="person-avatar fernando">FM</div>
+          <div>
+            <div class="person-name">Fernando Medrano</div>
+            <div class="person-role">Creative technologist</div>
+          </div>
+        </div>
+        <p class="person-bio">A Vancouver-based creative technologist, roughly twenty-five years into building the systems behind creative work &mdash; a decade at Radical Entertainment, then directing the art of <i>Glitch</i> for the studio that became Slack, then founding studios of his own. On this project: created the architecture and machinery that turns a box of fragile, half-legible pages into a structured, searchable archive; the rules that keep that archive honest; and the system that gives the material shape and meaning, then narrative &mdash; and ultimately an engaging, living account. One rule is built into its bones: it can never present a guess as a fact.</p>
+      </div>
     </div>
   </div>
 </section>
