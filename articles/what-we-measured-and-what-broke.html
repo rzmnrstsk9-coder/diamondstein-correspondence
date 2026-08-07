@@ -9,6 +9,8 @@
 <style>
   .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
     --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  .editorial-byline { font-size: 0.85rem; color: var(--ink-muted, var(--ink-body));
+    margin: -0.5rem 0 var(--page-density); opacity: 0.75; }
   .editorial-section { margin-bottom: var(--page-density); }
   .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
     color: var(--page-accent); margin-bottom: 0.5rem; }
@@ -25,6 +27,7 @@
 <body>
 <main class="editorial-page">
   <h1>What We Measured, and What Broke</h1>
+  <p class="editorial-byline">By Fernando Medrano</p>
   <section class="editorial-section" data-item="editorial-page:articles/what-we-measured-and-what-broke"><h2 class="editorial-section-heading"></h2><div class="editorial-section-body" data-field="sections[id=opening].body">This is the technical companion to a piece about running a family&#x27;s Yiddish letter archive through AI. That article makes an argument. This one is the lab notebook: what we measured, what the numbers were, and — more usefully — the seven approaches that didn&#x27;t work and the instruments that lied to us about their own results.
 
 I&#x27;m writing the failures down in detail because nobody publishes them, and they cost us more than the successes did. If you are building something similar, the dead ends are the part you can actually use.

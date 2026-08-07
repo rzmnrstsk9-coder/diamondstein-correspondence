@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Just Add Water &mdash; The Sam and Dora Letters</title>
+<link rel="stylesheet" href="../assets/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<style>
+  .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
+    --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  .editorial-byline { font-size: 0.85rem; color: var(--ink-muted, var(--ink-body));
+    margin: -0.5rem 0 var(--page-density); opacity: 0.75; }
+  .editorial-section { margin-bottom: var(--page-density); }
+  .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
+    color: var(--page-accent); margin-bottom: 0.5rem; }
+  .editorial-section-body { font-size: 0.95rem; line-height: 1.6; color: var(--ink-body); }
+  .editorial-section-img { max-width: 100%; border-radius: 0; margin: 0.6rem 0; }
+  .editorial-page {
+  --page-accent: var(--rust);
+}
+</style>
+  <script data-goatcounter="https://aboxofletters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<meta name="robots" content="noindex,follow">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body>
+<main class="editorial-page">
+  <h1>Just Add Water</h1>
+  <p class="editorial-byline">By Fernando Medrano</p>
+  <section class="editorial-section" data-item="editorial-page:articles/just-add-water"><h2 class="editorial-section-heading"></h2><div class="editorial-section-body" data-field="sections[id=opening].body">People keep asking for the code.
+
+<strong>It is a reasonable request and the wrong one.</strong> The code is about four thousand lines of Python that knows an enormous amount about Yiddish handwriting, letter-shaped records, and one specific family. Almost none of that would help you. If your collection is ship manifests or court records or a decade of a parish register, the parts of this project that look most like software are the parts least worth copying.
+
+<strong>What transfers is the posture.</strong> A handful of commitments made early, most of them before any code existed, which then decided nearly every technical question downstream. They would decide the same questions the same way for a collection of something else entirely.
+
+This piece is that posture, and there is a file at the end of it you can hand to whatever agent you are working with. Two warnings about that file before you get there, both of which the rest of this explains: it is deliberately incomplete, and it has been used exactly once.</div></section><section class="editorial-section" data-item="editorial-page:articles/just-add-water"><h2 class="editorial-section-heading">Three things, and the sentence that connects them</h2><div class="editorial-section-body" data-field="sections[id=the-pillars].body">Every archive project has the same three functions in it, whether or not anyone has named them. Naming them is most of the benefit, because unnamed functions get collapsed into each other and the collapse is where the trouble starts.
+
+<strong>There is a record.</strong> It holds everything ever found, including the uncertain, the contradictory and the unused, with its confidence marked. It never invents. If a word cannot be read, the record says so rather than guessing.
+
+<strong>There is a presentation.</strong> It takes the record and curates it into something a person can follow — which means it shows a subset, on purpose, and leaves things out that are perfectly real.
+
+<strong>And there is a gate between them.</strong> It runs before anything is published, and it checks that references resolve, that links work, and that nothing claims more than the record supports.
+
+The sentence that connects them is the most useful thing in this article:
+
+The record keeps everything; the presentation shows only some of it; the gate guards the seam.
+
+<strong>That is why there are separate tiers for provisional and public material.</strong> It is why hiding something on the website never deletes it from the archive. It is why an automated check is allowed to refuse a publish. All three follow from taking the sentence seriously.
+
+<strong>There are two more roles and they are both human-shaped.</strong> Someone edits — decides what is featured, what is hidden, what is ready, how it sounds. And someone, or something, does the legwork. In our case the legwork is done by an AI agent and the editing is not, and the important discipline is keeping those two distinct even when they happen in the same conversation. The moment they blur, generated material starts arriving as though it had been established.</div></section><section class="editorial-section" data-item="editorial-page:articles/just-add-water"><h2 class="editorial-section-heading">Say which operation you are performing</h2><div class="editorial-section-body" data-field="sections[id=the-verbs].body"><strong>This one sounds like bureaucracy and is not.</strong> It came out of a specific embarrassment.
+
+The project has a small vocabulary for the operations that get performed on the archive: ingest, discover, audit, correct, clarify, connect, park, decline, retire, vet, build. Most are self-evident. Three are worth explaining, because each fixes a real failure.
+
+<strong>Vet is never allowed to stand alone.</strong> Saying a thing has been vetted conveys almost nothing, and it took an incident to notice: the sentence &quot;we reviewed the places&quot; was completely true and thoroughly misleading, because reviewing meant one thing to the person who wrote it and another to the person who read it. So the word is always qualified now. Vetted same-thing means two records are the same entity. Vetted real-thing means it exists outside our data. Vetted true means the evidence supports the claim. Vetted ready means it is fit to publish. Four different jobs that had been sharing one word.
+
+<strong>Park is a real outcome rather than a failure.</strong> Some questions cannot be settled with what you have, and the useful move is to record why you stopped. A parked question with its reasoning attached is worth more than a gap somebody has to rediscover.
+
+<strong>Decline needs to be as durable as acceptance.</strong> A rejected claim that leaves no trace will be proposed again, and again, by whoever comes next — including a machine that has no memory of the last time. Writing down that something was considered and refused is not bookkeeping; it is the only thing that stops the same argument recurring forever.</div></section><section class="editorial-section" data-item="editorial-page:articles/just-add-water"><h2 class="editorial-section-heading">Eight commitments, each one paid for</h2><div class="editorial-section-body" data-field="sections[id=the-invariants].body"><strong>None of these were designed in advance.</strong> Every one exists because its absence caused a problem that took real effort to undo.
+
+<strong>Everything rendered records what produced it.</strong> A reader points at something on a page and you need to know which source file to edit. Without it, corrections get applied to the output and vanish at the next rebuild.
+
+<strong>Provisional and public are different tiers, enforced structurally.</strong> Not by convention or a naming rule someone remembers — by construction, so that generated material cannot reach a public surface without a human moving it there.
+
+<strong>Superseding never deletes.</strong> When a record is replaced, keep it and record what replaced it. You will want the old one, usually to understand why somebody made a decision that now looks wrong.
+
+<strong>A gate runs before publication and is allowed to refuse.</strong> The refusal is the feature. A gate that always passes is decoration, and you will not find out which kind you have until the day it matters.
+
+<strong>Edits resolve to source, never to output.</strong> The built site is a reference surface, not an edit surface. A hand-edit to generated output survives until the next build and then disappears without trace, which is worse than being unable to make it — so here, a hook physically blocks it.
+
+<strong>The name of a thing is not evidence about the thing.</strong> Filenames, folder names and titles are somebody&#x27;s earlier guess, recorded at a moment you cannot see. In a cold test of this posture on about a hundred and fifty scans, the filenames disagreed with the documents they named roughly a quarter of the time — wrong dates, two names swapped with each other, four promising crops that were never made. None of it was visible without opening the images. The distinction that matters is whether a fact was read from the object or inferred from its surroundings, and nothing downstream can tell those apart unless somebody records which it was.
+
+<strong>Prefer the reversible action, and when you cannot, stop and ask.</strong> This is the principle the others quietly share. Superseding is reversible; deleting is not. A dry run is reversible; a write is not. When something is expensive to undo — rewriting history, discarding originals — that is the moment to put the choice to a person, even when you are confident. Confidence and reversibility are different things.
+
+And the one that has cost the most: derive, never enumerate. Compute status and coverage from what is actually there, never from a hand-maintained list. Lists rot silently, and the rot is invisible precisely because a list looks authoritative. This project has lost data to that at least seven separate times, which is why the rule is stated so bluntly.</div></section><section class="editorial-section" data-item="editorial-page:articles/just-add-water"><h2 class="editorial-section-heading">The file, and why it is deliberately incomplete</h2><div class="editorial-section-body" data-field="sections[id=the-file].body"><strong>At the end of this there is a single Markdown file.</strong> You give it to whatever agent you are working with, along with your material, and it establishes the posture above before any design decisions get made.
+
+<strong>It does not contain a data schema.</strong> It does not contain a pipeline, a stage list, a directory layout or a technology recommendation. Those omissions are the point.
+
+The reasoning is that a recipe implies completeness — follow the steps, get the dish — and this cannot be that. It has never seen your material. If it prescribed a record shape, you would copy a structure built for handwritten letters into a collection of something else, and the mismatch would be invisible until it had already cost you something.
+
+So what it carries instead is commitments with their reasons attached, because a rule that travels with its reason can be extended to a case it does not name. That is what makes it useful in the situation you will actually be in, which is one nobody anticipated.
+
+This is also why it does not need to be complete, and why trying would make it worse. An agent that hits an uncovered case is expected to work out which commitment applies and reason from it. A file detailed enough to answer everything is a file that stops that reasoning and replaces it with pattern-matching against somebody else&#x27;s archive. The gaps are where judgement is required, and marking them as gaps is more honest than filling them with guesses.
+
+It opens by telling you to do two things before anything else: write down where the material came from and whether the folder is source or copy, and then open the material itself rather than reading its filenames. Both came out of watching agents skip them. It ends with five questions rather than five answers. What is the thing in your material that cannot be wrong? Who can check the machine&#x27;s output, and what happens where nobody can? What could be regenerated, and what would be lost forever? What does uncertainty look like, and does it survive all the way to a reader? And what is the smallest thing you could publish that would still be honest?
+
+<strong>The second question is the one that determines everything else.</strong> If a competent person can verify every result, you can afford a permissive pipeline and fix errors as they surface. If nobody can — a dead language, a hand nobody reads, a vocabulary that died with its speakers — then error has to be made structurally difficult, because there is no later in which to catch it.</div></section><section class="editorial-section" data-item="editorial-page:articles/just-add-water"><h2 class="editorial-section-heading">What we do not know</h2><div class="editorial-section-body" data-field="sections[id=what-we-do-not-know].body">Now the part that ought to make you cautious.
+
+This project has a rule about exactly this situation, and publishing the file breaks it. The rule says: do not extract a shared abstraction in anticipation of a second user; extract it at the second user, once you can see which parts were really general. It exists because generalising from one example produces something shaped like the example, wearing the costume of a principle.
+
+We are breaking it deliberately, and the honest reason is that a shape is more useful shared than hoarded. But you should read the file knowing that it has been run on one archive, by two people, over about four months.
+
+Our best guess at what transfers: the one sentence, the derive-never-enumerate rule, and the habit of qualifying the word vetted.
+
+Our best guess at what is ours rather than yours: the specific tiers we chose, the record shape, and everything downstream of the fact that our material is handwritten letters in a language nobody in the family reads. That last constraint drove more of our design than anything else, and most collections do not have it.
+
+We genuinely do not know which of those two lists a given piece belongs on. That is not modesty. It is what one data point buys you.
+
+Since writing that, the file has been handed cold to four fresh agents — an empty folder, a copy of the material, no other context — and every run changed it. The first read the folder as an origin when it was a copy, and spent several turns building on that before working out where it actually was. That was the file&#x27;s fault: it insists that everything record what produced it, and arrived with its own provenance stripped. It now carries a header saying where it came from.
+
+The second agent hit that header on first read, recognised itself as the case the file describes, and asked instead of assuming. Then it surveyed the material and found things we had missed for months: a filename that dates a letter a year before it was written, two filenames swapped with each other, twelve records pointing at three photographs, and a large fraction of the filenames disagreeing with the documents they name.
+
+The number turned out to depend on how you count, which is itself worth knowing. A later run opened every image and sorted the names by whether they claimed anything at all. Nearly a third of the files are named scan-41 and similar — they assert nothing, so they cannot be wrong. Among the names that did make a claim, a date, a place, a recipient, more than half were wrong in at least one particular. So the error rate is somewhere between a quarter and a half, and which figure you quote depends entirely on whether you count the names that never said anything. We had been quoting the lower one without noticing we had chosen a denominator.
+
+<strong>The fourth run is the one that stopped being about the file.</strong> That agent was not asked to check anything. It was asked for an inventory, in the words a busy person would actually use, and told to be efficient. It opened a quarter of the images, said clearly that it had opened a quarter, and then reported something neither of us had ever looked at.
+
+Dora is addressed as Miss Dora Diamondstein on postcards from 1907 and 1909. In two letters from August 1910, both signed Your Loving Sam, she is Miss D. Dean. She is unmarried in all of them, and already carrying the surname she would supposedly take when she married. Either both families shared a name, or Dean was the anglicisation and the family used both, or our transcription picked up a surname from context rather than reading it off the page. We do not know which, and the archive has a document that probably settles it: the betrothal contract names both families, and it has been sitting transcribed in the corpus the entire time.
+
+<strong>That is the part worth reporting honestly.</strong> The agent found both halves of this and filed them separately, one as a filename error and one as an open question four sections apart, and never joined them. It took a human reading its report to see that they were the same finding. Which is roughly the thesis of everything above: the noticing can come from either side, and the mattering usually takes both.
+
+It also reported something neither of us had noticed about the file: the tier structure never came up in either run, because neither agent got near publishing anything. Two of the eight commitments do all the early work and were listed last. That is now fixed, and it is the kind of thing only a cold reader finds — we had both been too close to the material to see which parts of the posture were load-bearing on day one.</div></section><section class="editorial-section" data-item="editorial-page:articles/just-add-water"><h2 class="editorial-section-heading">Take it and tell us what broke</h2><div class="editorial-section-body" data-field="sections[id=the-invitation].body">The useful thing you can do with this is not to follow it.
+
+It is to adapt it to material it was not built for, notice where it fails, and say so. The second person to use a shape is the one who finds out which parts of it were real — everything before that is a hypothesis with good presentation.
+
+<strong>If you do try it, the failures are more interesting than the successes.</strong> A commitment that turned out to be specific to letters, a question that made no sense for your material, an invariant that cost more than it saved. Those tell us something the first run structurally cannot.
+
+<strong>The file is below.</strong> It is short, it is opinionated, and it is incomplete on purpose.</div><p class="editorial-section-link"><a href="../start-your-own-archive.md">Download: Starting your own archive (Markdown)</a></p></section>
+</main>
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Site navigation">
+    <a href="index.html">&larr; All articles</a>
+    <a href="../index.html">Home</a>
+    <a href="../letters.html">Every Letter</a>
+    <a href="../family.html">The Family</a>
+    <a href="../long-read.html">Read the Story</a>
+    <a href="../journey.html">Follow the Journey</a>
+    <a href="../pictures.html">The Couple in Pictures</a>
+    <a href="../worth-knowing.html">Background &amp; Context</a>
+    <a href="../how-made.html">How This Was Made</a>
+    <a href="../articles/">Articles</a>
+    <a href="../credits.html">Credits &amp; Sources</a>
+  </nav>
+  <p class="footer-contact">Questions, corrections, contributions? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
+</footer>
+<script>
+  // Obfuscated mailto, same convention as the other doors: the address never appears as plain
+  // text in the HTML source — assembled at runtime from data-u/data-d, so a scraper never sees
+  // it while a real visitor gets a working mailto: link. Wires EVERY matching element, so an
+  // in-article contact link works the same way the footer one does.
+  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
+    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
+  });
+</script>
+</body>
+</html>

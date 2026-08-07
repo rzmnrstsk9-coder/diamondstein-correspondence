@@ -9,6 +9,8 @@
 <style>
   .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
     --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  .editorial-byline { font-size: 0.85rem; color: var(--ink-muted, var(--ink-body));
+    margin: -0.5rem 0 var(--page-density); opacity: 0.75; }
   .editorial-section { margin-bottom: var(--page-density); }
   .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
     color: var(--page-accent); margin-bottom: 0.5rem; }
@@ -25,6 +27,7 @@
 <body>
 <main class="editorial-page">
   <h1>How This Was Built</h1>
+  <p class="editorial-byline">By Fernando Medrano</p>
   <section class="editorial-section" data-item="editorial-page:articles/how-this-was-built"><h2 class="editorial-section-heading"></h2><div class="editorial-section-body" data-field="sections[id=opening].body">The architecture here is deliberately opinionated: it isn&#x27;t a loose bag of scripts that happen to produce a website; it&#x27;s a designed system with a point of view about honesty, and that view is enforced in the structure itself.
 
 The central principle is a strict division of labour, and the work is split among a chain of specialists — a transcriber, a translator, an archivist, an editor — each with exactly one job and a clean handoff to the next. No single step is trusted to do everything.
