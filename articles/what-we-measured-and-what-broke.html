@@ -9,8 +9,12 @@
 <style>
   .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
     --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  /* ⚠️ The top margin was -0.5rem, which pulled the byline up INTO the title's descenders —
+     "By Fernando Medrano" sat against the tail of the "y" in "Beautiful". A negative pull is only
+     safe against a heading whose font never descends, and this one does. Uses the spacing token
+     scale rather than a hand-picked value: tokens-only is a guarded rule on this site. */
   .editorial-byline { font-size: 0.85rem; color: var(--ink-muted, var(--ink-body));
-    margin: -0.5rem 0 var(--page-density); opacity: 0.75; }
+    margin: var(--space-2) 0 var(--page-density); opacity: 0.75; }
   .editorial-section { margin-bottom: var(--page-density); }
   .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
     color: var(--page-accent); margin-bottom: 0.5rem; }
