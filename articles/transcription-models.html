@@ -40,7 +40,15 @@
 
 <strong>Letter Reader, model 371705.</strong> Trained on 532 pages: family letters, relief-society correspondence, community minutes — 12,240 lines, 99,526 words. Also 75 transcriptions.
 
-And a Latin-script model, run over the English and mixed-language material rather than the Yiddish: 75 transcriptions.
+Yiddish to Latin, model 116033.
+
+This one does something different, and it is worth understanding because it explains the shape of the whole pipeline. It does not read a page into Yiddish. It reads the page into the Latin alphabet — the same Yiddish words, spelled phonetically in the letters this sentence is written in, so that lib̤entse dore is what the other models render as ליבענדע דארע. That makes it useful as an independent check rather than as a source: it reads the same ink through a different output alphabet, so where it disagrees with the others, the disagreement is about the strokes rather than about a shared habit of spelling. It produced 75 transcriptions.
+
+Which is the moment to be plain about what the pipeline actually is.
+
+<strong>Yiddish is written in the Hebrew alphabet.</strong> It is not Hebrew — it is a Germanic language with Hebrew, Slavic and Aramaic in it — but it uses those letters, and that is what these models produce: Yiddish words in Hebrew script. Nobody in this family reads either. So the published English on this site is not a translation of the scans. It is a translation of a transcription: a handwriting model reads the ink and produces Yiddish in Hebrew characters, and then a second model translates that text into English. Sixty-eight of the English translations in this archive cite the Dybbuk transcription as their source, not the photograph.
+
+<strong>That is two steps, and the second one cannot see the page.</strong> Every misread character in step one arrives in step two as a fact, and a translator working from text has no way to know the ink said something else. It is why the character confusions further down this article matter more than they first appear: a single wrong letter does not stay a wrong letter. It becomes a wrong word, and then a fluent English sentence built on it.
 
 Alongside the handwriting models, Claude&#x27;s vision model produced 76 readings — nearly all of them on the English material, where the writing is printed or clear enough to photograph and read directly. That is the whole roster: 299 recorded jobs across the four handwriting models plus one that never finished, and 151 records in the archive, of which 72 are Yiddish, 76 English, and 3 mixed.
 
