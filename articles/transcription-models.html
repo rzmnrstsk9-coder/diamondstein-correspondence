@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Beautiful Fabrication &mdash; The Sam and Dora Letters</title>
+<link rel="stylesheet" href="../assets/tokens.css">
+<link rel="stylesheet" href="../assets/components.css">
+<style>
+  .editorial-page { max-width: 720px; margin: 3rem auto; padding: 0 1.5rem;
+    --page-accent: var(--rust); --page-density: var(--space-5); --page-heading-scale: var(--text-xl); }
+  .editorial-byline { font-size: 0.85rem; color: var(--ink-muted, var(--ink-body));
+    margin: -0.5rem 0 var(--page-density); opacity: 0.75; }
+  .editorial-section { margin-bottom: var(--page-density); }
+  .editorial-section-heading { font-family: var(--font-display); font-size: var(--page-heading-scale);
+    color: var(--page-accent); margin-bottom: 0.5rem; }
+  .editorial-section-body { font-size: 0.95rem; line-height: 1.6; color: var(--ink-body); }
+  .editorial-section-img { max-width: 100%; border-radius: 0; margin: 0.6rem 0; }
+  .editorial-page {
+  --page-accent: var(--rust);
+}
+</style>
+  <script data-goatcounter="https://aboxofletters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<meta name="robots" content="noindex,follow">
+<link rel="icon" type="image/png" href="../assets/favicon.png">
+</head>
+<body>
+<main class="editorial-page">
+  <h1>A Beautiful Fabrication</h1>
+  <p class="editorial-byline">By Fernando Medrano</p>
+  <section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading"></h2><div class="editorial-section-body" data-field="sections[id=opening].body"><strong>This archive holds about a hundred and fifty letters.</strong> Seventy-two of them are in Yiddish, most of those handwritten, and nobody in the family reads Yiddish.
+
+<strong>So every door into those seventy-two pages is a machine.</strong> There is no version of this project where a relative sits down with the box and simply reads it. What follows is a field report on the machines: four handwriting models run over the same pages, the vision models we used alongside them, and the ones we rejected — with the dates, the numbers, and the evidence each verdict actually rests on.</div></section><section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading">Why there is no one left to read them</h2><div class="editorial-section-body" data-field="sections[id=no-readers-left].body"><strong>Before the war, Yiddish had close to eleven million speakers.</strong> The strongest single source for that is a fact sheet from a Jewish research institute, which does not give a round number at all — it gives a region-by-region table, adds it up, and arrives at 10,690,000. Eastern and Central Europe held about 6.8 million of them, North America about 3 million. Other sources round the figure up to eleven million. The honest version is that the best primary count is just under it.
+
+<strong>The Holocaust killed roughly half of them.</strong> That is the demographic catastrophe, and nothing else in this paragraph is comparable to it.
+
+<strong>What happened afterwards was slower and had several causes at once.</strong> The same institute&#x27;s fact sheet puts them in one sentence: through the second half of the twentieth century, Yiddish usage was reduced by acculturation and assimilation in the United States, by forced acculturation and assimilation in the Soviet Union, and because of repression of Yiddish and acculturation to Hebrew in the State of Israel. In the new Israeli state the pressure was real, documented, and dated — an explicit national preference for Hebrew, publication limits on Yiddish newspapers enforced through licensing law inherited from the Mandate, a permit regime restricting Yiddish theatre concentrated around 1949 to 1951. It was not a single decree and not a total ban, and the historian who has written the fullest account of it argues the Hebrew-only project was only partly successful. It is one factor of three, operating on a population already halved.
+
+<strong>And for this family it was none of those things.</strong> They settled in London. What happened to their Yiddish is the most ordinary cause on the list: two generations, and the children spoke English. That is why the box came to us unreadable, and it is why the rest of this article is about software.</div></section><section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading">What we ran</h2><div class="editorial-section-body" data-field="sections[id=what-we-ran].body">Four handwriting models, all of them hosted on Transkribus, each identified there by a numeric id so you can look it up yourself.
+
+<strong>The Dybbuk, model 46159.</strong> This was the incumbent — the model the whole site was originally built on. It was trained mainly on play manuscripts from a research project of the same name. The archive holds 74 transcriptions produced by it.
+
+<strong>Mame Loshn Maven, model 371445.</strong> Trained on 867 pages of civil records and letters combined — 33,487 lines, 139,504 words. It produced 75 transcriptions here.
+
+<strong>Letter Reader, model 371705.</strong> Trained on 532 pages: family letters, relief-society correspondence, community minutes — 12,240 lines, 99,526 words. Also 75 transcriptions.
+
+And a Latin-script model, run over the English and mixed-language material rather than the Yiddish: 75 transcriptions.
+
+<strong>A note on two numbers that look like they should be the same and are not.</strong> The archive holds 74 transcriptions attributed to the Dybbuk model. Our own job log holds 73 entries for the batch that produced them. Both counts are correct. One early run predates the job log entirely, so it left a transcription in the archive with no matching job record. They are two different things counted honestly, not one thing counted twice with an error somewhere.
+
+Alongside the handwriting models, Claude&#x27;s vision model produced 76 readings — nearly all of them on the English material, where the writing is printed or clear enough to photograph and read directly. That is the whole roster: 299 recorded jobs across the four handwriting models plus one that never finished, and 151 records in the archive, of which 72 are Yiddish, 76 English, and 3 mixed.</div></section><section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading">What the scores don&#x27;t tell you</h2><div class="editorial-section-body" data-field="sections[id=what-the-scores-hide].body">Each of these models publishes an accuracy figure — character error rate, the share of characters it gets wrong. Lined up, they look like a ranking.
+
+The Dybbuk reports 4.4%. Mame Loshn Maven reports 7.68%. Letter Reader reports 9.35%. And there is a fourth Yiddish model out there, trained on synthetically generated handwriting, reporting an error rate of 0.0009 — which is to say, essentially perfect.
+
+<strong>The ranking is worthless.</strong> Each figure was measured on that model&#x27;s own held-out data. The Dybbuk&#x27;s 4.4% means it reads play manuscripts well, because play manuscripts are what it was tested on. Letter Reader&#x27;s 9.35% is a worse number measured on a harder and much closer thing: actual family letters. On our pages, the model with the best published score was the outlier of the three — the one the other two most often disagreed with.
+
+<strong>The synthetic model makes the point without ambiguity.</strong> A near-perfect score on synthetic data is evidence about the data, not about the model. If a program generates the handwriting and the same program grades the reading of it, the number tells you the two halves agree. It tells you nothing about a fountain pen moving fast across a thin sheet in 1908.
+
+<strong>So the published error rate is not a property of the model.</strong> It is a property of the model paired with one particular test set, and unless that test set looks like your pages, the number is a fact about someone else&#x27;s archive.</div></section><section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading">What we rejected, and on what evidence</h2><div class="editorial-section-body" data-field="sections[id=what-we-rejected].body">Three rejections, and one model carries most of the section.
+
+On 2 July 2026 we tested Google&#x27;s Gemini as a transcription source — the calibration ran against gemini-3.1-pro-preview and gemini-2.5-pro. We gave it a control page — one of the cleanest letters in the archive, only 1.4% of it marked unclear by any other reading. It returned an entirely different letter. Fluent, plausible Yiddish, correctly formatted, signed by a person who does not appear anywhere on the page. We ran the same scan again and got a second different letter, with a second different invented signatory. It was rejected as a transcription source that day.
+
+On 31 July we gave it a fair retest, this time against gemini-3.1-pro-preview alone, because both objections to the first test were reasonable. The first objection was that we had asked it to do the wrong job — transcribe a whole page rather than check a single line. The second was that we had handed it unpreprocessed pages instead of clean line crops. We fixed both: individual line crops, cut from the page, with the model asked only to compare a crop against an existing transcription and score the agreement. It fabricated five out of five. Every return was a stock Yiddish letter formula — the epistolary phrases that open thousands of letters — described with specific, confident detail about handwriting it could not see. On the one line in the archive where we have external ground truth from a human who reads Yiddish, the reference handwriting model scored 0.13 divergence from the truth and this checker scored 0.77. Set to temperature zero, where the same input is supposed to produce the same output, one line came back with a different fabrication than the run before.
+
+Gemini was accepted for translation, and still does that job on this archive. That is not a contradiction, and it is the most useful thing we learned. Translation hands it fixed text — the Yiddish is already there, in characters, on the input. Transcription hands it pixels of a hand it cannot resolve. When we asked it to translate, it preserved the unreadable markers we had put in the text and refused to guess at them. When we asked it to read ink, it invented. The variable is not the company or the model. It is whether the task contains a perceptual gap. A perceptual gap invites confabulation; a visible-text task does not.
+
+The third rejection was another handwriting model, Pinkas Brody, model 59324. Mean divergence from our existing reading was 0.84, with zero lines scoring under 0.50 — uniform garbling, no structure anywhere. That verdict rests on a single page, and the job for that page never even completed. We are not claiming more than that: one page, one unfinished job, and a decision not to spend more on it.
+
+<strong>Which brings me to the sentence this whole article is named for.</strong> A garble is safer than a fabrication. When a model returns nonsense, you can see it failing — the text does not parse, the words are not words, and no reader is fooled for a second. When a model returns confident, fluent, correctly-formatted prose that is not on the page, nothing about it looks wrong. A faithful garble is more truthful than a beautiful fabrication, because the garble tells you its own error rate and the fabrication conceals it. In an archive that no family member can check, that difference is the entire safety margin.
+
+These are findings about these pages — faint cursive, mixed scripts, 1900 to 1942 — on the dates named. They are not general verdicts about any model.</div></section><section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading">What agreement is worth</h2><div class="editorial-section-body" data-field="sections[id=what-agreement-is-worth].body">Once two new models were reading the same pages, the obvious move was to check where they agreed.
+
+Across every Yiddish letter all three models had read, the two candidates agreed with each other on 62% of about 11,655 comparable tokens. Each agreed with the incumbent on 49%. That looks like the two newcomers corroborating one another against an old, worse reading.
+
+<strong>It mostly isn&#x27;t.</strong> The two candidates are not independent. One of them was trained on the other&#x27;s data plus a body of civil records, so a shared training distribution is doing part of the agreeing. Their agreement is therefore weak evidence, and their disagreement is the informative case — the place where two overlapping models were pulled apart by something on the page.
+
+The general form of this is worth stating plainly, because it is easy to get backwards. Two models agreeing on an illegible character is the same failure twice, not corroboration. Where the ink is genuinely unreadable, similar models will fail similarly, and the method goes quiet exactly where you most need it to speak.
+
+What the disagreements did surface was a set of specific character confusions. One substitution turned up 23 times, another 21, and across 25 letters the analysis pointed at 59 probable lost characters — not in rare words, but in some of the commonest words in the language, which is where a single wrong letter does the most damage to a sentence&#x27;s meaning.
+
+<strong>The first version of that analysis invented 20% of its own evidence.</strong> Two different Hebrew characters transliterate to the same Latin letter, and the code compared the transliterations, so it manufactured confusions that never happened. The tell was structural rather than statistical: the result was perfectly one-directional — every instance ran the same way, with no counter-examples at all. Real handwriting confusion is messy and goes both ways. A perfectly clean result is a bug&#x27;s signature, and we caught it by finding the cleanliness suspicious rather than impressive. I include our own instrument error here because it is the same failure mode as everything else in this article, committed by us.
+
+<strong>The measurement that did hold was a blind trial.</strong> On a set where 48% of tokens differed between models and not one line out of 37 was identical, both candidates independently reproduced a human expert&#x27;s corrections — a Yiddish specialist who had never seen these models and did not know they existed. That included reading the recipient&#x27;s name correctly, in a place where the incumbent had it wrong. Enormous disagreement in aggregate, and exact agreement with a human on the points a human had checked. Amount of disagreement told us nothing. What sort of disagreement told us everything.</div></section><section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading">Yiddish models, and what they cost</h2><div class="editorial-section-body" data-field="sections[id=the-catalogue].body">Here is the full Transkribus field as we found it, split into what we actually ran and what we did not.
+
+<strong>Models we ran and measured.</strong> The Dybbuk, 46159, published error rate 4.4%, trained largely on play manuscripts — the incumbent, and on our pages the outlier of the three. Mame Loshn Maven, 371445, published 7.68%, trained on civil records and letters. Letter Reader, 371705, published 9.35%, trained on family letters and community correspondence — the closest training material to what we have. A Latin-script model for the English and mixed pages. Two rejections: Gemini as transcription source and again as line-crop checker, and Pinkas Brody, 59324, on one page.
+
+<strong>Models we did not run.</strong> Each of these carries the same label, and I want it stated on every row rather than once at the top, because a list of names reads as a list of recommendations otherwise.
+
+Transcription Aid Model 1, 51946 — a sibling of the transliteration model, plausibly relevant. We did not test this.
+
+DiJeSt 3.0, 357765 — trained on printed text, which is very likely the wrong domain for handwriting. We did not test this.
+
+Vaybertaytsh — trained on eighteenth and nineteenth century print, not cursive. We did not test this.
+
+VILNISH — from a different lab, on different data, which makes it the most genuinely independent candidate available and the one whose agreement with our models would actually mean something. We did not test this either. It is the most interesting name on the list and we have no measurement of it at all.
+
+And the synthetic-trained model with the 0.0009 score, which is a fact about its training data. We did not test this.
+
+What it costs, as of August 2026, and the order matters.
+
+<strong>Start free.</strong> Transkribus gives 50 free credits a month with no card required. At one credit per page per model, that is enough to put a handful of your own pages through every candidate before you pay anything. Do this first. The whole point of the free tier is that it lets you disqualify models on your own handwriting, which is the only test that counts.
+
+<strong>Then about forty euros, total.</strong> Two months of the Scholar subscription at €19.99 each, which is €39.98. Scholar gives 150 credits a month, which at one credit per page per model is 75 letters through two models. That was the entire model-comparison budget for this project.
+
+<strong>The bulk runs went through the API rather than the web interface.</strong> API credits cost roughly half as much, and more importantly it is the only practical way to run hundreds of jobs and keep a record of each one.
+
+<strong>One trap, and it cost us.</strong> Transkribus reports expired credit packages as active, with a non-zero balance. A package can be sitting there looking spendable and return a payment error on every real job. We lost 46 credits that expired unused while the balance said they were fine. Only the expiry date is trustworthy — not the status flag, not the balance.</div></section><section class="editorial-section" data-item="editorial-page:articles/transcription-models"><h2 class="editorial-section-heading">Your own box of letters</h2><div class="editorial-section-body" data-field="sections[id=your-own-letters].body"><strong>Yiddish is the instance.</strong> The class is an archive in a language its own family can no longer read, and it is much bigger than one language.
+
+Ladino, carried out of Spain in 1492 and largely destroyed in the Balkans in the 1940s. Judeo-Arabic, ended by twentieth-century displacement across North Africa and the Middle East. Syriac, spoken by communities repeatedly scattered. Low German, which ordinary schooling and mobility replaced across northern Germany over a couple of generations. Rusyn, minoritised by one state after another. The causes are not the same — genocide, state policy, displacement, and the plain fact of children preferring the language school is taught in — but the outcome in a family&#x27;s hands is identical. A box of paper, and nobody at the table who can read it.
+
+<strong>The method transfers even where nothing else does.</strong> Run your own pages through every candidate rather than trusting a published score, because the score was measured on somebody else&#x27;s handwriting. Use the free tier to disqualify before you buy anything. Prefer two independent readings, while remembering that agreement on an illegible mark is the same failure twice. Distrust any model that produces fluent text where the page is damaged — a torn or faded passage should come back broken, and if it comes back beautiful, something has been invented. And keep the scan permanently beside the transcription, so that anyone who does come along later, and can read it, can check.
+
+A few things about where these models come from are worth knowing, and they are all checkable. Transkribus&#x27;s public model list runs to 451 models. Only a handful of those are Yiddish. The two best models on our pages were released in 2025 by a community consortium of genealogists and archivists — not by a technology company, and not by anyone who was ever going to market them to us. And we found out they existed because a scholar mentioned them to a family member on Facebook. That is the entire discovery mechanism. There was no search that would have turned them up.
+
+I can say nothing about what exists for any language we did not check, and I am not going to guess. For a great many languages there will be nothing usable yet — no model, no training data, nobody working on it. That is a real and common outcome, and the free tier is how you find it out cheaply, in an afternoon, instead of after a purchase.
+
+So: search the Transkribus model list for your language, and ask the people who care about it. Those are two different actions and the second one found ours.</div></section>
+</main>
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Site navigation">
+    <a href="index.html">&larr; All articles</a>
+    <a href="../index.html">Home</a>
+    <a href="../letters.html">Every Letter</a>
+    <a href="../family.html">The Family</a>
+    <a href="../long-read.html">Read the Story</a>
+    <a href="../journey.html">Follow the Journey</a>
+    <a href="../pictures.html">The Couple in Pictures</a>
+    <a href="../worth-knowing.html">Background &amp; Context</a>
+    <a href="../how-made.html">How This Was Made</a>
+    <a href="../articles/">Articles</a>
+    <a href="../credits.html">Credits &amp; Sources</a>
+  </nav>
+  <p class="footer-contact">Questions, corrections, contributions? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
+</footer>
+<script>
+  // Obfuscated mailto, same convention as the other doors: the address never appears as plain
+  // text in the HTML source — assembled at runtime from data-u/data-d, so a scraper never sees
+  // it while a real visitor gets a working mailto: link. Wires EVERY matching element, so an
+  // in-article contact link works the same way the footer one does.
+  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
+    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
+  });
+</script>
+</body>
+</html>
