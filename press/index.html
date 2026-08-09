@@ -131,6 +131,17 @@
   .faq-q { font-family: var(--font-display); font-weight: 700; font-size: 1.02rem; margin-bottom: 0.5rem; }
   .faq-a { font-size: 0.92rem; line-height: 1.6; color: var(--ink-body); }
 
+  /* ---- media coverage ---- */
+  .coverage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem; }
+  .coverage-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); padding: 1.6rem 1.8rem; }
+  .coverage-outlet { font-family: var(--font-mono); font-size: 0.74rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.5rem; }
+  .coverage-headline { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; line-height: 1.35; margin-bottom: 0.5rem; }
+  .coverage-headline a { color: var(--ink); text-decoration: none; border-bottom: 1px solid rgba(0,0,0,0.2); }
+  .coverage-headline a:hover { color: var(--rust); border-color: var(--rust); }
+  .coverage-meta { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); margin-bottom: 0.7rem; }
+  .coverage-blurb { font-size: 0.88rem; line-height: 1.55; color: var(--ink-body); }
+  @media (max-width: 760px) { .coverage-grid { grid-template-columns: 1fr; } }
+
   /* ---- who made this ---- */
   .people { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1.5rem; }
   .person-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); padding: 1.8rem 2rem; }
@@ -302,6 +313,41 @@
     </div>
     <div class="contact-row">
       Press contact: <a href="#" class="js-email" data-u="aboxofletters" data-d="icloud.com">(enable JavaScript to view email)</a> &middot; High-resolution images available on request.
+    </div>
+  </div>
+</section>
+
+<!-- ============ MEDIA COVERAGE ============ -->
+<section class="block">
+  <div class="wrap">
+    <p class="eyebrow">Media Coverage</p>
+    <h2>What's already run.</h2>
+    <p class="lede">Real coverage this project has received, listed as it lands.</p>
+    <div class="coverage-grid">
+      <div class="coverage-card">
+        <div class="coverage-outlet">Vancouver Sun</div>
+        <div class="coverage-headline"><a href="https://epaper.vancouversun.com/1000/20260808/281569477543992" target="_blank" rel="noopener">Box of letters becomes a memorial, with a little help from AI</a></div>
+        <div class="coverage-meta">Denise Ryan &middot; 8 Aug 2026 &middot; Feature article</div>
+        <p class="coverage-blurb">A feature on how the archive came together &mdash; finding the box in storage, translating the Yiddish courtship letters, and the checks the project used against AI hallucination.</p>
+      </div>
+      <div class="coverage-card">
+        <div class="coverage-outlet">CBC Vancouver &mdash; On the Coast</div>
+        <div class="coverage-headline"><a href="https://www.cbc.ca/listen/live-radio/1-46-on-the-coast/clip/16230411-reconstructing-three-decades-great-grandparents-history" target="_blank" rel="noopener">Reconstructing three decades of great-grandparents' history</a></div>
+        <div class="coverage-meta">Gloria Macarenko &middot; 6 Aug 2026 &middot; Radio interview</div>
+        <p class="coverage-blurb">Paul's first broadcast interview about the archive, on CBC's Vancouver afternoon-drive show.</p>
+      </div>
+      <div class="coverage-card">
+        <div class="coverage-outlet">CBC Kelowna &mdash; Radio West</div>
+        <div class="coverage-headline"><a href="https://www.cbc.ca/listen/live-radio/1-96-radio-west/clip/16230414-vancouver-man-used-a-i-reconstruct-great-grandparents-history" target="_blank" rel="noopener">Vancouver man used AI to reconstruct great-grandparents' history</a></div>
+        <div class="coverage-meta">6 Aug 2026 &middot; Radio interview</div>
+        <p class="coverage-blurb">An organic pickup the same day as the On the Coast interview &mdash; never directly pitched to this show.</p>
+      </div>
+      <div class="coverage-card">
+        <div class="coverage-outlet">Web Curios</div>
+        <div class="coverage-headline"><a href="https://webcurios.co.uk/webcurios-07-08-26/#misc_links1" target="_blank" rel="noopener">Web Curios 07/08/26</a></div>
+        <div class="coverage-meta">Matt Muir &middot; 7 Aug 2026 &middot; Newsletter feature</div>
+        <p class="coverage-blurb">Called it &ldquo;a really beautiful bit of family history work, and a decent example of &lsquo;AI, but used well.&rsquo;&rdquo;</p>
+      </div>
     </div>
   </div>
 </section>
