@@ -245,8 +245,8 @@ with. No file automates that, and you should be suspicious of one that offers to
 
 ## What we do not know
 
-This posture has been run on exactly **one** archive, by two people, over about five weeks. Every
-claim here about portability is a hypothesis.
+This posture has been run on exactly **one** archive, by two people, over about five weeks in the
+summer of 2026. Every claim here about portability is a hypothesis.
 
 To check it, we handed this file to four agents that had never seen the project — an empty folder, a
 copy of the material, nothing else — and fixed what each run broke. The revisions you are reading
