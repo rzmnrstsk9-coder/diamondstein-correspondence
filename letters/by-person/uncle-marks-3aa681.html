@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Letters by Person — The Sam and Dora Letters (1901&ndash;1926)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/components.css">
+<style>
+  .era-heading { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 1.3rem; max-width: 1200px; margin: 2.5rem auto 1rem; padding: 0 1.5rem; }
+  .era-group:first-of-type .era-heading { margin-top: 0; }
+
+  /* Era pill nav — same classes/values as letters.html (not yet a shared components.css
+     primitive; using identical names now so a future consolidation is a drop-in). Filters by
+     show/hide over server-rendered .era-group sections (see script below), not a rebuilt grid. */
+  .group-row { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem; }
+  .group-btn { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; padding: 0.5rem 1rem; border-radius: 0; border: 1px solid rgba(26,26,26,0.15); background: #fff; color: var(--ink); cursor: pointer; transition: all 0.15s ease; }
+  .group-btn:hover { border-color: var(--rust); }
+  .group-btn.active { background: var(--rust); border-color: var(--rust); color: #fff; }
+  .group-dates { opacity: 0.6; font-size: 0.94em; }
+</style>
+  <script data-goatcounter="https://aboxofletters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<meta name="robots" content="noindex,follow">
+<link rel="icon" type="image/png" href="../../assets/favicon.png">
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="../../index.html#doors">&larr; Back to start</a>
+  <span class="crumb">Letters by Person</span>
+</div>
+<div class="demo-banner">Letters mentioning Mordekhai-Zev &quot;Max&quot; Bull (1)</div>
+
+<div class="head">
+  <p class="kicker">A Box of Letters</p>
+  <h1 class="display">Letters mentioning Mordekhai-Zev &quot;Max&quot; Bull</h1>
+  <p class="sub">Sorted into the eras of the story. Click any card for the full translation.
+    &nbsp;&middot;&nbsp;<a href="../../letters.html">&larr; full archive</a></p>
+</div>
+<div class="group-row" id="group-row"><button class="group-btn active" data-era="all">All (1)</button><button class="group-btn" data-era="The Courtship">The Courtship <span class="group-dates">circa 1900–1911</span> (1)</button></div><div class="era-group" data-era="The Courtship"><h2 class="era-heading">The Courtship</h2><div class="letters-grid"><button class="letter-card" data-title="A Promise to Write More" data-item="manifest:letter/scan-48" data-artifact="scan-48"><div class="lc-thumb"><img data-field="image" data-artifact="scan-48" data-provenance="archival-scan" src="../../images/scan-48.jpeg" alt="A Promise to Write More" loading="lazy"></div><div class="lc-body"><div class="lc-date mono" data-field="date" data-artifact="scan-48">circa 1907-1908</div><div class="lc-title" data-field="title" data-artifact="scan-48">A Promise to Write More</div><div class="lc-summary" data-field="summary" data-artifact="scan-48">Sam writes to uncle Reuven and aunt Hinde with news of work and a promise to write more, sending regards to other relatives.</div></div></button></div></div>
+
+<!-- _modals.partial.html — the shared modal shell (modal-dedup, 2026-07-14). Lifted from
+     letters.html (letter-modal, incl. #lm-capsule En<->Yiddish toggle + .modal-nav-row prev/next)
+     + family.html (person-modal #pm-*, the richer of the two pre-dedup copies) + the shared
+     zoom-overlay. Every door includes this partial unconditionally — modal.js hides #lm-capsule/
+     #modal-nav-row at init for doors whose window.MODAL_CONFIG sets langToggle/prevNext false
+     (same for #person-modal-nav-row + personPrevNext, added 2026-07-21), rather than the partial
+     forking into two shapes (single-honest-core principle applied to markup, not just behavior). -->
+<div class="overlay" id="person-overlay">
+  <div class="person-modal">
+    <button class="close-btn" id="person-modal-close">&times;</button>
+    <div class="pm-top">
+      <img class="pm-photo" id="pm-photo" src="" alt="">
+      <div class="pm-photo-placeholder" id="pm-photo-placeholder" style="display:none"></div>
+      <div>
+        <div class="pm-name" id="pm-name"></div>
+        <div class="pm-dates mono" id="pm-dates"></div>
+        <div class="pm-role" id="pm-role"></div>
+      </div>
+    </div>
+    <div class="pm-bio" id="pm-bio"></div>
+    <div class="pm-letters-label" id="pm-letters-label"></div>
+    <div id="pm-letters-list"></div>
+    <div class="pm-source" id="pm-source" style="display:none">
+      <div class="pm-source-label" id="pm-source-label"></div>
+      <div class="pm-source-pages" id="pm-source-pages"></div>
+      <div class="pm-source-note" id="pm-source-note"></div>
+      <div class="pm-source-translation" id="pm-source-translation"></div>
+    </div>
+    <div class="modal-nav-row" id="person-modal-nav-row">
+      <button class="nav-btn" id="person-modal-prev" aria-label="Previous person">&larr;</button>
+      <div class="modal-position mono" id="person-modal-position"></div>
+      <button class="nav-btn" id="person-modal-next" aria-label="Next person">&rarr;</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="letter-overlay">
+  <div class="letter-modal" id="lm-card">
+    <button class="close-btn" id="modal-close">&times;</button>
+    <div class="lm-date mono" id="lm-date"></div>
+    <div class="lm-title" id="lm-title"></div>
+    <div class="lm-scan" id="lm-scan"></div>
+    <div class="lm-capsule" id="lm-capsule">
+      <button class="lm-lang-btn on" data-lang="en" id="lm-lang-en">English</button>
+      <button class="lm-lang-btn" data-lang="yi" id="lm-lang-yi">ייִדיש</button>
+    </div>
+    <!-- Yiddish-only transcription notice + correction invitation. Hidden by default and
+         shown by modal.js ONLY when the Yiddish original is on screen: the claim is about
+         machine HANDWRITING RECOGNITION, so it would be false advertising on the English
+         translation, which has a different provenance. The mailto: is assembled at runtime
+         from data-u/data-d (same anti-scraper convention as the footers, Paul's ask
+         2026-07-16) — the address never appears as plain text in the built HTML.
+
+         ⚠️ ABOVE the body on purpose. Placed after it first, and measured: the notice landed
+         1704px down a 1910px card, so the reader met the caveat only after scrolling past the
+         whole transcription — if at all. A disclaimer nobody reaches is not a disclaimer. Here
+         it frames the text you are about to read, which is what it is for. -->
+    <div class="lm-notice" id="lm-notice" hidden>
+      <p class="lm-notice-text">Notice: Machine transcription is ongoing and partially verified.
+        AI handwriting recognition makes mistakes&mdash;always rely on the original photograph.
+        Corrections are welcome!</p>
+      <a class="lm-notice-btn" id="lm-notice-btn" href="#"
+         data-u="aboxofletters" data-d="icloud.com">Suggest a correction</a>
+    </div>
+    <div class="lm-body" id="lm-body"></div>
+    <div class="modal-nav-row" id="modal-nav-row">
+      <button class="nav-btn" id="modal-prev" aria-label="Previous letter">&larr;</button>
+      <div class="modal-position mono" id="modal-position"></div>
+      <button class="nav-btn" id="modal-next" aria-label="Next letter">&rarr;</button>
+    </div>
+  </div>
+</div>
+
+<button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
+<div class="zoom-overlay" id="zoom-overlay"><img id="zoom-overlay-img" src="" alt=""><figcaption id="zoom-overlay-cap" class="zoom-cap" style="display:none;"></figcaption></div>
+
+
+<script>
+  window.MODAL_CONFIG = { langToggle: true, prevNext: true, imgPathMatch: "anywhere" };
+  window.MODAL_LETTERS = [ {
+  "date": "circa 1907-1908",
+  "title": "A Promise to Write More",
+  "img": "../../images/scan-48.jpeg",
+  "summary": "Sam writes to uncle Reuven and aunt Hinde with news of work and a promise to write more, sending regards to other relatives.",
+  "translation": "[low-confidence]Note: undated in the letter itself (no dateline/postmark transcribed). Approximate date: c. 1907–1908 (Montreal) — addressed to \"uncle Ruven\" and \"Hinde\" with talk of work and a promise to write more, and regards to \"Uncle Max/Marks\" and \"Aunt Ribe\"; prior research groups this with several other letters as Sam's own outgoing voice from the Montreal money-panic stretch of 1907-1909, addressed to uncle Reuven/aunt Hinde.[/low-confidence]\n\n[low-confidence] To my dear [uncle Ruven?] and [worthy?] uncle, [/low-confidence] and to Hinde — may you all live and have much good fortune.\n\n[low-confidence] I want to let you know [/low-confidence] that I am completely well, thank God.\n\n[low-confidence] (Several lines here are too garbled to read — they seem to touch on work and how things stand, but the wording is lost.) [/low-confidence]\n\nI hope to get [low-confidence] some news [/low-confidence] soon.\n\n[low-confidence] (A passage about writing — apparently asking someone to write, and mentioning a relative — is unreadable. One reading has \"about Bessie's\"; the models disagree, so the name is uncertain.) [/low-confidence]\n\n[low-confidence] Be sure to write to me at my address [/low-confidence], and [low-confidence] don't pass along any more news [that way?]. [/low-confidence]\n\nGive my regards to [low-confidence] Uncle Max (or Marks) [/low-confidence] and [low-confidence] Aunt Ribe [/low-confidence], and greet them all for me. Tell them that I will write to them!\n\n[low-confidence] (The closing lines — mentioning \"all friends\" and sending further regards — are too corrupted to render faithfully.) [/low-confidence]",
+  "transcription": "\nאולד טאַלטע רויבען אוןד\nווערטפער אנקעל\nהינדע זאָלען לעבען און פל גליק\nאיז קוין אינען דוא בענטכריכטען,\nדאָסל אל בון געזענס פאלקאָם אין גלעהליין\nלע ארבהט פב אג\nהילזיכט נאָר קיין\nגויסט איך פערפאָף צו קרישען\nאָבין נייעס וועל און\nי אב ע\nווייף שריוגען וועגען ציא באַסעס שרייבט\nאלכין צאלבריץ זוא זייין אויף מיין דרעס\nוועחליך זייא יובער געבען מער קיינע\nנייעס לאייערערשע\nלזט געריסען דעם יונקעל מאלקס מיט דער\nפאנטע ריבע בלף איך אלעמען זאָגט זיי\nטס אך וועל זיי שרייבען! וויין בריץ\nאלע פיינד שר\nד\nזיו וויך וועגען\n—",
+  "yiddish": "\nאולד טאַלטע רויבען אוןד\nווערטפער אנקעל\nהינדע זאָלען לעבען און פל גליק\nאיז קוין אינען דוא בענטכריכטען,\nדאָסל אל בון געזענס פאלקאָם אין גלעהליין\nלע ארבהט פב אג\nהילזיכט נאָר קיין\nגויסט איך פערפאָף צו קרישען\nאָבין נייעס וועל און\nי אב ע\nווייף שריוגען וועגען ציא באַסעס שרייבט\nאלכין צאלבריץ זוא זייין אויף מיין דרעס\nוועחליך זייא יובער געבען מער קיינע\nנייעס לאייערערשע\nלזט געריסען דעם יונקעל מאלקס מיט דער\nפאנטע ריבע בלף איך אלעמען זאָגט זיי\nטס אך וועל זיי שרייבען! וויין בריץ\nאלע פיינד שר\nד\nזיו וויך וועגען\n—",
+  "era": "The Courtship",
+  "curated": false,
+  "artifact": "scan-48",
+  "img_provenance": "archival-scan",
+  "item_id": "manifest:letter/scan-48"
+} ];
+  window.MODAL_TITLE_INDEX = Object.fromEntries(window.MODAL_LETTERS.map((l, i) => [l.title, i]));
+</script>
+<script src="../../assets/modal.js"></script>
+<script>
+(function() {
+  // Era pill filter (Paul's ask, 2026-07-13): show/hide pre-rendered .era-group sections.
+  document.querySelectorAll('.group-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const era = btn.dataset.era;
+      document.querySelectorAll('.group-btn').forEach(b => b.classList.toggle('active', b === btn));
+      document.querySelectorAll('.era-group').forEach(section => {
+        section.style.display = (era === 'all' || section.dataset.era === era) ? '' : 'none';
+      });
+    });
+  });
+
+  // Server-rendered .letter-card buttons carry data-title — open by title via the shared opener.
+  document.querySelectorAll('.letter-card').forEach(card => {
+    card.addEventListener('click', () => window.openLetterModal(card.dataset.title));
+  });
+  // ?jump= deep-link is handled by the shared modal.js (it owns the modal). Do NOT duplicate
+  // it here — a second handler would fire openLetterModal twice on a ?jump load.
+})();
+</script>
+
+<footer class="site-footer">
+  <nav class="footer-nav" aria-label="Site navigation">
+    <a href="../../index.html">Home</a>
+    <a href="../../letters.html">Every Letter</a>
+    <a href="../../family.html">The Family</a>
+    <a href="../../long-read.html">Read the Story</a>
+    <a href="../../journey.html">Follow the Journey</a>
+    <a href="../../pictures.html">The Couple in Pictures</a>
+    <a href="../../worth-knowing.html">Background &amp; Context</a>
+    <a href="../../how-made.html">How This Was Made</a>
+    <a href="../../media-coverage.html">Media Coverage</a>
+    <a href="../../credits.html">Credits &amp; Sources</a>
+  </nav>
+  <p class="footer-contact">Questions, corrections, contributions? <a href="#" class="footer-contact-link" data-u="aboxofletters" data-d="icloud.com">Get in touch</a></p>
+</footer>
+
+<script>
+  // Obfuscated mailto (Paul's ask, 2026-07-16): the address never appears as plain text in
+  // the HTML source -- assembled at runtime, so a static-HTML scraper never sees it, while
+  // real visitors with JS get a normal working mailto: link.
+  document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
+    el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
+  });
+</script>
+
+<button class="back-to-top" id="back-to-top" type="button">&uarr; Top</button>
+<script src="assets/back-to-top.js"></script>
+
+</body>
+</html>
