@@ -322,7 +322,17 @@
   }
   .lp-callout-text em { color: #e8c98a; font-style: normal; }
   @media (prefers-reduced-motion: reduce) {
-    .lp-callout { filter: none !important; transform: none !important; }
+    /* The whole onboarding-callout sequence (opacity/position control, and the Next/Begin buttons'
+       click handlers) lives inside `if (lpTrack && !reduceMotion)` in the script below -- under
+       reduced motion NONE of that JS ever runs. `.lp-callout` is position:absolute;inset:0 with no
+       CSS-only opacity, so without the JS all five callouts default to fully visible, stacked
+       directly on top of each other, their now-unwired buttons stacked and dead on top of that
+       (Paul's mobile report, 2026-08-13: five callouts and their buttons all overlapping and
+       unclickable). Hiding them outright is correct, not a compromise -- the static hero text/photo
+       and the "Skip intro" link (a real `<a href="#doors">`, functional with zero JS) remain the
+       reduced-motion path through exactly as designed; this callout sequence is inherently
+       scroll-driven content that has nothing safe to fall back to. */
+    .lp-callout { display: none !important; }
   }
 
   /* ---- the letter-parallax field: Fernando's effect, drifting in three depth layers ON TOP of
