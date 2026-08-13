@@ -140,6 +140,12 @@
   .coverage-headline a:hover { color: var(--rust); border-color: var(--rust); }
   .coverage-meta { font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink-faint); margin-bottom: 0.7rem; }
   .coverage-blurb { font-size: 0.88rem; line-height: 1.55; color: var(--ink-body); }
+  .coverage-logo { margin-bottom: 0.6rem; }
+  .coverage-logo img { max-height: 24px; max-width: 150px; width: auto; height: auto; display: block; }
+  .coverage-scan-link { display: inline-block; font-family: var(--font-mono); font-size: 0.78rem;
+    color: var(--rust); text-decoration: none; margin-top: 0.6rem; }
+  .coverage-scan-link:hover { text-decoration: underline; }
+  .coverage-audio { display: block; width: 100%; margin-top: 0.8rem; }
   @media (max-width: 760px) { .coverage-grid { grid-template-columns: 1fr; } }
 
   /* ---- who made this ---- */
@@ -325,30 +331,38 @@
     <p class="lede">Real coverage this project has received, listed as it lands.</p>
     <div class="coverage-grid">
       <div class="coverage-card">
+        <div class="coverage-logo"><img src="media/logo-vancouver-is-awesome.png" alt="Vancouver Is Awesome" loading="lazy"></div>
         <div class="coverage-outlet">Vancouver Is Awesome</div>
         <div class="coverage-headline"><a href="https://www.vancouverisawesome.com/local-news/vancouver-man-finds-over-100-letters-from-the-early-1900s-uncovering-decades-of-family-history-12654976" target="_blank" rel="noopener">Vancouver man finds over 100 letters from the early 1900s, uncovering decades of family history</a></div>
         <div class="coverage-meta">Dev Patel &middot; 13 Aug 2026 &middot; Feature article</div>
         <p class="coverage-blurb">A storage room discovery and a little curiosity became a digital archive tracing love, migration and family across generations.</p>
       </div>
       <div class="coverage-card">
+        <div class="coverage-logo"><img src="media/logo-vancouver-sun.png" alt="Vancouver Sun" loading="lazy"></div>
         <div class="coverage-outlet">Vancouver Sun</div>
         <div class="coverage-headline"><a href="https://vancouversun.com/news/letters-vancouver-storage-unit-ai-history" target="_blank" rel="noopener">Box of letters becomes a memorial, with a little help from AI</a></div>
         <div class="coverage-meta">Denise Ryan &middot; 8 Aug 2026 &middot; Feature article</div>
         <p class="coverage-blurb">A feature on how the archive came together &mdash; finding the box in storage, translating the Yiddish courtship letters, and the checks the project used against AI hallucination.</p>
+        <a class="coverage-scan-link" href="media/vancouver-sun-2026-08-08-scan.jpg" target="_blank" rel="noopener">View the newspaper page &rarr;</a>
       </div>
       <div class="coverage-card">
+        <div class="coverage-logo"><img src="media/logo-cbc.png" alt="CBC" loading="lazy"></div>
         <div class="coverage-outlet">CBC Vancouver &mdash; On the Coast</div>
         <div class="coverage-headline"><a href="https://www.cbc.ca/listen/live-radio/1-46-on-the-coast/clip/16230411-reconstructing-three-decades-great-grandparents-history" target="_blank" rel="noopener">Reconstructing three decades of great-grandparents' history</a></div>
         <div class="coverage-meta">Gloria Macarenko &middot; 6 Aug 2026 &middot; Radio interview</div>
         <p class="coverage-blurb">Paul's first broadcast interview about the archive, on CBC's Vancouver afternoon-drive show.</p>
+        <audio class="coverage-audio" controls preload="none" src="media/cbc-on-the-coast-2026-08-06.m4a"></audio>
       </div>
       <div class="coverage-card">
+        <div class="coverage-logo"><img src="media/logo-cbc.png" alt="CBC" loading="lazy"></div>
         <div class="coverage-outlet">CBC Kelowna &mdash; Radio West</div>
         <div class="coverage-headline"><a href="https://www.cbc.ca/listen/live-radio/1-96-radio-west/clip/16230414-vancouver-man-used-a-i-reconstruct-great-grandparents-history" target="_blank" rel="noopener">Vancouver man used AI to reconstruct great-grandparents' history</a></div>
         <div class="coverage-meta">6 Aug 2026 &middot; Radio interview</div>
         <p class="coverage-blurb">An organic pickup the same day as the On the Coast interview &mdash; never directly pitched to this show.</p>
+        <audio class="coverage-audio" controls preload="none" src="media/cbc-radio-west-2026-08-06.mp3"></audio>
       </div>
       <div class="coverage-card">
+        <div class="coverage-logo"><img src="media/logo-web-curios.png" alt="Web Curios" loading="lazy"></div>
         <div class="coverage-outlet">Web Curios</div>
         <div class="coverage-headline"><a href="https://webcurios.co.uk/webcurios-07-08-26/#misc_links1" target="_blank" rel="noopener">Web Curios 07/08/26</a></div>
         <div class="coverage-meta">Matt Muir &middot; 7 Aug 2026 &middot; Newsletter feature</div>
