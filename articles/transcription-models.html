@@ -48,9 +48,7 @@
 
 <strong>Letter Reader, model 371705.</strong> Trained on 532 pages: family letters, relief-society correspondence, community minutes — 12,240 lines, 99,526 words. Also 75 transcriptions.
 
-Yiddish to Latin, model 116033.
-
-This one does something different, and it is worth understanding because it explains the shape of the whole pipeline. It does not read a page into Yiddish. It reads the page into the Latin alphabet — the same Yiddish words, spelled phonetically in the letters this sentence is written in, so that lib̤entse dore is what the other models render as ליבענדע דארע. That makes it useful as an independent check rather than as a source: it reads the same ink through a different output alphabet, so where it disagrees with the others, the disagreement is about the strokes rather than about a shared habit of spelling. It produced 75 transcriptions.
+<strong>Yiddish to Latin, model 116033.</strong> This one does something different, and it is worth understanding because it explains the shape of the whole pipeline. It does not read a page into Yiddish. It reads the page into the Latin alphabet — the same Yiddish words, spelled phonetically in the letters this sentence is written in, so that lib̤entse dore is what the other models render as ליבענדע דארע. That makes it useful as an independent check rather than as a source: it reads the same ink through a different output alphabet, so where it disagrees with the others, the disagreement is about the strokes rather than about a shared habit of spelling. It produced 75 transcriptions.
 
 Which is the moment to be plain about what the pipeline actually is.
 
