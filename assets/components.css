@@ -180,3 +180,86 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
 /* Run-in labels: a paragraph-leading phrase that names what the paragraph is about. Promoted by
    the renderer from already-escaped text, so it adds structure without weakening the escaping. */
 .editorial-section-body strong { font-weight: 600; color: var(--ink); }
+
+/* ── Structured editorial blocks ────────────────────────────────────────────────────────────
+   The base HTML vocabulary for escape-first editorial pages (added 2026-08-13). The author
+   supplies DATA and the renderer emits these tags, so an article can have real lists, tables and
+   subheadings without the body string ever carrying markup. ⚠️ `pre-wrap` lives on
+   .editorial-section-body and must NOT reach here: these are real elements, and inheriting
+   pre-wrap would turn every newline in the source JSON into a visible break inside a <td>. */
+.editorial-section-blocks { max-width: 68ch; white-space: normal; }
+
+/* ⚠️ Deliberately QUIETER than the h2 section heading above it. Caught on the specimen page, which
+   is what a specimen is for: rendered at display-face/ink-strong, an h3 out-competed its own h2
+   parent (the h2 is rust and lighter-weight), so the outline read inverted. A subheading is a
+   subordinate mark — mono, uppercase, letter-spaced — and it reads as a label rather than a rival
+   title. Reviewing these one element at a time would not have surfaced it. */
+.ed-subheading { font-family: var(--font-mono); color: var(--ink-soft);
+  margin: var(--space-5) 0 var(--space-2); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; line-height: 1.3; }
+h4.ed-subheading { text-transform: none; letter-spacing: 0.02em; color: var(--ink-body);
+  font-size: var(--text-sm); }
+
+.ed-list { margin: var(--space-3) 0; padding-left: var(--space-5); color: var(--ink-body);
+  line-height: 1.62; }
+.ed-list li { margin-bottom: var(--space-2); }
+
+.ed-term-list { margin: var(--space-3) 0; padding-left: 0; list-style: none;
+  color: var(--ink-body); line-height: 1.62; }
+.ed-term-list li { margin-bottom: var(--space-2); padding-left: var(--space-3);
+  border-left: 2px solid var(--line); }
+.ed-term { font-weight: 600; color: var(--ink-strong); }
+
+/* A table must be able to overflow on a phone WITHOUT the page scrolling sideways — the wrapper
+   scrolls, not the document. */
+.ed-table-wrap { margin: var(--space-4) 0; overflow-x: auto; }
+.ed-table { border-collapse: collapse; width: 100%; font-size: var(--text-sm);
+  color: var(--ink-body); }
+.ed-table caption { caption-side: bottom; font-family: var(--font-mono);
+  font-size: var(--text-xs); color: var(--ink-soft); text-align: left;
+  padding-top: var(--space-2); }
+.ed-table th, .ed-table td { border-bottom: 1px solid var(--line); padding: var(--space-2);
+  text-align: left; vertical-align: top; }
+.ed-table th { font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--ink-soft); text-transform: uppercase; letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--line-strong); }
+
+.ed-callout { margin: var(--space-4) 0; padding: var(--space-3) var(--space-4);
+  background: var(--fill-sunken); border-left: 3px solid var(--rust);
+  border-radius: var(--radius-chip); color: var(--ink-body); font-size: var(--text-sm);
+  line-height: 1.55; }
+.ed-callout-label { font-family: var(--font-mono); font-size: var(--text-xs);
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--rust); font-weight: 600; }
+
+.ed-pull-quote { margin: var(--space-5) 0; font-family: var(--font-display);
+  font-size: var(--text-xl); line-height: 1.3; color: var(--ink-strong); }
+
+.ed-blockquote { margin: var(--space-4) 0; padding-left: var(--space-4);
+  border-left: 3px solid var(--line-strong); color: var(--ink-body); }
+.ed-blockquote p { margin: 0; line-height: 1.62; }
+.ed-cite { display: block; margin-top: var(--space-2); font-family: var(--font-mono);
+  font-size: var(--text-xs); color: var(--ink-soft); font-style: normal; }
+.ed-cite::before { content: "— "; }
+
+/* A prose paragraph BETWEEN structural blocks. Matches .editorial-section-body's measure and
+   rhythm so a migrated section reads identically to an unmigrated one — the vocabulary is meant to
+   add structure, not restyle the prose. */
+.ed-prose { max-width: 68ch; line-height: 1.62; color: var(--ink-body);
+  font-size: var(--text-base); margin: 0 0 var(--space-3); }
+
+/* Inline emphasis authored in escaped prose ([b]/[i]). Matches .editorial-section-body strong so a
+   migrated paragraph and an unmigrated one look identical. */
+.ed-prose strong, .ed-callout strong, .ed-term-list strong,
+.ed-list strong, .ed-blockquote strong { font-weight: 600; color: var(--ink); }
+
+/* Footnotes. The marker is a superscript link down; each note links back up. Built for one real
+   consumer (a hand-rolled bare `*` with no anchor and no way back) on the owner's explicit call. */
+.ed-fnref { font-family: var(--font-mono); font-size: var(--text-xs); line-height: 0; }
+.ed-fnref a { color: var(--rust); text-decoration: none; }
+.ed-fnref a:hover { text-decoration: underline; }
+.ed-footnotes { margin: var(--space-5) 0 0; padding: var(--space-4) 0 0 var(--space-5);
+  border-top: 1px solid var(--line); list-style: none; counter-reset: none;
+  font-size: var(--text-sm); color: var(--ink-soft); line-height: 1.55; max-width: 68ch; }
+.ed-footnote { margin-bottom: var(--space-2); }
+.ed-footnote:target { background: var(--fill-sunken); }
+.ed-fnback { color: var(--rust); text-decoration: none; margin-left: 0.3rem; }
