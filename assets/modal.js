@@ -23,13 +23,24 @@
   const zoomOverlayImg = document.getElementById('zoom-overlay-img');
   const zoomOverlayCap = document.getElementById('zoom-overlay-cap');
   const zoomCloseBtn = document.getElementById('zoom-close');
+  const zoomModalBtn = document.getElementById('zoom-modal-btn');
 
-  function openZoom(src, alt, caption = '') {
+  // modalTitle (optional, 2026-08-13): when a zoomed scan belongs to a letter with a full
+  // transcription available, a "Read full text & transcriptions" button appears alongside the
+  // zoomed image so the reader doesn't have to close the zoom and hunt for the card's own link —
+  // the letters door's letter-card-grid passes its own title here on thumbnail click. Every
+  // other openZoom caller (story-excerpt's inline-figure, the person-modal's source-doc pages)
+  // passes nothing, so the button stays hidden for them, same as the existing caption param.
+  function openZoom(src, alt, caption = '', modalTitle = '') {
     zoomOverlayImg.src = src;
     zoomOverlayImg.alt = alt || '';
     if (zoomOverlayCap) {
       zoomOverlayCap.textContent = caption || '';       // escape-at-the-sink
       zoomOverlayCap.style.display = caption ? 'block' : 'none';
+    }
+    if (zoomModalBtn) {
+      zoomModalBtn.style.display = modalTitle ? 'block' : 'none';
+      zoomModalBtn.dataset.title = modalTitle || '';
     }
     zoomOverlay.classList.add('open');
     zoomCloseBtn.style.display = 'flex';
@@ -37,9 +48,18 @@
   function closeZoom() {
     zoomOverlay.classList.remove('open');
     zoomCloseBtn.style.display = 'none';
+    if (zoomModalBtn) zoomModalBtn.style.display = 'none';
   }
   zoomOverlay.addEventListener('click', closeZoom);
   zoomCloseBtn.addEventListener('click', closeZoom);
+  if (zoomModalBtn) {
+    zoomModalBtn.addEventListener('click', (e) => {
+      e.stopPropagation();          // don't let the click also fall through to zoomOverlay's closeZoom
+      const title = zoomModalBtn.dataset.title;
+      closeZoom();
+      if (title) openLetterModal(title);
+    });
+  }
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeZoom(); });
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c =>
