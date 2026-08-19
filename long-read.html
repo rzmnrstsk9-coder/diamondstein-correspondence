@@ -327,6 +327,17 @@
   .chapter-nav .cn-num { opacity: 0.6; font-size: 0.94em; }
   .chapter-nav .cn-date { opacity: 0.55; font-size: 0.88em; }
 
+  /* Sources disclosure + document downloads (2026-08-19, Paul's ask): page furniture, not
+     chapter content -- sits once at the very top, before the sticky nav, not per-chapter data,
+     so it lives directly in this template rather than as a chapters.json block. */
+  .sources-block { max-width: 720px; margin: 0 auto 2rem; padding: 0 1.5rem; text-align: center; }
+  .sources-note { font-size: 0.94rem; line-height: 1.6; color: rgba(26,26,26,0.75); margin: 0 0 0.9rem; }
+  .sources-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .sources-list li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0.4rem; font-size: 0.88rem; }
+  .sources-link { color: var(--rust); text-decoration: underline; text-decoration-color: rgba(193,72,31,0.4); font-weight: 600; white-space: nowrap; }
+  .sources-link:hover { text-decoration-color: var(--rust); }
+  .sources-desc { color: rgba(26,26,26,0.6); }
+
   /* At-a-glance summary (2026-07-27): collapsed-by-default, sits above the chapter nav. */
   .glance { max-width: 720px; margin: 0 auto 2.5rem; padding: 0 1.5rem; }
   .glance-box { border: 1px solid rgba(26,26,26,0.12); background: rgba(255,255,255,0.5); padding: 1.1rem 1.8rem; }
@@ -378,7 +389,33 @@
 <div class="head">
   <p class="kicker">A Box of Letters</p>
   <h1 class="display">Read the Story</h1>
-  <p class="sub">The story that emerged from the letters, historical research, the family trees, and living memory. Every underlined phrase links straight to the letter or evidence behind it.</p>
+  <p class="sub">The story that emerged from the letters, historical research, the family trees, and living memory.</p>
+</div>
+
+<div class="sources-block">
+  <p class="sources-note">The following documents were used as the basis of the family history claims made here:</p>
+  <ul class="sources-list">
+    <li>
+      <a class="sources-link" href="documents/family-tree-1950s.pdf" download>Family Tree (1950s)</a>
+      <span class="sources-desc">A hand-compiled chart tracing David &amp; Keila-Tsirel Dimantshtein's line down through their descendants.</span>
+    </li>
+    <li>
+      <a class="sources-link" href="documents/family-tree-genealogy-compiled.pdf" download>Compiled Genealogy (20 pages)</a>
+      <span class="sources-desc">A separate, more detailed compiled genealogy tracing the wider family tree further back, with dates and locations.</span>
+    </li>
+    <li>
+      <a class="sources-link" href="documents/chaim-freedman-dimantshtein-family.pdf" download>Chaim Freedman — Dimantshtein Family</a>
+      <span class="sources-desc">Chaim Freedman's own published research on the Dimantshtein family.</span>
+    </li>
+    <li>
+      <a class="sources-link" href="documents/dimantshtein-family-history-2008-transcript.pdf" download>Dimantshtein Family History (2008) — Transcript</a>
+      <span class="sources-desc">A typed transcript of a family history compiled in 2008 — the primary source for the Holocaust-era material in the prologue.</span>
+    </li>
+    <li>
+      <a class="sources-link" href="documents/dimantshtein-diamond-family-history-gibson-2026.pdf" download>Dimantshtein/Diamond Family History (2026)</a>
+      <span class="sources-desc">A family history received from UK relatives Stephen and Jacob Gibson in August 2026.</span>
+    </li>
+  </ul>
 </div>
 
 
