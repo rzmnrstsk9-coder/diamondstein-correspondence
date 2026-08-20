@@ -10,19 +10,17 @@
 <link href="https://api.fontshare.com/v2/css?f[]=satoshi@500,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/tokens.css">
 <link rel="stylesheet" href="assets/components.css">
-<link rel="stylesheet" href="assets/maps/maplibre-gl.css">
+
 <style>
   :root { --cream: #f0eee9; --cream-dim: #e8e4da; --ink: #1a1a1a; --rust: #c1481f; --navy: #2a4a6a; }
 
-  /* Side rail (added 2026-07-16, Paul's ask -- items 9/10 from the site-changes memo). Below
-     1051px .page-shell/.rail stay single-column, cast cards inline in the article -- the JS moves
-     cast cards into the rail once it's actually visible. Explain-panels no longer route into the
-     rail at any width (2026-07-25, Paul's ask) -- they always float in place above their own
-     paragraph; see the explain-trigger JS further down. */
-  .page-shell { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
-  @media (min-width: 1051px) {
-    .page-shell { max-width: 1060px; display: grid; grid-template-columns: 680px 1fr; gap: 2.6rem; align-items: start; }
-  }
+  /* The side rail (2026-07-16 -> 2026-08-20) is GONE (Paul's ask): the two-column
+     .page-shell/.rail split is retired in favor of one wider single column, freed by moving
+     "Everyone Named in the Letters" out of the side and into its own full-width horizontal strip
+     (.cast-strip, below) positioned right above Chapter One. Explain-panels still always float
+     in place above their own paragraph (2026-07-25) -- unaffected by this change. */
+  .page-shell { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem 5rem; }
+  .head { max-width: 820px; }
   article { position: relative; }
   /* Chapter title flipped to the dominant element (Paul's ask, 2026-07-25): it used to be a small
      muted mono caption sitting next to a big rust numeral, which read backwards -- the numeral
@@ -32,7 +30,7 @@
      this loop's sequential index (prologue has no "Chapter" word and is index 1, so "The
      Courtship" -- data-titled "Chapter One" -- would land as index 2) -- prepending the word here
      just put two conflicting chapter-numbering schemes side by side once both were legible. */
-  .chapter-mark { display: flex; flex-direction: column; gap: 0.45rem; margin: 4rem 0 1.8rem; scroll-margin-top: calc(var(--nav-h, 3.4rem) + 1rem); }
+  .chapter-mark { display: flex; flex-direction: column; gap: 0.45rem; margin: 4rem 0 1.8rem; scroll-margin-top: calc(var(--topbar-h, 0px) + var(--nav-h, 3.4rem) + 1rem); }
   .chapter-mark:first-child { margin-top: 1rem; }
   /* Numeral eyebrow dropped entirely (Paul's ask, 2026-07-25): even bare, it read as a competing
      chapter-numbering scheme next to titles that spell out their own "Chapter One"/etc — see the
@@ -245,31 +243,42 @@
     .cast-featured-row { flex-direction: column; }
   }
 
-  /* The rail itself -- hidden below 1051px (see .page-shell above); the JS only populates it
-     when it's actually visible, so nothing gets moved somewhere unreachable. */
-  .rail { display: none; }
-  @media (min-width: 1051px) {
-    /* Not sticky (2026-08-12, Paul's third pass): tried non-sticky-but-capped, then sticky-but-
-       uncapped (2026-07-25) to fix that version's internal-scrollbar complaint -- both still
-       "followed" the reader. Paul's final call: don't follow at all. The "Everyone Named in the
-       Letters" list now scrolls in normal document flow alongside the article, same as everything
-       else on the page. */
-    .rail { display: block; }
-  }
-  .rail-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(26,26,26,0.4); margin-bottom: 0.8rem; }
-  .cast-rail-stack { display: flex; flex-direction: column; gap: 0.9rem; }
-  /* Compact card treatment once a cast-inline lands in the rail (narrower column than the
-     680px article) -- overrides both the plain and .featured variants back to one small row. */
-  .rail .cast-inline { padding: 0.85rem 1rem; gap: 0.85rem; margin: 0; }
-  .rail .cast-inline img { width: 60px; height: 60px; }
-  .rail .cast-inline .ci-photo-placeholder { width: 60px; height: 60px; }
-  .rail .cast-inline .ci-name { font-size: 0.92rem; }
-  .rail .cast-inline .ci-dates { font-size: 0.68rem; }
-  .rail .cast-inline .ci-role { font-size: 0.78rem; }
-  .rail .cast-inline.cast-featured { flex-direction: row; text-align: left; padding: 0.85rem 1rem; border-color: rgba(0,0,0,0.06); box-shadow: none; }
-  .rail .cast-inline.cast-featured img { width: 60px; height: 60px; margin-bottom: 0; }
-  .rail .cast-inline.cast-featured .ci-photo-placeholder { width: 60px; height: 60px; margin-bottom: 0; }
-  .rail .cast-inline.cast-featured .ci-name { font-family: 'Inter', sans-serif; font-weight: 600; font-size: 0.92rem; }
+  /* "Everyone Named in the Letters" strip (2026-08-20, Paul's ask): replaces the old sticky side
+     rail. A full-width horizontal row of every person's first-mention .cast-inline card, moved
+     out of wherever they first appear in the article (same "MOVE the real node" pattern the rail
+     used -- event listeners survive, see the JS below) and relocated to sit right above Chapter
+     One, with prev/next arrows over a native horizontal scroll. Full-bleed like .tree-figure. */
+  .cast-strip { width: 100vw; max-width: 100vw; margin-left: calc(50% - 50vw); margin-right: calc(50% - 50vw);
+    background: var(--cream-dim); padding: 1.8rem 1.5rem; margin-top: 0.4rem; margin-bottom: 2.6rem; }
+  .cast-strip[hidden] { display: none; }
+  .cs-label { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem;
+    text-transform: uppercase; letter-spacing: 0.08em; color: rgba(26,26,26,0.45); margin-bottom: 1.1rem; }
+  .cs-row-wrap { position: relative; max-width: 1200px; margin: 0 auto; }
+  .cs-row { display: flex; gap: 1.6rem; flex-wrap: nowrap; overflow-x: auto; scroll-behavior: smooth;
+    scroll-snap-type: x proximity; padding: 0 2.6rem; justify-content: flex-start; scrollbar-width: none; }
+  .cs-row::-webkit-scrollbar { display: none; }
+  .cs-nav { position: absolute; top: 50%; transform: translateY(-50%); z-index: 5; width: 36px; height: 36px;
+    border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); background: #fff; color: var(--ink);
+    font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+  .cs-nav:hover { border-color: var(--rust); color: var(--rust); }
+  .cs-nav.cs-prev { left: 0; }
+  .cs-nav.cs-next { right: 0; }
+  .cs-nav[hidden] { display: none; }
+  /* Restyle the real .cast-inline nodes once they land in the strip: circular avatar, stacked
+     centered text, fixed narrow card -- overrides both the plain and .featured variants back to
+     one consistent compact shape (mirrors the old .rail overrides this replaces). */
+  .cast-strip .cast-inline { display: flex; flex-direction: column; align-items: center; text-align: center;
+    width: 132px; flex: 0 0 auto; scroll-snap-align: start; padding: 0; margin: 0; border: none;
+    box-shadow: none; background: none; cursor: pointer; }
+  .cast-strip .cast-inline:hover { transform: none; box-shadow: none; }
+  .cast-strip .cast-inline:hover .ci-name { color: var(--rust); }
+  .cast-strip .cast-inline img, .cast-strip .cast-inline .ci-photo-placeholder {
+    width: 88px; height: 88px; border-radius: 0; margin-bottom: 0.7rem; }
+  .cast-strip .cast-inline .ci-name { font-size: 0.9rem; transition: color 0.15s ease; }
+  .cast-strip .cast-inline .ci-dates { font-size: 0.68rem; margin-top: 0.15rem; }
+  .cast-strip .cast-inline .ci-role { font-size: 0.78rem; margin-top: 0.15rem; }
+  .cast-strip .cast-inline .ci-hint { display: none; }
 
   .person-modal { background: #fff; border-radius: 0; max-width: 520px; width: 100%; max-height: 85vh; overflow-y: auto; padding: 2rem 2.2rem; position: relative; }
   .pm-top { display: flex; gap: 1.2rem; align-items: center; margin-bottom: 1.2rem; }
@@ -329,14 +338,31 @@
 
   /* Sources disclosure + document downloads (2026-08-19, Paul's ask): page furniture, not
      chapter content -- sits once at the very top, before the sticky nav, not per-chapter data,
-     so it lives directly in this template rather than as a chapters.json block. */
-  .sources-block { max-width: 720px; margin: 0 auto 2rem; padding: 0 1.5rem; text-align: center; }
-  .sources-note { font-size: 0.94rem; line-height: 1.6; color: rgba(26,26,26,0.75); margin: 0 0 0.9rem; }
-  .sources-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
-  .sources-list li { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 0.4rem; font-size: 0.88rem; }
-  .sources-link { color: var(--rust); text-decoration: underline; text-decoration-color: rgba(193,72,31,0.4); font-weight: 600; white-space: nowrap; }
-  .sources-link:hover { text-decoration-color: var(--rust); }
-  .sources-desc { color: rgba(26,26,26,0.6); }
+     so it lives directly in this template rather than as a chapters.json block.
+     Redesigned 2026-08-20 (Paul's ask: "a horizontal table with pdf icons", then "all on one
+     row, shrink if necessary, make it clear they're pdfs") -- one row, nowrap; each tile
+     shrinks via flex on narrower viewports, and the block scrolls horizontally rather than
+     wrapping or squeezing past legibility once viewport-width already can't fit 5 columns. */
+  .sources-block { max-width: 900px; margin: 0 auto 2rem; padding: 0 1.5rem; text-align: center; }
+  .sources-note { font-size: 0.94rem; line-height: 1.6; color: rgba(26,26,26,0.75); margin: 0 0 1.1rem; }
+  .sources-table { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: nowrap;
+    justify-content: center; gap: 0; overflow-x: auto;
+    border-top: 1px solid rgba(26,26,26,0.1); border-left: 1px solid rgba(26,26,26,0.1); }
+  .sources-doc { display: flex; flex: 1 1 0; flex-direction: column; align-items: center; text-align: center;
+    min-width: 108px; max-width: 168px; padding: 0.8rem 0.5rem; text-decoration: none;
+    border-right: 1px solid rgba(26,26,26,0.1); border-bottom: 1px solid rgba(26,26,26,0.1);
+    transition: background .15s ease; }
+  .sources-doc:hover { background: rgba(193,72,31,0.06); }
+  .sources-doc-icon-wrap { position: relative; display: inline-flex; }
+  .sources-doc-icon { width: 24px; height: 24px; color: var(--rust); }
+  .sources-doc-icon .pdf-fold { fill: rgba(193,72,31,0.14); }
+  .pdf-badge { position: absolute; right: -9px; bottom: -3px; background: var(--rust); color: #fff;
+    font-family: var(--font-mono); font-size: 0.5rem; font-weight: 700; letter-spacing: 0.02em;
+    padding: 0.06rem 0.2rem; line-height: 1.3; white-space: nowrap; }
+  .sources-doc-title { font-weight: 600; font-size: 0.76rem; color: var(--ink); margin: 0.5rem 0 0; line-height: 1.28; }
+  .sources-doc-title u { text-decoration-color: rgba(193,72,31,0.4); }
+  .sources-doc:hover .sources-doc-title u { text-decoration-color: var(--rust); }
+  .sources-doc-desc { font-size: 0.66rem; color: rgba(26,26,26,0.55); margin-top: 0.3rem; line-height: 1.35; }
 
   /* At-a-glance summary (2026-07-27): collapsed-by-default, sits above the chapter nav. */
   .glance { max-width: 720px; margin: 0 auto 2.5rem; padding: 0 1.5rem; }
@@ -389,34 +415,63 @@
 <div class="head">
   <p class="kicker">A Box of Letters</p>
   <h1 class="display">Read the Story</h1>
-  <p class="sub">The story that emerged from the letters, historical research, the family trees, and living memory.</p>
+  <p class="sub">The background of the Dimantshtein family's history starting around 1700, followed by the story that emerged from the letters between Sam and Dora, 1900&ndash;1926.</p>
 </div>
 
 <div class="sources-block">
   <p class="sources-note">The following documents were used as the basis of the family history claims made here:</p>
-  <ul class="sources-list">
-    <li>
-      <a class="sources-link" href="documents/family-tree-1950s.pdf" download>Family Tree (1950s)</a>
-      <span class="sources-desc">A hand-compiled chart tracing David &amp; Keila-Tsirel Dimantshtein's line down through their descendants.</span>
-    </li>
-    <li>
-      <a class="sources-link" href="documents/family-tree-genealogy-compiled.pdf" download>Compiled Genealogy (20 pages)</a>
-      <span class="sources-desc">A separate, more detailed compiled genealogy tracing the wider family tree further back, with dates and locations.</span>
-    </li>
-    <li>
-      <a class="sources-link" href="documents/chaim-freedman-dimantshtein-family.pdf" download>Chaim Freedman — Dimantshtein Family</a>
-      <span class="sources-desc">Chaim Freedman's own published research on the Dimantshtein family.</span>
-    </li>
-    <li>
-      <a class="sources-link" href="documents/dimantshtein-family-history-2008-transcript.pdf" download>Dimantshtein Family History (2008) — Transcript</a>
-      <span class="sources-desc">A typed transcript of a family history compiled in 2008 — the primary source for the Holocaust-era material in the prologue.</span>
-    </li>
-    <li>
-      <a class="sources-link" href="documents/dimantshtein-diamond-family-history-gibson-2026.pdf" download>Dimantshtein/Diamond Family History (2026)</a>
-      <span class="sources-desc">A family history received from UK relatives Stephen and Jacob Gibson in August 2026.</span>
-    </li>
-  </ul>
+  <!-- PDF glyph is drawn ONCE (see the "pdf-icon" symbol below the closing div) and reused by
+       every tile via <use> -- one shape to keep in sync, not five copy-pasted paths. -->
+  <div class="sources-table">
+    <a class="sources-doc" href="documents/family-tree-1950s.pdf" download>
+      <span class="sources-doc-icon-wrap">
+        <svg class="sources-doc-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#pdf-icon"/></svg>
+        <span class="pdf-badge">PDF</span>
+      </span>
+      <span class="sources-doc-title"><u>Family Tree (1950s)</u></span>
+      <span class="sources-doc-desc">A hand-compiled chart tracing David &amp; Keila-Tsirel Dimantshtein's descendants.</span>
+    </a>
+    <a class="sources-doc" href="documents/family-tree-genealogy-compiled.pdf" download>
+      <span class="sources-doc-icon-wrap">
+        <svg class="sources-doc-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#pdf-icon"/></svg>
+        <span class="pdf-badge">PDF</span>
+      </span>
+      <span class="sources-doc-title"><u>Compiled Genealogy</u> (20 pages)</span>
+      <span class="sources-doc-desc">A more detailed genealogy tracing the wider family tree further back, with dates and locations.</span>
+    </a>
+    <a class="sources-doc" href="documents/chaim-freedman-dimantshtein-family.pdf" download>
+      <span class="sources-doc-icon-wrap">
+        <svg class="sources-doc-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#pdf-icon"/></svg>
+        <span class="pdf-badge">PDF</span>
+      </span>
+      <span class="sources-doc-title"><u>Chaim Freedman</u> &mdash; Dimantshtein Family</span>
+      <span class="sources-doc-desc">Chaim Freedman's own published research on the family.</span>
+    </a>
+    <a class="sources-doc" href="documents/dimantshtein-family-history-2008-transcript.pdf" download>
+      <span class="sources-doc-icon-wrap">
+        <svg class="sources-doc-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#pdf-icon"/></svg>
+        <span class="pdf-badge">PDF</span>
+      </span>
+      <span class="sources-doc-title"><u>Family History (2008)</u> Transcript</span>
+      <span class="sources-doc-desc">The primary source for the Holocaust-era material in the prologue.</span>
+    </a>
+    <a class="sources-doc" href="documents/dimantshtein-diamond-family-history-gibson-2026.pdf" download>
+      <span class="sources-doc-icon-wrap">
+        <svg class="sources-doc-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#pdf-icon"/></svg>
+        <span class="pdf-badge">PDF</span>
+      </span>
+      <span class="sources-doc-title"><u>Dimantshtein/Diamond</u> Family History (2026)</span>
+      <span class="sources-doc-desc">Received from UK relatives Stephen and Jacob Gibson, August 2026.</span>
+    </a>
+  </div>
 </div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="pdf-icon" viewBox="0 0 24 24">
+    <path d="M6 2h9l5 5v15H6z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+    <path class="pdf-fold" d="M15 2v5h5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/>
+    <path d="M9 12.5h6M9 15.5h6M9 18.5h3.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+  </symbol>
+</svg>
 
 
 
@@ -424,11 +479,23 @@
 <nav class="chapter-nav" id="chapter-nav" aria-label="Jump to chapter"><a href="#ch-prologue" class="cn-item" data-target="ch-prologue"><span class="cn-label">Prologue: Belarus and Latvia, 1770-1901</span></a><a href="#ch-courtship" class="cn-item" data-target="ch-courtship"><span class="cn-label">Chapter One, The Courtship</span><span class="cn-date mono">circa 1900–1911</span></a><a href="#ch-war-years" class="cn-item" data-target="ch-war-years"><span class="cn-label">Chapter Two, The War Years</span><span class="cn-date mono">1914–1918</span></a><a href="#ch-travelling-years" class="cn-item" data-target="ch-travelling-years"><span class="cn-label">Chapter Three, The Travelling Years</span><span class="cn-date mono">1919–1926</span></a><a href="#ch-what-the-letters-dont-say" class="cn-item" data-target="ch-what-the-letters-dont-say"><span class="cn-label">What the Letters Don&#x27;t Say</span><span class="cn-date mono">the silences + after</span></a><a href="#ch-afterword" class="cn-item" data-target="ch-afterword"><span class="cn-label">Afterword</span></a><a href="#" class="cn-item cn-top" id="cn-top"><span class="cn-num mono">&uarr;</span><span class="cn-label">Back to top</span></a></nav>
 </div>
 
+<!-- Static shell for "Everyone Named in the Letters" (2026-08-20) -- empty until the JS below
+     moves every person's cast-inline card into #cast-strip-row and relocates this whole element
+     to sit right above Chapter One. hidden by default so nothing flashes empty pre-JS. -->
+<div class="cast-strip" id="cast-strip" hidden>
+  <div class="cs-label">Everyone Named in the Letters</div>
+  <div class="cs-row-wrap">
+    <button type="button" class="cs-nav cs-prev" id="cast-strip-prev" aria-label="Scroll left">&larr;</button>
+    <div class="cs-row" id="cast-strip-row"></div>
+    <button type="button" class="cs-nav cs-next" id="cast-strip-next" aria-label="Scroll right">&rarr;</button>
+  </div>
+</div>
+
 <div class="page-shell">
   <article>
 <div class="chapter-mark" id="ch-prologue"><div class="chapter-num display">1</div><div class="chapter-name">Prologue: Belarus and Latvia, 1770-1901</div></div>
 <p class="section-eyebrow" data-item="chapter:prologue/prologue-30" data-field="eyebrow">The Founding Generation — Zev Wulf</p>
-<div class="para-figure-wrap"><figure class="inline-figure figure-full"><img data-field="image" data-media="family-tree-diagram" data-provenance="diagram" src="media/family-tree-diagram.png" alt="A family tree diagram tracing Zev Wulf Dimantshtein&#x27;s line down through Eliyahu, David and Keila-Tsirel, and their eleven children, to Sam and Dora as first cousins who married, and on to their own daughters. Sam and Dora&#x27;s direct line is highlighted; the Holocaust dead are separately marked." loading="lazy"><figcaption>The family tree this account is drawn from, Zev Wulf down to Sam and Dora&#x27;s daughters.</figcaption></figure><p class="para" data-item="chapter:prologue/prologue-01" data-field="narrative">As far back as the Diamondstein family&#x27;s own paper trail goes, it starts with Zev Wulf Dimantshtein, born around 1770 in Polotsk, in what is now Belarus, and dead before 1839 — no wife, no occupation, no title survives for him personally. (One other family chart gives David a different father and grandfather entirely: a father named Shlomo, who it says moved the family from Keidan, Lithuania to Korsovka, and — one generation further back — a rabbi named Tsvi-Hirsh HaLevy, married to a woman named Sirke, who headed a yeshiva in Keidan.) What does survive is a claim about the wider line: that they were Leviim and Chabad Chassidim, followers of the <span class="explain-trigger" role="button" tabindex="0" data-target="ex-hasidism">Hasidic movement</span> then spreading through the <span class="explain-trigger" role="button" tabindex="0" data-target="ex-pale">Pale of Settlement</span>. The same Hasidic identity turns up again a few generations later, when one of Zev Wulf&#x27;s descendants married into a family whose patriarch was remembered as &quot;one of the first Chabad Chassidim in England.&quot;</p></div><div class="explain-panel" id="ex-hasidism" data-item="explainer:hasidism"><button class="explain-panel-close" type="button" aria-label="Close">&times;</button><div class="explain-panel-eyebrow">Worth Knowing</div><div class="explain-panel-title">The Hasidic Movement</div><div class="explain-panel-summary">The 18th-century religious revival the family tree claims this family belonged to, and the Chabad school specifically.</div><div class="explain-panel-body" data-field="body">Hasidism began in the mid-1700s in Podolia (in what&#x27;s now Ukraine), founded by Israel ben Eliezer, known as the Baal Shem Tov -- a religious revival movement that stressed joyful, direct devotion and a charismatic rebbe&#x27;s spiritual leadership over pure legal scholarship, at a time when Jewish religious life in Eastern Europe was dominated by rabbinic academies. It spread quickly through the Pale of Settlement over the following decades, splitting into distinct courts and dynasties, each following its own rebbe. Chabad -- the specific branch this family&#x27;s own tree names -- was founded a generation later by Rabbi Shneur Zalman of Liadi, and took root especially in the Belarus/Lithuania/Latvia corner of the Pale this family is documented in, Polotsk included. None of this is confirmed by any letter or document specific to this family -- it comes from a claim in one family-tree chart -- but it&#x27;s the real, well-documented religious landscape a Polotsk family of this era would have belonged to if the chart&#x27;s claim holds.</div></div><div class="explain-panel" id="ex-pale" data-item="explainer:pale"><button class="explain-panel-close" type="button" aria-label="Close">&times;</button><div class="explain-panel-eyebrow">Worth Knowing</div><div class="explain-panel-title">The Pale of Settlement</div><div class="explain-panel-summary">The legal confinement and tightening restrictions that pushed an entire generation of shtetl families to leave.</div><div class="explain-panel-body" data-field="body">Korsovka sat inside the Pale of Settlement, the region of the Russian Empire where Jewish residence was legally confined from 1791 onward, roughly the territory of modern Belarus, Lithuania, Latvia, Moldova, and parts of Ukraine and Poland. Villages like it were built around a synagogue, a marketplace, and a mix of trades and small commerce. Through the 1880s and 90s the Empire tightened the legal noose further: the May Laws of 1882 restricted new Jewish settlement even within the Pale itself, quotas capped Jewish enrollment in schools and universities, and conscription pressure on young Jewish men intensified. None of this is documented for this specific family, there&#x27;s no letter describing it, but it&#x27;s the ordinary, well-attested backdrop against which an entire generation of shtetl families, this one included, made the same calculation at roughly the same time: stay, or go.</div></div>
+<div class="para-figure-wrap"><figure class="inline-figure figure-full"><img data-field="image" data-media="family-tree-diagram" data-provenance="diagram" src="media/family-tree-diagram.png" alt="A family tree diagram tracing Zev Wulf Dimantshtein&#x27;s line down through Eliyahu, David and Keila-Tsirel, and their eleven children, to Sam and Dora as first cousins who married, and on to their own daughters, with real portraits of Sam and Dora on their own boxes. Sam and Dora&#x27;s direct line is highlighted; the Holocaust dead are separately marked. A dashed branch, upper left, shows the disputed alternate lineage one other family chart gives David: a father, Shlomo, and grandfather, Rabbi Tsvi-Hirsh HaLevy of Keidan." loading="lazy"><figcaption>The family tree this account is drawn from, Zev Wulf down to Sam and Dora&#x27;s daughters. The dashed branch, upper left, is the disputed alternate lineage one other chart gives David.</figcaption></figure><p class="para" data-item="chapter:prologue/prologue-01" data-field="narrative">As far back as the Diamondstein family&#x27;s own paper trail goes, it starts with Zev Wulf Dimantshtein, born around 1770 in Polotsk, in what is now Belarus, and dead before 1839 — no wife, no occupation, no title survives for him personally. (One other family chart gives David a different father and grandfather entirely: a father named Shlomo, who it says moved the family from Keidan, Lithuania to Korsovka, and — one generation further back — a rabbi named Tsvi-Hirsh HaLevy, married to a woman named Sirke, who headed a yeshiva in Keidan.) What does survive is a claim about the wider line: that they were Leviim and Chabad Chassidim, followers of the <span class="explain-trigger" role="button" tabindex="0" data-target="ex-hasidism">Hasidic movement</span> then spreading through the <span class="explain-trigger" role="button" tabindex="0" data-target="ex-pale">Pale of Settlement</span>. The same Hasidic identity turns up again a few generations later, when one of Zev Wulf&#x27;s descendants married into a family whose patriarch was remembered as &quot;one of the first Chabad Chassidim in England.&quot;</p></div><div class="explain-panel" id="ex-hasidism" data-item="explainer:hasidism"><button class="explain-panel-close" type="button" aria-label="Close">&times;</button><div class="explain-panel-eyebrow">Worth Knowing</div><div class="explain-panel-title">The Hasidic Movement</div><div class="explain-panel-summary">The 18th-century religious revival the family tree claims this family belonged to, and the Chabad school specifically.</div><div class="explain-panel-body" data-field="body">Hasidism began in the mid-1700s in Podolia (in what&#x27;s now Ukraine), founded by Israel ben Eliezer, known as the Baal Shem Tov -- a religious revival movement that stressed joyful, direct devotion and a charismatic rebbe&#x27;s spiritual leadership over pure legal scholarship, at a time when Jewish religious life in Eastern Europe was dominated by rabbinic academies. It spread quickly through the Pale of Settlement over the following decades, splitting into distinct courts and dynasties, each following its own rebbe. Chabad -- the specific branch this family&#x27;s own tree names -- was founded a generation later by Rabbi Shneur Zalman of Liadi, and took root especially in the Belarus/Lithuania/Latvia corner of the Pale this family is documented in, Polotsk included. None of this is confirmed by any letter or document specific to this family -- it comes from a claim in one family-tree chart -- but it&#x27;s the real, well-documented religious landscape a Polotsk family of this era would have belonged to if the chart&#x27;s claim holds.</div></div><div class="explain-panel" id="ex-pale" data-item="explainer:pale"><button class="explain-panel-close" type="button" aria-label="Close">&times;</button><div class="explain-panel-eyebrow">Worth Knowing</div><div class="explain-panel-title">The Pale of Settlement</div><div class="explain-panel-summary">The legal confinement and tightening restrictions that pushed an entire generation of shtetl families to leave.</div><div class="explain-panel-body" data-field="body">Korsovka sat inside the Pale of Settlement, the region of the Russian Empire where Jewish residence was legally confined from 1791 onward, roughly the territory of modern Belarus, Lithuania, Latvia, Moldova, and parts of Ukraine and Poland. Villages like it were built around a synagogue, a marketplace, and a mix of trades and small commerce. Through the 1880s and 90s the Empire tightened the legal noose further: the May Laws of 1882 restricted new Jewish settlement even within the Pale itself, quotas capped Jewish enrollment in schools and universities, and conscription pressure on young Jewish men intensified. None of this is documented for this specific family, there&#x27;s no letter describing it, but it&#x27;s the ordinary, well-attested backdrop against which an entire generation of shtetl families, this one included, made the same calculation at roughly the same time: stay, or go.</div></div>
 <div class="cast-featured-row"><div class="cast-inline cast-featured" data-person="person:dad-sam-104f4d"><img data-field="image" data-media="portrait-sam-young-real" data-provenance="archival-photo" src="media/portrait-sam-young-real.jpg" alt="Sam Diamondstein"><div><div class="ci-name">Sam Diamondstein</div><div class="ci-dates mono">c.1880–1978</div><div class="ci-role">Husband, letter-writer</div><div class="ci-hint">Click for their story &rarr;</div></div></div><div class="cast-inline cast-featured" data-person="person:dear-dora-3e5ca1"><img data-field="image" data-media="portrait-dora-young-real" data-provenance="archival-photo" src="media/portrait-dora-young-real.jpg" alt="Dora Diamondstein"><div><div class="ci-name">Dora Diamondstein</div><div class="ci-dates mono">1889–1984</div><div class="ci-role">Wife, recipient</div><div class="ci-hint">Click for their story &rarr;</div></div></div></div>
 <p class="section-eyebrow" data-item="chapter:prologue/prologue-31" data-field="eyebrow">Zev Wulf&#x27;s Son Eliyahu</p>
 <div class="para-figure-wrap"><figure class="inline-figure figure-float-right"><img data-field="image" data-media="hist-gargzdai-market" data-provenance="external-sourced" src="media/hist-gargzdai-market.jpg" alt="A busy market square in a small Eastern European Jewish shtetl, with wooden buildings and townspeople gathered, early 1900s." loading="lazy"><figcaption>A market square in Gargždai, Lithuania, c.1910–1912, representative of the kind of small Jewish shtetl Sam and Dora grew up in, not Korsovka itself.</figcaption></figure><p class="para" data-item="chapter:prologue/prologue-02" data-field="narrative">Zev Wulf&#x27;s son Eliyahu, born around 1800, also in Polotsk, died sometime before 1885. Nothing else about his own life survives — no wife, no occupation.</p></div>
@@ -443,7 +510,6 @@
 
 
 <div class="cast-inline" data-person="person:uncle-zalman-3ebd8e"><div class="ci-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg></div><div><div class="ci-name">Uncle Zalman</div><div class="ci-role">Probably David &amp; Keila-Tsirel&#x27;s son; Sam and Dora&#x27;s uncle</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
-<div class="map-live" data-item="journey-map:map-the-scattering" data-year="1890"><div class="map-live-stage" data-map="map-the-scattering"></div><div class="map-section"><div class="map-era" data-field="era">Before the Letters &middot; 1880s&ndash;1900s</div><div class="map-title" data-field="title">The Scattering</div><div class="map-copy" data-field="copy">David and Keila-Tsirel's eleven children didn't go far, not yet. Most stayed within the Baltic region itself &mdash; Korsovka, Riga, a scatter of nearby towns &mdash; with one cluster reaching London and a single sibling crossing to New York. The real distances came a generation later: Sam's own crossing to Montreal, his cousin Yehuda-Leib's to Palestine. This map is the quieter first half of the story &mdash; the ordinary regional movement that, one generation on, would open into the wider diaspora the letters themselves are written across.</div><a class="map-live-link" href="journey.html">See the full journey map &rarr;</a></div></div>
 <p class="section-eyebrow" data-item="chapter:prologue/prologue-34" data-field="eyebrow">Zissa&#x27;s Family in the Holocaust</p>
 <p class="para" data-item="chapter:prologue/prologue-15" data-field="narrative">One of David Dimantshtein&#x27;s daughters, Zissa and her family paid the heaviest price. She had married Peisakh Gordin; their son, Yaakov-Zev-Wolf Gordin, and his wife, Batia Nisse, were both killed in Korsovka in 1941. Of their six children, three — Rassia, Zalman, and Mikhail — were killed that same year in Korsovka; the other three — Gita, Liuba, and Pesakh-Eliyahu — survived and reached what would become Israel. Two more of Zissa&#x27;s sons, Mendel and Dan Gordin, also died in 1941, in Berzpils, along with most of their own children and grandchildren — though Mendel&#x27;s son Aba Gordin survived, and after the war organized religious services for what remained of Korsovka&#x27;s Jewish community.</p>
 <p class="para" data-item="chapter:prologue/prologue-26" data-field="narrative">Zissa&#x27;s line was not the only one this generation lost. Her brother Zev-Wolf had stayed in Korsovka too, farming near the town&#x27;s Jewish cemetery and Naudas Kalns — the site of the 1941 massacre itself. Of his own children, at least three were killed there and in Riga that same year: his son Avraham, Avraham&#x27;s wife Liza, and their daughter Marita, killed together in Korsovka; and two of Avraham&#x27;s nieces, Zhenia and Gittel, killed in a roundup of women in Riga. A grandson, Zev-Wolf — known in the family as &quot;Volinka&quot; — was killed in Riga the same year, a university student. The wider family&#x27;s war losses reached further still, in different ways: one grandson died at the front serving in the Soviet army in 1944; two more were killed serving in the Soviet and Latvian armies; a son, Shmuel, fled across the Soviet border in 1941 and perished in Siberian exile; and another son, Eliyahu, died of illness in exile in Kokand, Uzbekistan, in 1942.</p>
@@ -452,7 +518,7 @@
 <div class="cast-inline" data-person="person:reuven"><div class="ci-photo-placeholder"><svg class="pc-silhouette" viewBox="0 0 100 100"><circle cx="50" cy="36" r="20" fill="#1a1a1a"/><path d="M12,96 C12,64 28,52 50,52 C72,52 88,64 88,96 Z" fill="#1a1a1a"/></svg></div><div><div class="ci-name">Reuven Diamondstein</div><div class="ci-dates mono">c.1850–1934</div><div class="ci-role">Dora&#x27;s father</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
 <div class="cast-inline" data-person="person:dora-s-mother-hinde-41248e"><img data-field="image" data-media="hinde" data-provenance="archival-photo" src="media/hinde.jpeg" alt="Hinde Diamondstein"><div><div class="ci-name">Hinde Diamondstein</div><div class="ci-role">Dora&#x27;s mother</div><div class="ci-hint">Click for their story &rarr;</div></div></div>
 <p class="section-eyebrow" data-item="chapter:prologue/prologue-36" data-field="eyebrow">Reuven and Getzel&#x27;s Children: Sam and Dora</p>
-<p class="para" data-item="chapter:prologue/prologue-16" data-field="narrative">One of David Dimantshtein&#x27;s eleven children, Reuven, was Dora&#x27;s father. Another of David&#x27;s children, <span class="person-trigger" role="button" tabindex="0" data-person="person:getzel">Getzel</span>, was Sam&#x27;s father. So Sam and Dora were first cousins raised in the same small-town world their grandparents had built, in the same faith their great-great-grandfather&#x27;s line was remembered for a century before — and they would grow up to marry each other, and become the two people this entire story is actually about.</p>
+<p class="para" data-item="chapter:prologue/prologue-16" data-field="narrative">Dora&#x27;s uncle, <span class="person-trigger" role="button" tabindex="0" data-person="person:getzel">Getzel</span>, was the father of Sam, making Sam and Dora <span class="explain-trigger" role="button" tabindex="0" data-target="ex-cousins">first cousins</span>, raised in the same small-town world their grandparents had built, in the same faith their great-great-grandfather&#x27;s line was remembered for a century before — and they would grow up to marry each other, and become the two people this entire story is actually about.</p><div class="explain-panel" id="ex-cousins" data-item="explainer:cousins"><button class="explain-panel-close" type="button" aria-label="Close">&times;</button><div class="explain-panel-eyebrow">Worth Knowing</div><div class="explain-panel-title">Marriage Between Cousins</div><div class="explain-panel-summary">Why Sam and Dora marrying as first cousins raised no eyebrows at the time.</div><div class="explain-panel-body" data-field="body">Sam and Dora were first cousins, their fathers, Getzel and Reuven, were brothers. That&#x27;s not an aside; it&#x27;s a real structural fact of how this correspondence exists at all: cousin marriage was a common, unremarkable, religiously permitted practice in small, close-knit shtetl communities like Korsovka, often reinforcing family and property ties across a scattering diaspora rather than raising any concern. Sam and Dora were plausibly raised knowing each other from early childhood, and by the time the earliest surviving letters begin, courtship between them reads as an entirely ordinary, expected next step, not a complication the letters ever feel a need to explain.</div></div>
 
 <p class="section-eyebrow" data-item="chapter:prologue/prologue-37" data-field="eyebrow">Sam and Dora Reach England</p>
 <div class="para-figure-wrap"><figure class="inline-figure figure-float-right"><img data-field="image" data-media="family-sam-dora-and-sams-mother" data-provenance="archival-photo" src="media/family-sam-dora-and-sams-mother.jpeg" alt="Sam, Dora, and Sam&#x27;s own mother, Deborah Tomshinsky, together — Sam appears too old in it to still have been in Korsovka, suggesting it was taken after he&#x27;d already emigrated." loading="lazy"><figcaption>Sam, Dora, and Sam&#x27;s mother, together — undated and unlocated, but Sam appears too old here to still have been in Korsovka, so likely taken in England.</figcaption></figure><p class="para" data-item="chapter:prologue/prologue-27" data-field="narrative">Reuven reached London in 1897, the last of his own siblings to leave Korsovka — his son <span class="inline-portrait" data-person="person:yehuda-leib"><img src="media/portrait-yehuda-leib-real.jpeg" alt="Yehuda-Leib Diamondstein" loading="lazy"></span><span class="person-trigger" role="button" tabindex="0" data-person="person:yehuda-leib">Yehuda-Leib</span>, then seventeen, came with him, but later moved to Palestine, where he was killed in the 1929 Palestine riots. Dora herself followed a few years later, arriving in England around 1903 or 1904, still a girl of about fourteen. One granddaughter&#x27;s testimony names a relative, &quot;Uncle Bernard,&quot; as the one who brought Dora and her family back from Siberia to England — though which Bernard isn&#x27;t settled either; the only Bernard identified in the corpus so far belongs to a different branch of the family entirely, so the name may not be reliable. Getzel never left Korsovka at all, and stayed there the rest of his life — whether he was even still alive to see his son leave for Montreal in 1901 isn&#x27;t known; no source gives a death date for him that actually holds up. Sam may have made this journey in two steps rather than one. A possible 1901 English census record has him in England before that — which would mean he crossed to Montreal from there, not straight from Korsovka as his own dated letter home, postmarked Montreal, June 1901, had previously been assumed to mean. Either way, he didn&#x27;t settle in London for good until 1908 — arriving in the same city his cousin Dora already called home. A family photo shows Sam, Dora, and Sam&#x27;s own mother together, Sam plainly too old in it to still have been in Korsovka — meaning she, at least, made it to England too, at some point after her son did.</p></div>
@@ -526,10 +592,6 @@ What this archive cannot tell you is what came next. It holds nothing at all bet
 <p class="para" data-item="chapter:afterword/afterword-04" data-field="narrative">That&#x27;s the whole of it, every date, every letter, and every honest guess this project could make from what actually survives. Where the record runs out, this account says so plainly, rather than filling in the rest by invention.</p>
 <p class="para" data-item="chapter:afterword/afterword-05" data-field="narrative">Thank you for reading.</p>
   </article>
-  <aside class="rail" id="rail">
-    <div class="rail-label" id="rail-label">Everyone Named in the Letters</div>
-    <div class="cast-rail-stack" id="cast-rail-stack"></div>
-  </aside>
 </div>
 
 <button class="zoom-close" id="zoom-close" style="display:none;">&times;</button>
@@ -1409,35 +1471,51 @@ What this archive cannot tell you is what came next. It holds nothing at all bet
     });
   });
 
-  // Side rail (2026-07-16, Paul's ask -- items 9/10, approved against the
-  // docs/prototypes/paul/side-rail-2026-07-16/ mockup; identical to story-excerpt.html). Decided
-  // once at load, not live on resize: below 1051px the rail is display:none in CSS, so cast
-  // cards simply stay where the server rendered them and explain-triggers keep today's in-place
-  // popup -- nothing is ever moved somewhere unreachable. `isWide` gates both the one-time
-  // cast-card move below and the explain-trigger handler further down.
-  //
-  // A single static "Everyone Named in the Letters" list (2026-07-25, Paul's ask), not a
-  // per-chapter one that swapped its contents as you scrolled -- every person cast-inline card in
-  // the article moves into the rail once, unconditionally, and just stays there for the whole
-  // read (the rail's own sticky positioning is what keeps it in view/"sliding" along as the
-  // reader scrolls). Each person already gets exactly one cast-inline trigger, at their first
-  // mention anywhere in the story (the resolve-side "first mention" convention), so this list is
-  // naturally deduplicated -- no extra client-side work needed for that.
-  const isWide = window.matchMedia('(min-width: 1051px)').matches;
-  const railStack = document.getElementById('cast-rail-stack');
-  if (isWide && railStack) {
+  // "Everyone Named in the Letters" strip (2026-08-20, Paul's ask -- replaces the old side rail
+  // above). A single static list, not a per-chapter one: every person cast-inline card in the
+  // article moves into #cast-strip-row once, unconditionally, at every width -- no isWide gate
+  // any more, since there's no narrower single-column layout to fall back to now that the rail
+  // (and the two-column .page-shell it needed) is gone. Each person already gets exactly one
+  // cast-inline trigger, at their first mention anywhere in the story (the resolve-side "first
+  // mention" convention), so this list is naturally deduplicated -- no extra client-side work
+  // needed for that.
+  const castStrip = document.getElementById('cast-strip');
+  const castStripRow = document.getElementById('cast-strip-row');
+  const chapterOne = document.getElementById('ch-courtship');
+  if (castStrip && castStripRow && chapterOne) {
     const article = document.querySelector('article');
     // Letter cast-inline cards (data-title, no data-person) stay in the article -- the letter is
     // already reachable via its inline [letter:...] phrase-link in the same paragraph, so a
-    // second copy in the rail was pure duplication (Paul's find, 2026-07-25). Only person cards
-    // move to the rail.
+    // second copy in the strip would be pure duplication (Paul's find, 2026-07-25). Only person
+    // cards move to the strip.
     article.querySelectorAll('.cast-inline:not([data-title])').forEach(el => {
-      railStack.appendChild(el);          // MOVES the real node (event listeners survive)
+      castStripRow.appendChild(el);       // MOVES the real node (event listeners survive)
     });
     // cast-featured-row wrappers are now empty (their cards moved) -- drop the husk.
     article.querySelectorAll('.cast-featured-row').forEach(row => {
       if (!row.children.length) row.remove();
     });
+    // Relocate the whole strip to sit right above Chapter One, then reveal it (stayed hidden
+    // until now so nothing flashed empty pre-JS).
+    chapterOne.parentNode.insertBefore(castStrip, chapterOne);
+    castStrip.hidden = false;
+
+    // Prev/next arrows over the row's native horizontal scroll (same mechanism as the
+    // hotel-gallery filmstrip's stage nav below) -- hidden whenever the row doesn't actually
+    // overflow, or once scrolled to either end.
+    const csPrev = document.getElementById('cast-strip-prev');
+    const csNext = document.getElementById('cast-strip-next');
+    const CS_STEP = 320;
+    csPrev.addEventListener('click', () => castStripRow.scrollBy({ left: -CS_STEP, behavior: 'smooth' }));
+    csNext.addEventListener('click', () => castStripRow.scrollBy({ left: CS_STEP, behavior: 'smooth' }));
+    const updateCastStripNav = () => {
+      const overflowing = castStripRow.scrollWidth > castStripRow.clientWidth + 4;
+      csPrev.hidden = !overflowing || castStripRow.scrollLeft <= 4;
+      csNext.hidden = !overflowing || castStripRow.scrollLeft >= castStripRow.scrollWidth - castStripRow.clientWidth - 4;
+    };
+    castStripRow.addEventListener('scroll', updateCastStripNav);
+    window.addEventListener('resize', updateCastStripNav);
+    updateCastStripNav();
   }
 
   // Inline explainer callouts -- declared here (not down by its event listeners below) because
@@ -1703,11 +1781,7 @@ What this archive cannot tell you is what came next. It holds nothing at all bet
 <button class="back-to-top" id="back-to-top" type="button">&uarr; Top</button>
 <script src="assets/back-to-top.js"></script>
 
-<script src="assets/maps/maplibre-gl.js"></script>
-<script src="assets/maps/pmtiles.js"></script>
-<script src="assets/maps/maplibre-gl-dates.js"></script>
-<script>window.JOURNEY_MAPS = [{"map": "map-the-scattering", "year": 1890, "zoom": 2, "min_zoom": null, "max_zoom": null, "tile_source": "live", "center": {"lat": 56.78, "lon": 27.68}, "waypoints": [{"label": "THE PALE", "place_ref": "place:city-korsovka", "lat": 56.78, "lon": 27.68}, {"label": "RIGA", "place_ref": "place:riga-802894", "lat": 56.95, "lon": 24.11}, {"label": "LONDON", "place_ref": "place:city-london", "lat": 51.51, "lon": -0.13}, {"label": "NEW YORK", "place_ref": "place:new-york-dddd96", "lat": 40.71, "lon": -74.01}], "routes": [{"from": {"lat": 56.78, "lon": 27.68}, "to": {"lat": 56.95, "lon": 24.11}, "animated": true}, {"from": {"lat": 56.78, "lon": 27.68}, "to": {"lat": 51.51, "lon": -0.13}, "animated": true}, {"from": {"lat": 56.78, "lon": 27.68}, "to": {"lat": 40.71, "lon": -74.01}, "animated": true}]}];</script>
-<script src="assets/maps/map-render.js"></script>
+
 
 </body>
 </html>
