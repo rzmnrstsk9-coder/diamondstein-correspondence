@@ -385,15 +385,43 @@
     font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 1.3rem;
     color: var(--rust); margin-top: 1.1rem;
   }
-  .door-featured { max-width: 1100px; margin: 0 auto 1.5rem; }
+  /* Same grid as .door-grid below (auto-fit, minmax(260px,1fr), same gap/max-width) so this row's
+     columns pixel-align with the row underneath it -- Read the Story spans 2 of those columns,
+     the CBC card spans 1 (matching The Couple in Pictures' own single-column width exactly),
+     not just a visually-close flex ratio. */
+  .door-featured { max-width: 1100px; margin: 0 auto 1.5rem; display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; align-items: stretch; }
   .door-featured-card {
     display: flex; flex-wrap: wrap; position: relative; background: #fff; border-radius: 0; overflow: hidden;
     text-decoration: none; color: var(--ink); border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 14px 34px rgba(0,0,0,0.08);
-    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    transition: transform 0.18s ease, box-shadow 0.18s ease; grid-column: span 2;
   }
   .door-featured-card:hover { transform: translateY(-4px); box-shadow: 0 20px 44px rgba(0,0,0,0.14); }
   .door-featured-card .story-row { flex: 1 1 340px; }
   .door-featured-card .door-content { flex: 1 1 340px; padding: 1.75rem 1.75rem 1.6rem; }
+
+  /* CBC card (2026-08-20, Paul's ask): sits beside the featured story card, NOT a door -- no
+     link, just a self-contained card with two real inline players. Same card chrome as
+     .door-featured-card (background/border/shadow) so it reads as a matched pair, not a
+     mismatched afterthought. */
+  .cbc-card {
+    grid-column: span 1; background: #fff; border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 14px 34px rgba(0,0,0,0.08); padding: 1.6rem 1.6rem 1.5rem;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+  }
+  .cbc-card-link { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600;
+    color: var(--rust); text-decoration: underline; text-decoration-color: rgba(193,72,31,0.4);
+    margin-top: 1.1rem; }
+  .cbc-card-link:hover { text-decoration-color: var(--rust); }
+  .cbc-card img.cbc-logo { height: 28px; width: auto; margin-bottom: 0.9rem; }
+  .cbc-card p { font-size: 0.88rem; line-height: 1.55; color: rgba(26,26,26,0.65); margin: 0 0 0.9rem; text-align: left; }
+  .cbc-card p.cbc-card-p2 { margin-bottom: 1.2rem; }
+  .cbc-card p b { color: var(--rust); font-weight: 600; }
+  .cbc-player { width: 100%; margin-bottom: 1.1rem; }
+  .cbc-player:last-child { margin-bottom: 0; }
+  .cbc-player-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.68rem; text-transform: uppercase;
+    letter-spacing: 0.06em; color: rgba(26,26,26,0.5); margin-bottom: 0.4rem; text-align: left; }
+  .cbc-player audio { width: 100%; display: block; }
   .fm-answer a { color: var(--rust); text-decoration: underline; text-decoration-color: rgba(193,72,31,0.4); }
   .fm-answer .marker { font-family: 'IBM Plex Mono', monospace; font-size: 0.85em; background: rgba(0,0,0,0.05); padding: 0.1em 0.4em; border-radius: 0; }
 
@@ -516,10 +544,24 @@
       <div class="door-content">
         <div class="door-eyebrow">Read it as a story</div>
         <div class="door-title">Read the Story</div>
-        <div class="door-body">The whole correspondence, woven into one continuous story with real photographs throughout &mdash; every detail, every underlined phrase linking straight to the letter or evidence behind it.</div>
+        <div class="door-body">The background of the Dimantshtein family's history, starting around 1700, followed by the story that emerged from the letters between Sam and Dora, 1900&ndash;1926 &mdash; a courtship, a war, and a life rebuilt across three countries, told as one continuous read with real photographs throughout, every underlined phrase linking straight to the letter or evidence behind it.</div>
         <div class="door-time">~30 min &middot; Six chapters</div>
       </div>
     </a>
+    <div class="cbc-card">
+      <img class="cbc-logo" src="media/logo-cbc.png" alt="CBC">
+      <p>CBC's <i>On the Coast</i> and <i>Radio West</i> interviewed <b>Paul Levine</b> about the discovery of the letters, the use of AI to transcribe and translate them, and the remarkable story they revealed about his great-grandparents, Sam and Dora Diamondstein.</p>
+      <p class="cbc-card-p2">The conversations also explore the opportunities&mdash;and the pitfalls&mdash;of using AI to unlock family archives.</p>
+      <div class="cbc-player">
+        <div class="cbc-player-label">CBC Vancouver &mdash; On the Coast</div>
+        <audio controls preload="none" src="media/cbc-on-the-coast-2026-08-06.m4a"></audio>
+      </div>
+      <div class="cbc-player">
+        <div class="cbc-player-label">CBC Kelowna &mdash; Radio West</div>
+        <audio controls preload="none" src="media/cbc-radio-west-2026-08-06.mp3"></audio>
+      </div>
+      <a class="cbc-card-link" href="media-coverage.html">See all media coverage &rarr;</a>
+    </div>
   </div>
   <div class="door-grid">
     <a class="door" href="letters.html">
