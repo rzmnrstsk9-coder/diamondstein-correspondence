@@ -22,7 +22,7 @@
      tall sticky block sitting over the article text, not just a nav strip (Paul, 2026-07-25:
      "the menu items intrude into the text" on mobile). One row, horizontally scrollable, is a
      fixed known height at every viewport width -- the bug class doesn't exist anymore. */
-  .jump-nav-wrap { position: sticky; top: 0; z-index: 20; background: var(--cream); border-bottom: 1px solid var(--line); box-shadow: var(--shadow-rest); }
+  .jump-nav-wrap { position: sticky; top: var(--topbar-h, 0); z-index: 20; background: var(--cream); border-bottom: 1px solid var(--line); box-shadow: var(--shadow-rest); }
   .jump-nav { max-width: 760px; margin: 0 auto; padding: 0.8rem 1.5rem; display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; gap: 0.5rem; }
   .jump-nav::-webkit-scrollbar { height: 4px; }
   .jump-nav::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
@@ -38,7 +38,7 @@
   .count-num { font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; display: block; }
   .count-label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.04em; color: var(--ink-faint); }
 
-  .explainer-card { padding: 2.2rem 0; border-top: 1px solid var(--line); scroll-margin-top: 4.5rem; }
+  .explainer-card { padding: 2.2rem 0; border-top: 1px solid var(--line); scroll-margin-top: calc(var(--topbar-h, 0px) + 4.5rem); }
   .explainer-card:first-of-type { border-top: none; padding-top: 0; }
   .explainer-card .eyebrow { font-family: var(--font-mono); font-size: var(--text-xs); letter-spacing: 0.1em; text-transform: uppercase; color: var(--rust); margin-bottom: 0.6rem; display: block; }
   .explainer-card .title { font-family: var(--font-display); font-weight: 700; font-size: 1.35rem; line-height: 1.3; margin: 0 0 0.6rem; }

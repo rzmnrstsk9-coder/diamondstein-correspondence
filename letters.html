@@ -17,7 +17,7 @@
      2026-08-12/): search + a "Chapters" heading + the era-pill nav, all in one sticky block, so
      --nav-h (below) only has to measure one element's height for every jumped-to section's
      scroll-margin-top. */
-  .controls { position: sticky; top: 0; z-index: 20; background: var(--cream);
+  .controls { position: sticky; top: var(--topbar-h, 0); z-index: 20; background: var(--cream);
     border-bottom: 1px solid rgba(0,0,0,0.06); padding: 0.9rem 1.5rem; box-sizing: border-box; }
   .controls-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.6rem; }
   .search-row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
@@ -69,7 +69,7 @@
      above it. var(--nav-h) is measured live by JS (the bar's real height varies with viewport
      width, how many pills/search-row items fit before wrapping), same pattern as long-read.html's
      chapter-mark. */
-  .era-group { scroll-margin-top: calc(var(--nav-h, 3.4rem) + 1rem); }
+  .era-group { scroll-margin-top: calc(var(--topbar-h, 0px) + var(--nav-h, 3.4rem) + 1rem); }
 
   /* Era pill nav — server-rendered by grid_groups_html (engine/letter_cards.py). A scroll-jump +
      scrollspy nav (2026-07-25, extended 2026-08-13 to the redesigned card grid): every era's

@@ -41,6 +41,13 @@
   /* Elevation — 3 shadows */
   --shadow-rest:0 4px 14px rgba(0,0,0,0.04); --shadow-hover:0 10px 24px rgba(0,0,0,0.09);
   --shadow-modal:0 30px 80px rgba(0,0,0,0.40);
+
+  /* Layout — sticky chrome. .topbar's real rendered height (components.css), read by every
+     door template that stacks its own sticky sub-nav below it (letters.html's .controls,
+     long-read.html's .chapter-nav-wrap, worth-knowing.html's .jump-nav-wrap) so the two sticky
+     bars offset instead of overlapping. Static, not JS-measured, because .topbar's own height
+     never varies with content (unlike those sub-navs, which DO measure themselves live). */
+  --topbar-h:72px;
 }
 
 /* Confidence — honesty encoding. SEPARATE bare :root (never a themeable block)

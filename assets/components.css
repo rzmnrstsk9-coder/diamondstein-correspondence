@@ -87,9 +87,13 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
 /* Site chrome — promoted from the byte-identical inline <style> blocks of letters.html,
    by-person.html, story-excerpt.html (verified 2026-07-13). pictures.html's .topbar is a DARK
    variant (different bg/padding/border) and stays page-local — see its own <style> block. */
-.topbar { display:flex; align-items:center; justify-content:space-between; padding:var(--space-4) var(--space-6); background:var(--ink); color:#fff; }
-.topbar a.back { display:inline-flex; align-items:center; gap:var(--space-1); font-size:var(--text-sm); font-weight:600; text-decoration:none; color:#fff; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.22); padding:0.45rem 0.95rem; border-radius: 0; transition:background .15s ease, border-color .15s ease, transform .15s ease; }
-.topbar a.back:hover { background:var(--rust); border-color:var(--rust); transform:translateX(-2px); }
+/* Warm rust-tinted bar, sticky on scroll, postmark-style back button (2026-08-20, Paul's ask —
+   graduated from preview). Every door with its own sticky sub-nav offsets it to
+   top:var(--topbar-h) instead of top:0 so the two stack rather than overlap — see that
+   token's own comment in tokens.css for the full list of call sites. */
+.topbar { display:flex; align-items:center; justify-content:space-between; padding:var(--space-4) var(--space-6); background:url(topbar-letter-ghost.png) center/cover no-repeat, linear-gradient(120deg, var(--ink) 0%, #24140f 100%); color:#fff; border-bottom:3px solid var(--rust); position:sticky; top:0; z-index:40; box-shadow:0 4px 14px -8px rgba(0,0,0,0.5); }
+.topbar a.back { display:inline-flex; align-items:center; gap:var(--space-1); font-size:var(--text-xs); font-weight:600; text-decoration:none; color:#fff; text-transform:uppercase; letter-spacing:0.05em; background:rgba(255,255,255,0.06); border:1.5px solid rgba(193,72,31,0.55); border-radius:0; padding:0.45rem 1.05rem; box-shadow:0 0 0 3px rgba(193,72,31,0.14), inset 0 0 0 1px rgba(255,255,255,0.06); transition:background .15s ease, border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+.topbar a.back:hover { background:var(--rust); border-color:var(--rust); box-shadow:0 0 0 3px rgba(193,72,31,0.28); transform:translateX(-2px); }
 .topbar .crumb { font-family:var(--font-mono); font-size:var(--text-xs); letter-spacing:0.06em; text-transform:uppercase; color:rgba(255,255,255,0.5); }
 .demo-banner { background:#2a2118; color:var(--gold); text-align:center; font-family:var(--font-mono); font-size:var(--text-sm); padding:var(--space-3) 1rem; line-height:1.5; }
 

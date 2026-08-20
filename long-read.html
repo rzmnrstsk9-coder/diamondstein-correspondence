@@ -314,7 +314,7 @@
      900px-centered row directly meant its background didn't reach the page's wider content
      columns (article/rail run out to 1060px), leaving a gap on each side that scrolled-past text
      could show through (caught live, Paul, 2026-07-25). */
-  .chapter-nav-wrap { position: sticky; top: 0; z-index: 20; background: var(--cream); border-bottom: 1px solid rgba(0,0,0,0.06); margin-bottom: 2rem; }
+  .chapter-nav-wrap { position: sticky; top: var(--topbar-h, 0); z-index: 20; background: var(--cream); border-bottom: 1px solid rgba(0,0,0,0.06); margin-bottom: 2rem; }
   .chapter-nav { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; max-width: 900px; margin: 0 auto; padding: 0.9rem 1.5rem; }
   .chapter-nav .cn-item {
     flex-shrink: 0; white-space: nowrap; display: inline-flex; align-items: center; gap: 0.35rem;
