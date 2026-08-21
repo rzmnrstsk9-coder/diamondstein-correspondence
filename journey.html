@@ -18,6 +18,7 @@
      scroll container, so it stays aligned under every dot at any scroll position). Same
      scroll-arrow-btn pattern index.html's letters-scroll-wrap already uses. */
   .journey { max-width: 1000px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+  .ai-collab-note { max-width: 1000px; }
   .timeline-wrap { position: relative; max-width: 1000px; margin: 3rem auto 4rem; padding: 0 2.8rem; }
   .timeline { position: relative; display: flex; gap: 1.8rem; overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; padding: 2.2rem 0.6rem 1rem; -webkit-overflow-scrolling: touch; }
   .timeline::-webkit-scrollbar { height: 4px; }
@@ -109,6 +110,15 @@
   <h1 class="display">A Life in Motion</h1>
   <p class="sub">A timeline of the key events in Sam and Dora's life, paired with maps of the real places behind them &mdash; from the family's scattering out of the Pale in the 1880s, to two decades building a life and business together in London.</p>
 </header>
+
+<div class="ai-collab-note">
+  <img class="ai-collab-icon" src="assets/ai-label-icon.png" alt="AI">
+  <div>
+    <div class="ai-collab-heading">This site is a Human + AI Collaboration</div>
+    <p class="ai-collab-text">AI pulled every place name and date mentioned across the letters and plotted them onto a real historical map, building the routes and timeline shown here. Where a location or a date isn't certain, it's marked as approximate rather than pinned with false precision. A human supplied the letters and family testimony all of this is drawn from.</p>
+    <a class="ai-collab-link" href="how-made.html">Read how this was made &rarr;</a>
+  </div>
+</div>
 
 <main class="journey">
   <section class="timeline-wrap">

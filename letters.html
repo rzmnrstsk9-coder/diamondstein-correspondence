@@ -20,6 +20,7 @@
   .controls { position: sticky; top: var(--topbar-h, 0); z-index: 20; background: var(--cream);
     border-bottom: 1px solid rgba(0,0,0,0.06); padding: 0.9rem 1.5rem; box-sizing: border-box; }
   .controls-inner { max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.6rem; }
+  .ai-collab-note { max-width: 1200px; }
   .search-row { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; }
   .search-wrap { position: relative; flex: 1 1 240px; }
   #letter-search { width: 100%; font-family: 'Inter', sans-serif; font-size: 0.95rem;
@@ -158,6 +159,15 @@
   <p class="kicker">A Box of Letters</p>
   <h1 class="display">Every Letter, Translated and Transcribed</h1>
   <p class="sub">Sorted into the eras of the story, searchable by name or place. Click any card for the full translation.</p>
+</div>
+
+<div class="ai-collab-note">
+  <img class="ai-collab-icon" src="assets/ai-label-icon.png" alt="AI">
+  <div>
+    <div class="ai-collab-heading">This site is a Human + AI Collaboration</div>
+    <p class="ai-collab-text">AI transcribed each letter from the handwritten page &mdash; Yiddish and English alike &mdash; translated it, and wrote the summaries and search tags that make browsing by name, place, or date possible. Uncertain words and phrases are flagged in the transcription itself rather than guessed at. A human supplied the original letters and reviewed every transcription and translation against the scan.</p>
+    <a class="ai-collab-link" href="how-made.html">Read how this was made &rarr;</a>
+  </div>
 </div>
 
 <div class="controls">
