@@ -115,8 +115,11 @@
   <img class="ai-collab-icon" src="assets/ai-label-icon.png" alt="AI">
   <div>
     <div class="ai-collab-heading">This site is a Human + AI Collaboration</div>
-    <p class="ai-collab-text">AI pulled every place name and date mentioned across the letters and plotted them onto a real historical map, building the routes and timeline shown here. Where a location or a date isn't certain, it's marked as approximate rather than pinned with false precision. A human supplied the letters and family testimony all of this is drawn from.</p>
-    <a class="ai-collab-link" href="how-made.html">Read how this was made &rarr;</a>
+    <button class="ai-collab-trigger" type="button" aria-expanded="false">Find out how this page was made.</button>
+    <div class="ai-collab-detail" hidden>
+      <p class="ai-collab-text">AI pulled every place name and date mentioned across the letters and plotted them onto a real historical map, building the routes and timeline shown here. Where a location or a date isn't certain, it's marked as approximate rather than pinned with false precision. A human supplied the letters and family testimony all of this is drawn from.</p>
+      <a class="ai-collab-link" href="how-made.html">Read more about how this site was made</a>
+    </div>
   </div>
 </div>
 
@@ -256,6 +259,7 @@
 
 <button class="back-to-top" id="back-to-top" type="button">&uarr; Top</button>
 <script src="assets/back-to-top.js"></script>
+<script src="assets/ai-collab.js"></script>
 
 </body>
 </html>

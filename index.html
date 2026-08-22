@@ -433,7 +433,14 @@
   .ai-collab-icon { flex-shrink: 0; width: 36px; height: 36px; display: block; margin-bottom: 0.7rem; }
   .ai-collab-heading { font-family: 'Satoshi', sans-serif; font-weight: 700; font-size: 1.02rem;
     color: var(--ink); margin-bottom: 0.5rem; }
-  .ai-collab-text { max-width: 760px; font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.72); margin: 0 0 0.7rem; }
+  .ai-collab-trigger { display: block; width: 100%; background: none; border: none; padding: 0; margin: 0;
+    font: inherit; font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.72); text-align: center;
+    cursor: pointer; text-decoration: underline; text-decoration-style: dotted;
+    text-decoration-color: rgba(193,72,31,0.4); }
+  .ai-collab-trigger:hover { color: var(--rust); text-decoration-color: var(--rust); }
+  .ai-collab-detail { margin-top: 0.6rem; }
+  .ai-collab-detail[hidden] { display: none; }
+  .ai-collab-text { max-width: 760px; font-size: 0.92rem; line-height: 1.6; color: rgba(26,26,26,0.72); margin: 0 auto 0.7rem; }
   .ai-collab-link { font-family: 'IBM Plex Mono', monospace; font-size: 0.78rem; font-weight: 600;
     color: var(--rust); text-decoration: underline; text-decoration-color: rgba(193,72,31,0.4); }
   .ai-collab-link:hover { text-decoration-color: var(--rust); }
@@ -548,16 +555,19 @@
 </div>
 
 <div class="doors" id="doors">
-  <div class="doors-intro">
-    <p>This site is built from a specific period of family history, 1901&ndash;1926, from letters exchanged between Sam and Dora Diamondstein. You can browse and search through individual letters, read the recovered story that emerged from the correspondence, and find out more about the technology that we used to make this.</p>
-  </div>
   <div class="ai-collab-note">
     <img class="ai-collab-icon" src="assets/ai-label-icon.png" alt="AI">
     <div>
       <div class="ai-collab-heading">This site is a Human + AI Collaboration</div>
-      <p class="ai-collab-text">This project is two things at once: the recovered story of Sam and Dora, and a real, honest test of whether AI tools can be trusted to help with family history research at all. This whole site is built from a real family archive &mdash; letters, photographs, and testimony &mdash; with AI doing the reading, translating, and connecting at a scale no one could do by hand. Every claim traces back to something real, reviewed and checked by a human before it went on the page.</p>
-      <a class="ai-collab-link" href="how-made.html">Read how this was made &rarr;</a>
+      <button class="ai-collab-trigger" type="button" aria-expanded="false">Find out how this page was made.</button>
+      <div class="ai-collab-detail" hidden>
+        <p class="ai-collab-text">This project is two things at once: the recovered story of Sam and Dora, and a real, honest test of whether AI tools can be trusted to help with family history research at all. This whole site is built from a real family archive &mdash; letters, photographs, and testimony &mdash; with AI doing the reading, translating, and connecting at a scale no one could do by hand. Every claim traces back to something real, reviewed and checked by a human before it went on the page.</p>
+        <a class="ai-collab-link" href="how-made.html">Read more about how this site was made</a>
+      </div>
     </div>
+  </div>
+  <div class="doors-intro">
+    <p>This site is built from a specific period of family history, 1901&ndash;1926, from letters exchanged between Sam and Dora Diamondstein. You can browse and search through individual letters, read the recovered story that emerged from the correspondence, and find out more about the technology that we used to make this.</p>
   </div>
   <div class="doors-intro">
     <p class="doors-intro-cta">Choose how you'd like to explore.</p>
@@ -969,6 +979,7 @@
   window.AMBIENT_AUDIO = { src: 'assets/ambient-klezmer.mp3', label: 'Music', volume: 0.01 };
 </script>
 <script src="assets/ambient-audio.js"></script>
+<script src="assets/ai-collab.js"></script>
 
 </body>
 </html>

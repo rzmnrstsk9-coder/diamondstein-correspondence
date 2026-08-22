@@ -89,8 +89,11 @@
   <img class="ai-collab-icon" src="assets/ai-label-icon.png" alt="AI">
   <div>
     <div class="ai-collab-heading">This site is a Human + AI Collaboration</div>
-    <p class="ai-collab-text">These entries are historical background, not family history &mdash; AI researched real events and conventions the letters mention without explanation (the Pale of Settlement, a 1907 financial panic, a wartime Zeppelin raid), and wrote explanations for today's reader. The sources are the historical record, not the family's own account, and each entry sticks to verifiable public history. A human chose which topics needed explaining and checked and edited each one.</p>
-    <a class="ai-collab-link" href="how-made.html">Read how this was made &rarr;</a>
+    <button class="ai-collab-trigger" type="button" aria-expanded="false">Find out how this page was made.</button>
+    <div class="ai-collab-detail" hidden>
+      <p class="ai-collab-text">These entries are historical background, not family history &mdash; AI researched real events and conventions the letters mention without explanation (the Pale of Settlement, a 1907 financial panic, a wartime Zeppelin raid), and wrote explanations for today's reader. The sources are the historical record, not the family's own account, and each entry sticks to verifiable public history. A human chose which topics needed explaining and checked and edited each one.</p>
+      <a class="ai-collab-link" href="how-made.html">Read more about how this site was made</a>
+    </div>
   </div>
 </div>
 
@@ -163,6 +166,7 @@ What this archive cannot tell you is what came next. It holds nothing at all bet
   mo.observe(nav, { attributes: true, subtree: true, attributeFilter: ['class'] });
 </script>
 <script src="assets/back-to-top.js"></script>
+<script src="assets/ai-collab.js"></script>
 
 </body>
 </html>
