@@ -147,6 +147,10 @@ body { background:var(--cream); color:var(--ink); font-family:var(--font-body); 
 .pc-dates.unknown { color:var(--ink-faint); font-style:italic; }
 .pc-role { font-size:var(--text-sm); color:var(--ink-soft); margin-top:var(--space-1);
   padding:0 var(--space-2); }
+/* PREVIEW ONLY (2026-08-24, Paul's ask): per-person letter count, only used by build_family.py's
+   person-card cards (the sole consumer of this element currently). */
+.pc-letters { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--rust);
+  margin-top:var(--space-1); padding:0 var(--space-2); }
 .pc-hint { font-family:var(--font-mono); font-size:var(--text-xs); color:var(--rust);
   margin-top:var(--space-2); padding:0 var(--space-2); line-height:1.4; }
 .cast-card.featured { padding-bottom:var(--space-5); }
