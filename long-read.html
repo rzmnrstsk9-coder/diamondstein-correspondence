@@ -460,6 +460,25 @@
   .glance-era { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: rgba(26,26,26,0.4); margin-bottom: 0.15rem; }
   .glance-thesis { font-size: 0.94rem; line-height: 1.5; transition: color 0.15s ease; }
 
+  /* PREVIEW ONLY (2026-08-23) -- reading-progress bar, an experimental look for Paul.
+     Fixed at the true viewport top, above .topbar's own z-index:40, so it never competes with
+     that or .chapter-nav-wrap's sticky stacking below it. Gold, not rust -- rust already carries
+     the letter/explain/pull-quote citation meaning on this page; this bar isn't evidence, it's
+     navigation, so it borrows the homepage's gold accent instead.
+     ROUND 2 (same day, Paul: "too subtle to be noticeable"): a bare 3px fill with nothing behind
+     it read as almost invisible against the topbar's own busy dark-gradient/rust-border top edge.
+     Split into a full-width track (always visible, so the empty portion reads as a groove, not
+     nothing) plus a gold fill with a glow so it lifts off the dark topbar -- two stacked elements
+     rather than a negative-z-index pseudo-element trick, so paint order isn't relying on how the
+     parent's own stacking context resolves.
+     ROUND 3 (same day, Paul: "more"): 5px -> 8px, darker/higher-contrast track, and a much
+     stronger two-layer glow (tight bright core + wide soft halo) instead of one soft shadow. */
+  .reading-progress-track { position: fixed; top: 0; left: 0; height: 8px; width: 100%;
+    background: rgba(0,0,0,0.35); z-index: 200; }
+  .reading-progress { position: fixed; top: 0; left: 0; height: 8px; width: 0%;
+    background: #e8c98a; z-index: 201;
+    box-shadow: 0 0 4px rgba(255,255,255,0.9), 0 0 18px rgba(232,201,138,1); }
+  @media (prefers-reduced-motion: reduce) { .reading-progress { transition: none; } }
 </style>
   <script data-goatcounter="https://aboxofletters.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <meta name="description" content="The complete telling of Sam and Dora&#x27;s story, drawn from their own letters and the research around them — about a thirty-minute read.">
@@ -477,6 +496,9 @@
 <link rel="icon" type="image/png" href="assets/favicon.png">
 </head>
 <body>
+
+<div class="reading-progress-track"></div>
+<div class="reading-progress" id="reading-progress"></div>
 
 <div class="topbar">
   <a class="back" href="index.html#doors">&larr; Back to start</a>
@@ -1882,6 +1904,24 @@ What this archive cannot tell you is what came next. It holds nothing at all bet
   document.querySelectorAll('.footer-contact-link[data-u]').forEach(function(el) {
     el.href = 'mailto:' + el.dataset.u + '@' + el.dataset.d;
   });
+</script>
+
+<script>
+  // PREVIEW ONLY (2026-08-23) -- reading-progress bar. Width tracks how far through the
+  // scrollable page the reader is, 0 at the top, 100 once there's nothing left to scroll.
+  (function() {
+    var bar = document.getElementById('reading-progress');
+    if (!bar) return;
+    function update() {
+      var doc = document.documentElement;
+      var scrollable = doc.scrollHeight - doc.clientHeight;
+      var pct = scrollable > 0 ? (doc.scrollTop / scrollable) * 100 : 0;
+      bar.style.width = pct + '%';
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
 </script>
 
 <button class="back-to-top" id="back-to-top" type="button">&uarr; Top</button>
